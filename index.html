@@ -79,8 +79,8 @@
         <div id="scheduleContent">⏳ Завантаження...</div>
         <button id="btnBackToDays" class="btn-secondary">🔙 Інший день</button>
     </div>
-
-    <script>
+    
+  <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
@@ -101,7 +101,7 @@
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
 
-        // Навігація
+        // Навигация
         btnCourse1.addEventListener('click', () => {
             selectedCourse = 1;
             daysTitle.innerText = "1 курс 🎓";
@@ -126,14 +126,14 @@
             daysScreen.classList.add('active');
         });
 
-        // Завантаження даних
+        // Запуск парсинга при выборе дня
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
                 daysScreen.classList.remove('active');
                 scheduleScreen.classList.add('active');
                 scheduleTitle.innerText = selectedDay;
-                scheduleContent.innerText = "⏳ Завантаження розкладу з таблиці...";
+                scheduleContent.innerText = "⏳ Сканую таблицю...";
                 
                 fetchSchedule(selectedCourse, selectedDay);
             });
@@ -141,64 +141,72 @@
 
         async function fetchSchedule(course, day) {
             let sheetParam = '';
-            let skipRows = 0;
-            
-            if (course === 1) {
-                sheetParam = ''; // Перший аркуш за замовчуванням
-                skipRows = 5;
-            } else {
+            // ВАЖНО: &headers=0 заставляет Google не "съедать" первую строку
+            if (course === 2) {
                 sheetParam = '&sheet=' + encodeURIComponent('2к 1с 26-27');
-                skipRows = 4;
             }
 
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json${sheetParam}`;
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=0${sheetParam}`;
             
             try {
                 const response = await fetch(url);
                 const text = await response.text();
                 
-                // Очищаємо відповідь Google від зайвого тексту, щоб отримати чистий JSON
                 const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
                 const data = JSON.parse(jsonString);
                 
-                let rows = data.table.rows.slice(skipRows);
                 let scheduleDict = {};
                 let currentDay = '';
                 let currentTime = '';
-                const searchWord = day.toUpperCase().substring(0, 5); // наприклад, "ПОНЕД"
+                const searchWord = day.toUpperCase().substring(0, 5); // "ПОНЕД"
 
-                // Аналог pandas.iterrows() та ffill()
-                for (let row of rows) {
+                // УМНЫЙ СКАНЕР: идем по всем строкам без пропуска (skipRows больше не нужен)
+                for (let row of data.table.rows) {
                     if (!row || !row.c) continue;
 
-                    let cell0 = row.c[0] ? row.c[0].v : null;
-                    let cell1 = row.c[1] ? row.c[1].v : null;
+                    // Безопасно берем День (колонка 0) и Время (колонка 1)
+                    let cell0 = (row.c.length > 0 && row.c[0] && row.c[0].v !== null) ? String(row.c[0].v).trim().toUpperCase() : '';
+                    let cell1 = (row.c.length > 1 && row.c[1] && row.c[1].v !== null) ? String(row.c[1].v).trim() : '';
 
-                    if (cell0 !== null && cell0 !== '') currentDay = String(cell0).toUpperCase();
-                    if (cell1 !== null && cell1 !== '') currentTime = String(cell1);
+                    // Если встретили название дня, запоминаем его (аналог ffill)
+                    if (['ПОНЕД', 'ВІВТО', 'СЕРЕД', 'ЧЕТВЕ', 'П\'ЯТН', 'СУБОТ'].some(d => cell0.includes(d))) {
+                        currentDay = cell0;
+                    }
 
-                    if (currentDay.includes(searchWord)) {
-                        let lessonPart = '';
+                    // Если встретили формат времени (цифры вида 12.30), запоминаем
+                    if (cell1.match(/\d{1,2}[\.,]\d{2}/)) {
+                        currentTime = cell1;
+                    }
+
+                    // Если мы находимся в нужном дне и у нас есть время
+                    if (currentDay.includes(searchWord) && currentTime !== '') {
                         
+                        // Безопасно достаем 4 и 5 колонку (индексы 4 и 5)
+                        let col4 = (row.c.length > 4 && row.c[4] && row.c[4].v !== null) ? String(row.c[4].v).trim() : '';
+                        let col5 = (row.c.length > 5 && row.c[5] && row.c[5].v !== null) ? String(row.c[5].v).trim() : '';
+
+                        let lessonPart = '';
                         if (course === 1) {
-                            let col4 = (row.c[4] && row.c[4].v) ? String(row.c[4].v) : '';
-                            let col5 = (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '';
                             lessonPart = (col4 + " " + col5).trim();
                         } else {
-                            let col4 = (row.c[4] && row.c[4].v) ? String(row.c[4].v) : '';
                             lessonPart = col4.trim();
                         }
 
-                        if (lessonPart && lessonPart.toLowerCase() !== 'nan') {
+                        // Игнорируем пустые ячейки и мусор
+                        if (lessonPart !== '' && lessonPart.toLowerCase() !== 'nan' && lessonPart !== 'null') {
                             if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
-                            scheduleDict[currentTime].push(lessonPart);
+                            
+                            // Защита от дублей при объединенных ячейках
+                            if (!scheduleDict[currentTime].includes(lessonPart)) {
+                                scheduleDict[currentTime].push(lessonPart);
+                            }
                         }
                     }
                 }
 
-                // Формування фінального тексту
+                // Вывод на экран
                 if (Object.keys(scheduleDict).length === 0) {
-                    scheduleContent.innerText = `У ${day} пар немає! 🎉`;
+                    scheduleContent.innerText = `У ${day} пар немає! 🎉 (Або вони на 1 тижні)`;
                     return;
                 }
 
@@ -210,7 +218,7 @@
 
             } catch (error) {
                 console.error(error);
-                scheduleContent.innerText = "Упс, помилка при завантаженні розкладу. Спробуйте пізніше.";
+                scheduleContent.innerText = "Упс, помилка при завантаженні розкладу. Можливо, Google Таблиця закрита для перегляду.";
             }
         }
     </script>
