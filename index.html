@@ -76,37 +76,26 @@
     </div>
 
     <script>
-        // Инициализация Telegram Web App
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-
-        // Находим экраны
-        const courseScreen = document.getElementById('courseScreen');
-        const daysScreen = document.getElementById('daysScreen');
-
-        // Находим кнопки навигации
-        const btnCourse1 = document.getElementById('btnCourse1');
-        const btnBack = document.getElementById('btnBack');
-        const dayButtons = document.querySelectorAll('.dayBtn');
-
-        // Переход с Экрана 1 на Экран 2
-        btnCourse1.addEventListener('click', () => {
-            courseScreen.classList.remove('active');
-            daysScreen.classList.add('active');
-        });
-
-        // Возврат с Экрана 2 обратно на Экран 1
-        btnBack.addEventListener('click', () => {
-            daysScreen.classList.remove('active');
-            courseScreen.classList.add('active');
-        });
-
-        // Обработка нажатия на конкретный день недели
+       // Обработка нажатия на конкретный день недели
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
-                // Пока просто выводим уведомление. Позже здесь будет логика запроса расписания.
-                tg.showAlert(`Ти обрав: ${selectedDay}. Дані підтягнуться з таблиці!`);
+                
+                // Переводим день в короткий код для бота
+                const dayCodes = {
+                    "Понеділок": "mon",
+                    "Вівторок": "tue",
+                    "Середа": "wed",
+                    "Четвер": "thu",
+                    "П'ятниця": "fri"
+                };
+                let code = dayCodes[selectedDay];
+                
+                // ВАЖЛИВО: Заміни YOUR_BOT_USERNAME на реальний юзернейм твого бота! (без символу @)
+                let botUsername = "YOUR_BOT_USERNAME"; 
+                
+                // Формуємо посилання з прихованим параметром
+                tg.openTelegramLink(`https://t.me/${botUsername}?start=c1_${code}`);
             });
         });
     </script>
