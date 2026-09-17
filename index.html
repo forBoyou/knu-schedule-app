@@ -41,7 +41,7 @@
             border-radius: 10px;
             margin-top: 15px;
             text-align: left;
-            font-size: 13px; /* Зробив шрифт трохи меншим, щоб матриця влізла */
+            font-size: 15px;
             white-space: pre-line;
         }
 
@@ -51,6 +51,7 @@
 </head>
 <body>
 
+    <!-- ЕКРАН 1: Вибір курсу -->
     <div id="courseScreen" class="screen active">
         <h1>Розклад Соціології 📚</h1>
         <p>Привіт! Обери свій курс, щоб дізнатися розклад.</p>
@@ -58,6 +59,7 @@
         <button id="btnCourse2">2 курс</button>
     </div>
 
+    <!-- ЕКРАН 2: Дні тижня -->
     <div id="daysScreen" class="screen">
         <h1 id="daysTitle">Курс 🎓</h1>
         <p>Обери день тижня:</p>
@@ -71,6 +73,7 @@
         <button id="btnBackToCourse" class="btn-secondary">🔙 Назад до курсів</button>
     </div>
 
+    <!-- ЕКРАН 3: Розклад -->
     <div id="scheduleScreen" class="screen">
         <h1 id="scheduleTitle">Розклад</h1>
         <div id="scheduleContent">⏳ Завантаження...</div>
@@ -98,6 +101,7 @@
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
 
+        // Навігація
         btnCourse1.addEventListener('click', () => {
             selectedCourse = 1;
             daysTitle.innerText = "1 курс 🎓";
@@ -122,12 +126,13 @@
             daysScreen.classList.add('active');
         });
 
+        // Запуск парсингу
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
                 daysScreen.classList.remove('active');
                 scheduleScreen.classList.add('active');
-                scheduleTitle.innerText = "РЕЖИМ МАТРИЦІ";
+                scheduleTitle.innerText = selectedDay;
                 scheduleContent.innerText = "⏳ Сканую таблицю...";
                 
                 fetchSchedule(selectedCourse, selectedDay);
@@ -149,27 +154,73 @@
                 const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
                 const data = JSON.parse(jsonString);
                 
-                let matrixText = `МАТРИЦЯ (Курс ${course})\n\n`;
+                let scheduleDict = {};
+                let currentDay = '';
+                let currentTime = '';
+                
+                // Очищаємо день від апострофів для 100% збігу (П'ятниця -> ПЯТН)
+                const cleanSearchDay = day.toUpperCase().replace(/['`’ʼ\s]/g, '').substring(0, 4);
 
-                for (let i = 0; i < 20; i++) {
-                    let row = data.table.rows[i];
+                for (let row of data.table.rows) {
                     if (!row || !row.c) continue;
 
-                    let rowData = [];
-                    for (let j = 0; j < row.c.length; j++) {
-                        let cellVal = (row.c[j] && row.c[j].v !== null) ? String(row.c[j].v).trim() : '---';
-                        if (cellVal.length > 20) cellVal = cellVal.substring(0, 20) + '...';
-                        rowData.push(`${j}: ${cellVal}`);
+                    let cell0 = (row.c.length > 0 && row.c[0] && row.c[0].v !== null) ? String(row.c[0].v).trim().toUpperCase() : '';
+                    let cleanCell0 = cell0.replace(/['`’ʼ\s]/g, '');
+
+                    // Фіксуємо поточний день
+                    if (['ПОНЕ', 'ВІВТ', 'СЕРЕ', 'ЧЕТВ', 'ПЯТН', 'СУБО'].some(d => cleanCell0.includes(d))) {
+                        currentDay = cleanCell0;
                     }
+
+                    let cell1 = (row.c.length > 1 && row.c[1] && row.c[1].v !== null) ? String(row.c[1].v).trim() : '';
                     
-                    matrixText += `🔹 РЯДОК ${i}:\n${rowData.join(' | ')}\n\n`;
+                    // "Липкий час" - запам'ятовуємо час, і він діє для всіх рядків нижче, поки не з'явиться новий
+                    if (cell1.match(/\d{1,2}[\.,:]\d{2}/)) {
+                        currentTime = cell1;
+                    }
+
+                    // Якщо ми в потрібному дні і вже знайдено час пари
+                    if (currentDay.includes(cleanSearchDay) && currentTime !== '') {
+                        
+                        let lessonPart = '';
+                        
+                        if (course === 1) {
+                            // БЕРЕМО КОЛОНКУ 2 (ОП Соціологія, 1 група)
+                            let col2 = (row.c.length > 2 && row.c[2] && row.c[2].v !== null) ? String(row.c[2].v).trim() : '';
+                            lessonPart = col2;
+                        } else {
+                            // Для 2 курсу (Колонка 4)
+                            let col4 = (row.c.length > 4 && row.c[4] && row.c[4].v !== null) ? String(row.c[4].v).trim() : '';
+                            lessonPart = col4;
+                        }
+
+                        // Додаємо текст до поточного часу, якщо клітинка не порожня
+                        if (lessonPart !== '' && lessonPart.toLowerCase() !== 'nan' && lessonPart !== '---') {
+                            if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
+                            
+                            // Захист від дублювання
+                            if (!scheduleDict[currentTime].includes(lessonPart)) {
+                                scheduleDict[currentTime].push(lessonPart);
+                            }
+                        }
+                    }
                 }
 
-                scheduleContent.innerText = matrixText;
+                // Фінальний вивід на екран
+                if (Object.keys(scheduleDict).length === 0) {
+                    scheduleContent.innerText = `У ${day} пар немає! 🎉`;
+                    return;
+                }
+
+                let resultText = '';
+                for (let time in scheduleDict) {
+                    resultText += `⏰ ${time}\n📚 ${scheduleDict[time].join('\n')}\n\n`;
+                }
+                scheduleContent.innerText = resultText.trim();
 
             } catch (error) {
                 console.error(error);
-                scheduleContent.innerText = "Помилка завантаження матриці.";
+                scheduleContent.innerText = "Упс, помилка при завантаженні розкладу.";
             }
         }
     </script>
