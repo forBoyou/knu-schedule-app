@@ -51,7 +51,6 @@
 </head>
 <body>
 
-    <!-- ЕКРАН 1: Вибір курсу -->
     <div id="courseScreen" class="screen active">
         <h1>Розклад Соціології 📚</h1>
         <p>Привіт! Обери свій курс, щоб дізнатися розклад.</p>
@@ -59,7 +58,6 @@
         <button id="btnCourse2">2 курс</button>
     </div>
 
-    <!-- ЕКРАН 2: Дні тижня -->
     <div id="daysScreen" class="screen">
         <h1 id="daysTitle">Курс 🎓</h1>
         <p>Обери день тижня:</p>
@@ -73,7 +71,6 @@
         <button id="btnBackToCourse" class="btn-secondary">🔙 Назад до курсів</button>
     </div>
 
-    <!-- ЕКРАН 3: Розклад -->
     <div id="scheduleScreen" class="screen">
         <h1 id="scheduleTitle">Розклад</h1>
         <div id="scheduleContent">⏳ Завантаження...</div>
@@ -101,7 +98,6 @@
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
 
-        // Навігація
         btnCourse1.addEventListener('click', () => {
             selectedCourse = 1;
             daysTitle.innerText = "1 курс 🎓";
@@ -126,7 +122,6 @@
             daysScreen.classList.add('active');
         });
 
-        // Запуск парсингу
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
@@ -140,7 +135,6 @@
         });
 
         async function fetchSchedule(course, day) {
-            // ЖОРСТКО ВКАЗУЄМО НАЗВУ ВКЛАДКИ ДЛЯ КОЖНОГО КУРСУ
             let sheetName = '';
             if (course === 1) {
                 sheetName = '1к 1с 26-27';
@@ -185,8 +179,9 @@
                         let lessonPart = '';
                         
                         if (course === 1) {
-                            let col2 = (row.c.length > 2 && row.c[2] && row.c[2].v !== null) ? String(row.c[2].v).trim() : '';
-                            lessonPart = col2;
+                            // ТУТ БЫЛА ИЗМЕНЕНА КОЛОНКА НА 6-Ю ДЛЯ ОСНОВНОГО РАСПИСАНИЯ
+                            let col6 = (row.c.length > 6 && row.c[6] && row.c[6].v !== null) ? String(row.c[6].v).trim() : '';
+                            lessonPart = col6;
                         } else {
                             let col4 = (row.c.length > 4 && row.c[4] && row.c[4].v !== null) ? String(row.c[4].v).trim() : '';
                             lessonPart = col4;
@@ -218,7 +213,5 @@
             }
         }
     </script>
-        
-           
 </body>
 </html>
