@@ -14,7 +14,6 @@
             text-align: center;
             margin: 0;
         }
-        /* Управление экранами */
         .screen { display: none; }
         .active { display: block; }
         
@@ -30,18 +29,12 @@
             width: 100%;
             cursor: pointer;
         }
-        button:disabled {
-            background-color: var(--tg-theme-hint-color, #999999);
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
         .btn-secondary {
             background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
             color: var(--tg-theme-text-color, #000000);
             margin-top: 20px;
         }
         
-        /* Блок для самого расписания */
         #scheduleContent {
             background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
             padding: 15px;
@@ -49,7 +42,7 @@
             margin-top: 15px;
             text-align: left;
             font-size: 15px;
-            white-space: pre-line; /* Чтобы работали переносы строк */
+            white-space: pre-line;
         }
 
         h1 { font-size: 24px; margin-bottom: 10px; }
@@ -58,17 +51,17 @@
 </head>
 <body>
 
-    <!-- ЭКРАН 1: Выбор курса -->
+    <!-- ЕКРАН 1: Вибір курсу -->
     <div id="courseScreen" class="screen active">
         <h1>Розклад Соціології 📚</h1>
         <p>Привіт! Обери свій курс, щоб дізнатися розклад.</p>
         <button id="btnCourse1">1 курс</button>
-        <button id="btnCourse2" disabled>2 курс (у розробці)</button>
+        <button id="btnCourse2">2 курс</button>
     </div>
 
-    <!-- ЭКРАН 2: Дни недели -->
+    <!-- ЕКРАН 2: Дні тижня -->
     <div id="daysScreen" class="screen">
-        <h1>1 курс 🎓</h1>
+        <h1 id="daysTitle">Курс 🎓</h1>
         <p>Обери день тижня:</p>
         
         <button class="dayBtn" data-day="Понеділок">Понеділок</button>
@@ -80,13 +73,10 @@
         <button id="btnBackToCourse" class="btn-secondary">🔙 Назад до курсів</button>
     </div>
 
-    <!-- ЭКРАН 3: Само расписание -->
+    <!-- ЕКРАН 3: Розклад -->
     <div id="scheduleScreen" class="screen">
         <h1 id="scheduleTitle">Розклад</h1>
-        
-        <!-- Сюда мы будем подставлять пары -->
-        <div id="scheduleContent">Завантаження...</div>
-        
+        <div id="scheduleContent">⏳ Завантаження...</div>
         <button id="btnBackToDays" class="btn-secondary">🔙 Інший день</button>
     </div>
 
@@ -94,23 +84,34 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Экраны
+        const SHEET_ID = '1B-U4uPIUJk798YsXfTtwjwa-jBe1i8cJooiIPbrBrVM';
+        let selectedCourse = 1;
+
         const courseScreen = document.getElementById('courseScreen');
         const daysScreen = document.getElementById('daysScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
 
-        // Кнопки
         const btnCourse1 = document.getElementById('btnCourse1');
+        const btnCourse2 = document.getElementById('btnCourse2');
         const btnBackToCourse = document.getElementById('btnBackToCourse');
         const btnBackToDays = document.getElementById('btnBackToDays');
         const dayButtons = document.querySelectorAll('.dayBtn');
 
-        // Элементы для вставки расписания
+        const daysTitle = document.getElementById('daysTitle');
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
 
-        // Навигация
+        // Навігація
         btnCourse1.addEventListener('click', () => {
+            selectedCourse = 1;
+            daysTitle.innerText = "1 курс 🎓";
+            courseScreen.classList.remove('active');
+            daysScreen.classList.add('active');
+        });
+
+        btnCourse2.addEventListener('click', () => {
+            selectedCourse = 2;
+            daysTitle.innerText = "2 курс 🎓";
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
         });
@@ -125,22 +126,93 @@
             daysScreen.classList.add('active');
         });
 
-        // Открытие расписания БЕЗ отправки в чат
+        // Завантаження даних
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
-                
-                // Переключаем экраны
                 daysScreen.classList.remove('active');
                 scheduleScreen.classList.add('active');
-                
-                // Меняем заголовок на выбранный день
                 scheduleTitle.innerText = selectedDay;
+                scheduleContent.innerText = "⏳ Завантаження розкладу з таблиці...";
                 
-                // ВРЕМЕННАЯ ЗАГЛУШКА: Здесь скоро будет код, который читает твой Google Sheet
-                scheduleContent.innerText = `Тут буде відображено розклад на ${selectedDay} для 1 курсу.\n\n1. Пара...\n2. Пара...\n3. Пара...`;
+                fetchSchedule(selectedCourse, selectedDay);
             });
         });
+
+        async function fetchSchedule(course, day) {
+            let sheetParam = '';
+            let skipRows = 0;
+            
+            if (course === 1) {
+                sheetParam = ''; // Перший аркуш за замовчуванням
+                skipRows = 5;
+            } else {
+                sheetParam = '&sheet=' + encodeURIComponent('2к 1с 26-27');
+                skipRows = 4;
+            }
+
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json${sheetParam}`;
+            
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                // Очищаємо відповідь Google від зайвого тексту, щоб отримати чистий JSON
+                const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
+                const data = JSON.parse(jsonString);
+                
+                let rows = data.table.rows.slice(skipRows);
+                let scheduleDict = {};
+                let currentDay = '';
+                let currentTime = '';
+                const searchWord = day.toUpperCase().substring(0, 5); // наприклад, "ПОНЕД"
+
+                // Аналог pandas.iterrows() та ffill()
+                for (let row of rows) {
+                    if (!row || !row.c) continue;
+
+                    let cell0 = row.c[0] ? row.c[0].v : null;
+                    let cell1 = row.c[1] ? row.c[1].v : null;
+
+                    if (cell0 !== null && cell0 !== '') currentDay = String(cell0).toUpperCase();
+                    if (cell1 !== null && cell1 !== '') currentTime = String(cell1);
+
+                    if (currentDay.includes(searchWord)) {
+                        let lessonPart = '';
+                        
+                        if (course === 1) {
+                            let col4 = (row.c[4] && row.c[4].v) ? String(row.c[4].v) : '';
+                            let col5 = (row.c[5] && row.c[5].v) ? String(row.c[5].v) : '';
+                            lessonPart = (col4 + " " + col5).trim();
+                        } else {
+                            let col4 = (row.c[4] && row.c[4].v) ? String(row.c[4].v) : '';
+                            lessonPart = col4.trim();
+                        }
+
+                        if (lessonPart && lessonPart.toLowerCase() !== 'nan') {
+                            if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
+                            scheduleDict[currentTime].push(lessonPart);
+                        }
+                    }
+                }
+
+                // Формування фінального тексту
+                if (Object.keys(scheduleDict).length === 0) {
+                    scheduleContent.innerText = `У ${day} пар немає! 🎉`;
+                    return;
+                }
+
+                let resultText = '';
+                for (let time in scheduleDict) {
+                    resultText += `⏰ ${time}\n📚 ${scheduleDict[time].join('\n')}\n\n`;
+                }
+                scheduleContent.innerText = resultText.trim();
+
+            } catch (error) {
+                console.error(error);
+                scheduleContent.innerText = "Упс, помилка при завантаженні розкладу. Спробуйте пізніше.";
+            }
+        }
     </script>
 </body>
 </html>
