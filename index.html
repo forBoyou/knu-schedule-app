@@ -140,11 +140,15 @@
         });
 
         async function fetchSchedule(course, day) {
-            let sheetParam = '';
-            if (course === 2) {
-                sheetParam = '&sheet=' + encodeURIComponent('2к 1с 26-27');
+            // ЖОРСТКО ВКАЗУЄМО НАЗВУ ВКЛАДКИ ДЛЯ КОЖНОГО КУРСУ
+            let sheetName = '';
+            if (course === 1) {
+                sheetName = '1к 1с 26-27';
+            } else if (course === 2) {
+                sheetName = '2к 1с 26-27';
             }
 
+            let sheetParam = '&sheet=' + encodeURIComponent(sheetName);
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=0${sheetParam}`;
             
             try {
@@ -158,7 +162,6 @@
                 let currentDay = '';
                 let currentTime = '';
                 
-                // Очищаємо день від апострофів для 100% збігу (П'ятниця -> ПЯТН)
                 const cleanSearchDay = day.toUpperCase().replace(/['`’ʼ\s]/g, '').substring(0, 4);
 
                 for (let row of data.table.rows) {
@@ -167,38 +170,30 @@
                     let cell0 = (row.c.length > 0 && row.c[0] && row.c[0].v !== null) ? String(row.c[0].v).trim().toUpperCase() : '';
                     let cleanCell0 = cell0.replace(/['`’ʼ\s]/g, '');
 
-                    // Фіксуємо поточний день
                     if (['ПОНЕ', 'ВІВТ', 'СЕРЕ', 'ЧЕТВ', 'ПЯТН', 'СУБО'].some(d => cleanCell0.includes(d))) {
                         currentDay = cleanCell0;
                     }
 
                     let cell1 = (row.c.length > 1 && row.c[1] && row.c[1].v !== null) ? String(row.c[1].v).trim() : '';
                     
-                    // "Липкий час" - запам'ятовуємо час, і він діє для всіх рядків нижче, поки не з'явиться новий
                     if (cell1.match(/\d{1,2}[\.,:]\d{2}/)) {
                         currentTime = cell1;
                     }
 
-                    // Якщо ми в потрібному дні і вже знайдено час пари
                     if (currentDay.includes(cleanSearchDay) && currentTime !== '') {
                         
                         let lessonPart = '';
                         
                         if (course === 1) {
-                            // БЕРЕМО КОЛОНКУ 2 (ОП Соціологія, 1 група)
                             let col2 = (row.c.length > 2 && row.c[2] && row.c[2].v !== null) ? String(row.c[2].v).trim() : '';
                             lessonPart = col2;
                         } else {
-                            // Для 2 курсу (Колонка 4)
                             let col4 = (row.c.length > 4 && row.c[4] && row.c[4].v !== null) ? String(row.c[4].v).trim() : '';
                             lessonPart = col4;
                         }
 
-                        // Додаємо текст до поточного часу, якщо клітинка не порожня
                         if (lessonPart !== '' && lessonPart.toLowerCase() !== 'nan' && lessonPart !== '---') {
                             if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
-                            
-                            // Захист від дублювання
                             if (!scheduleDict[currentTime].includes(lessonPart)) {
                                 scheduleDict[currentTime].push(lessonPart);
                             }
@@ -206,7 +201,6 @@
                     }
                 }
 
-                // Фінальний вивід на екран
                 if (Object.keys(scheduleDict).length === 0) {
                     scheduleContent.innerText = `У ${day} пар немає! 🎉`;
                     return;
@@ -224,5 +218,7 @@
             }
         }
     </script>
+        
+           
 </body>
 </html>
