@@ -74,14 +74,37 @@
         
         <button id="btnBack" class="btn-secondary">🔙 Назад</button>
     </div>
+<script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand();
 
-    <script>
-       // Обработка нажатия на конкретный день недели
+        // Находим экраны
+        const courseScreen = document.getElementById('courseScreen');
+        const daysScreen = document.getElementById('daysScreen');
+
+        // Находим кнопки навигации
+        const btnCourse1 = document.getElementById('btnCourse1');
+        const btnBack = document.getElementById('btnBack');
+        const dayButtons = document.querySelectorAll('.dayBtn');
+
+        // ПЕРЕХОД: с Экрана 1 на Экран 2
+        btnCourse1.addEventListener('click', () => {
+            courseScreen.classList.remove('active');
+            daysScreen.classList.add('active');
+        });
+
+        // ПЕРЕХОД: Назад
+        btnBack.addEventListener('click', () => {
+            daysScreen.classList.remove('active');
+            courseScreen.classList.add('active');
+        });
+
+        // ОБРАБОТКА ДНЕЙ НЕДЕЛИ (связь с ботом)
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
                 
-                // Переводим день в короткий код для бота
                 const dayCodes = {
                     "Понеділок": "mon",
                     "Вівторок": "tue",
@@ -91,13 +114,14 @@
                 };
                 let code = dayCodes[selectedDay];
                 
-                // ВАЖЛИВО: Заміни YOUR_BOT_USERNAME на реальний юзернейм твого бота! (без символу @)
+                // ВАЖЛИВО: Запиши сюди юзернейм твого бота без @
                 let botUsername = "YOUR_BOT_USERNAME"; 
                 
-                // Формуємо посилання з прихованим параметром
+                // Відкриваємо бота з прихованою командою
                 tg.openTelegramLink(`https://t.me/${botUsername}?start=c1_${code}`);
             });
         });
     </script>
+           
 </body>
 </html>
