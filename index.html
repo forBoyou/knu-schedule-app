@@ -4,47 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Розклад КНУ</title>
-    
-    <!-- ТА САМАЯ МАГИЧЕСКАЯ СТРОЧКА: Подключаем библиотеку Телеграма -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
     <style>
-        /* Делаем так, чтобы цвета приложения автоматически подстраивались под тему пользователя (светлую/темную) */
         body {
             background-color: var(--tg-theme-bg-color, #ffffff);
             color: var(--tg-theme-text-color, #000000);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             padding: 20px;
             text-align: center;
+            margin: 0;
+        }
+        /* Скрываем все экраны по умолчанию */
+        .screen {
+            display: none; 
+        }
+        /* Показываем только активный экран */
+        .active {
+            display: block; 
         }
         button {
             background-color: var(--tg-theme-button-color, #3390ec);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 20px;
+            margin: 8px 0;
+            width: 100%;
             cursor: pointer;
         }
+        /* Стили для заблокированной кнопки */
+        button:disabled {
+            background-color: var(--tg-theme-hint-color, #999999);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        /* Стили для кнопки "Назад" */
+        .btn-secondary {
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            color: var(--tg-theme-text-color, #000000);
+            margin-top: 20px;
+        }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        p { font-size: 15px; color: var(--tg-theme-hint-color, #999999); margin-bottom: 25px; }
     </style>
 </head>
 <body>
-    <h1>Розклад Соціології 📚</h1>
-    <p>Привіт! Це твій новий міні-додаток.</p>
-    <button id="mainBtn">Обрати курс</button>
+
+    <!-- ЭКРАН 1: Выбор курса -->
+    <div id="courseScreen" class="screen active">
+        <h1>Розклад Соціології 📚</h1>
+        <p>Привіт! Обери свій курс, щоб дізнатися розклад.</p>
+        
+        <button id="btnCourse1">1 курс</button>
+        <button id="btnCourse2" disabled>2 курс (у розробці)</button>
+    </div>
+
+    <!-- ЭКРАН 2: Дни недели (для 1 курса) -->
+    <div id="daysScreen" class="screen">
+        <h1>1 курс 🎓</h1>
+        <p>Обери день тижня:</p>
+        
+        <button class="dayBtn" data-day="Понеділок">Понеділок</button>
+        <button class="dayBtn" data-day="Вівторок">Вівторок</button>
+        <button class="dayBtn" data-day="Середа">Середа</button>
+        <button class="dayBtn" data-day="Четвер">Четвер</button>
+        <button class="dayBtn" data-day="П'ятниця">П'ятниця</button>
+        
+        <button id="btnBack" class="btn-secondary">🔙 Назад</button>
+    </div>
 
     <script>
-        // Сообщаем Телеграму, что приложение готово к работе
+        // Инициализация Telegram Web App
         let tg = window.Telegram.WebApp;
-        
-        // Разворачиваем окно на всю высоту экрана при открытии
-        tg.expand(); 
+        tg.expand();
 
-        // Добавляем тестовую реакцию на кнопку
-        document.getElementById("mainBtn").addEventListener("click", function() {
-            tg.showAlert("Кнопка працює! Скоро тут буде вибір курсу.");
+        // Находим экраны
+        const courseScreen = document.getElementById('courseScreen');
+        const daysScreen = document.getElementById('daysScreen');
+
+        // Находим кнопки навигации
+        const btnCourse1 = document.getElementById('btnCourse1');
+        const btnBack = document.getElementById('btnBack');
+        const dayButtons = document.querySelectorAll('.dayBtn');
+
+        // Переход с Экрана 1 на Экран 2
+        btnCourse1.addEventListener('click', () => {
+            courseScreen.classList.remove('active');
+            daysScreen.classList.add('active');
+        });
+
+        // Возврат с Экрана 2 обратно на Экран 1
+        btnBack.addEventListener('click', () => {
+            daysScreen.classList.remove('active');
+            courseScreen.classList.add('active');
+        });
+
+        // Обработка нажатия на конкретный день недели
+        dayButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const selectedDay = e.target.getAttribute('data-day');
+                // Пока просто выводим уведомление. Позже здесь будет логика запроса расписания.
+                tg.showAlert(`Ти обрав: ${selectedDay}. Дані підтягнуться з таблиці!`);
+            });
         });
     </script>
 </body>
