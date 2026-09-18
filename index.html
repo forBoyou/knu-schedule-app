@@ -134,19 +134,15 @@
         });
 
         async function fetchSchedule(course, day) {
-            // Додаємо параметр часу, щоб телефон не кешував старий розклад
             const url = `https://Bohdanyof.pythonanywhere.com/api/schedule?t=${new Date().getTime()}`;
             
             try {
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Помилка сервера');
-                }
+                if (!response.ok) throw new Error('Помилка сервера');
                 
                 const data = await response.json();
                 const dayKey = day.toUpperCase(); 
 
-                // Перевіряємо, чи є дані для обраного курсу і дня
                 if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
                     scheduleContent.innerText = `У ${day} пар немає! 🎉`;
                     return;
@@ -156,7 +152,8 @@
                 let resultText = '';
                 
                 for (let time in daySchedule) {
-                    resultText += `⏰ ${time}\n📚 ${daySchedule[time].join('\n')}\n\n`;
+                    // Тепер daySchedule[time] - це готовий текст, а не масив
+                    resultText += `⏰ ${time}\n📚 ${daySchedule[time]}\n\n`;
                 }
                 
                 scheduleContent.innerText = resultText.trim();
