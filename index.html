@@ -135,13 +135,7 @@
         });
 
         async function fetchSchedule(course, day) {
-            let sheetName = '';
-            if (course === 1) {
-                sheetName = '1к 1с 26-27';
-            } else if (course === 2) {
-                sheetName = '2к 1с 26-27';
-            }
-
+            let sheetName = (course === 1) ? '1к 1с 26-27' : '2к 1с 26-27';
             let sheetParam = '&sheet=' + encodeURIComponent(sheetName);
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=0${sheetParam}`;
             
@@ -161,6 +155,7 @@
                 for (let row of data.table.rows) {
                     if (!row || !row.c) continue;
 
+                    // 1. Ищем день
                     let cell0 = (row.c.length > 0 && row.c[0] && row.c[0].v !== null) ? String(row.c[0].v).trim().toUpperCase() : '';
                     let cleanCell0 = cell0.replace(/['`’ʼ\s]/g, '');
 
@@ -168,42 +163,41 @@
                         currentDay = cleanCell0;
                     }
 
+                    // 2. Ищем время
                     let cell1 = (row.c.length > 1 && row.c[1] && row.c[1].v !== null) ? String(row.c[1].v).trim() : '';
-                    
                     if (cell1.match(/\d{1,2}[\.,:]\d{2}/)) {
                         currentTime = cell1;
                     }
 
+                    // 3. Собираем данные, если день и время совпали
                     if (currentDay.includes(cleanSearchDay) && currentTime !== '') {
                         
-                        let lessonPart = '';
-                        
-                        if (course === 1) {
-                            // Читаем обе колонки для 1 группы (6 и 7), чтобы захватить и лекции, и лабы
-                            let col6 = (row.c.length > 6 && row.c[6] && row.c[6].v !== null) ? String(row.c[6].v).trim() : '';
-                            let col7 = (row.c.length > 7 && row.c[7] && row.c[7].v !== null) ? String(row.c[7].v).trim() : '';
-                            
-                            if (col6 === '---' || col6.toLowerCase() === 'nan') col6 = '';
-                            if (col7 === '---' || col7.toLowerCase() === 'nan') col7 = '';
+                        // Определяем, какие колонки сканировать
+                        let startCol = (course === 1) ? 6 : 4; 
+                        let endCol = startCol + 1; // Захватываем основную колонку и соседнюю (для лаб)
 
-                            if (col6 && col7 && col6 !== col7) {
-                                lessonPart = col6 + " / " + col7;
-                            } else {
-                                lessonPart = col6 || col7; 
+                        let rowLessons = [];
+
+                        for (let colIdx = startCol; colIdx <= endCol; colIdx++) {
+                            if (row.c.length > colIdx && row.c[colIdx] && row.c[colIdx].v !== null) {
+                                let lessonText = String(row.c[colIdx].v).trim();
+                                
+                                // ЖЕСТКИЙ ФИЛЬТР: отсекаем пустоту, NaN и всё, что содержит цифры времени
+                                if (lessonText && lessonText.toLowerCase() !== 'nan' && lessonText !== '---' && !lessonText.match(/\d{1,2}[\.,:]\d{2}/)) {
+                                    rowLessons.push(lessonText);
+                                }
                             }
-                        } else {
-                            let col4 = (row.c.length > 4 && row.c[4] && row.c[4].v !== null) ? String(row.c[4].v).trim() : '';
-                            lessonPart = (col4 === '---' || col4.toLowerCase() === 'nan') ? '' : col4;
                         }
 
-                        // Защита от пустых строк и дублирования времени
-                        if (lessonPart !== '' && lessonPart.toLowerCase() !== 'null') {
-                            // Если текст не является временем (напр. 12.30-13.50)
-                            if (!lessonPart.match(/^\d{1,2}[\.,:]\d{2}/)) {
-                                if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
-                                if (!scheduleDict[currentTime].includes(lessonPart)) {
-                                    scheduleDict[currentTime].push(lessonPart);
-                                }
+                        // Убираем дубликаты (если лекция растянута на 2 ячейки)
+                        let uniqueLessons = [...new Set(rowLessons)];
+                        let finalLessonText = uniqueLessons.join(' / '); // Если пары разные, будет "Лаба 1 / Лаба 2"
+
+                        if (finalLessonText) {
+                            if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
+                            // Проверяем, не добавляли ли мы уже этот текст в это время
+                            if (!scheduleDict[currentTime].includes(finalLessonText)) {
+                                scheduleDict[currentTime].push(finalLessonText);
                             }
                         }
                     }
