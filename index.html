@@ -81,8 +81,7 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        const SHEET_ID = '1B-U4uPIUJk798YsXfTtwjwa-jBe1i8cJooiIPbrBrVM';
-        let selectedCourse = 1;
+        let selectedCourse = "1";
 
         const courseScreen = document.getElementById('courseScreen');
         const daysScreen = document.getElementById('daysScreen');
@@ -99,14 +98,14 @@
         const scheduleContent = document.getElementById('scheduleContent');
 
         btnCourse1.addEventListener('click', () => {
-            selectedCourse = 1;
+            selectedCourse = "1";
             daysTitle.innerText = "1 курс 🎓";
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
         });
 
         btnCourse2.addEventListener('click', () => {
-            selectedCourse = 2;
+            selectedCourse = "2";
             daysTitle.innerText = "2 курс 🎓";
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
@@ -128,95 +127,43 @@
                 daysScreen.classList.remove('active');
                 scheduleScreen.classList.add('active');
                 scheduleTitle.innerText = selectedDay;
-                scheduleContent.innerText = "⏳ Сканую таблицю...";
+                scheduleContent.innerText = "⏳ Отримання даних із сервера...";
                 
                 fetchSchedule(selectedCourse, selectedDay);
             });
         });
 
         async function fetchSchedule(course, day) {
-            let sheetName = (course === 1) ? '1к 1с 26-27' : '2к 1с 26-27';
-            let sheetParam = '&sheet=' + encodeURIComponent(sheetName);
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=0${sheetParam}`;
+            // Додаємо параметр часу, щоб телефон не кешував старий розклад
+            const url = `https://Bohdanyof.pythonanywhere.com/api/schedule?t=${new Date().getTime()}`;
             
             try {
                 const response = await fetch(url);
-                const text = await response.text();
-                
-                const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
-                const data = JSON.parse(jsonString);
-                
-                let scheduleDict = {};
-                let currentDay = '';
-                let currentTime = '';
-                
-                const cleanSearchDay = day.toUpperCase().replace(/['`’ʼ\s]/g, '').substring(0, 4);
-
-                for (let row of data.table.rows) {
-                    if (!row || !row.c) continue;
-
-                    // 1. Ищем день
-                    let cell0 = (row.c.length > 0 && row.c[0] && row.c[0].v !== null) ? String(row.c[0].v).trim().toUpperCase() : '';
-                    let cleanCell0 = cell0.replace(/['`’ʼ\s]/g, '');
-
-                    if (['ПОНЕ', 'ВІВТ', 'СЕРЕ', 'ЧЕТВ', 'ПЯТН', 'СУБО'].some(d => cleanCell0.includes(d))) {
-                        currentDay = cleanCell0;
-                    }
-
-                    // 2. Ищем время
-                    let cell1 = (row.c.length > 1 && row.c[1] && row.c[1].v !== null) ? String(row.c[1].v).trim() : '';
-                    if (cell1.match(/\d{1,2}[\.,:]\d{2}/)) {
-                        currentTime = cell1;
-                    }
-
-                    // 3. Собираем данные, если день и время совпали
-                    if (currentDay.includes(cleanSearchDay) && currentTime !== '') {
-                        
-                        // Определяем, какие колонки сканировать
-                        let startCol = (course === 1) ? 6 : 4; 
-                        let endCol = startCol + 1; // Захватываем основную колонку и соседнюю (для лаб)
-
-                        let rowLessons = [];
-
-                        for (let colIdx = startCol; colIdx <= endCol; colIdx++) {
-                            if (row.c.length > colIdx && row.c[colIdx] && row.c[colIdx].v !== null) {
-                                let lessonText = String(row.c[colIdx].v).trim();
-                                
-                                // ЖЕСТКИЙ ФИЛЬТР: отсекаем пустоту, NaN и всё, что содержит цифры времени
-                                if (lessonText && lessonText.toLowerCase() !== 'nan' && lessonText !== '---' && !lessonText.match(/\d{1,2}[\.,:]\d{2}/)) {
-                                    rowLessons.push(lessonText);
-                                }
-                            }
-                        }
-
-                        // Убираем дубликаты (если лекция растянута на 2 ячейки)
-                        let uniqueLessons = [...new Set(rowLessons)];
-                        let finalLessonText = uniqueLessons.join(' / '); // Если пары разные, будет "Лаба 1 / Лаба 2"
-
-                        if (finalLessonText) {
-                            if (!scheduleDict[currentTime]) scheduleDict[currentTime] = [];
-                            // Проверяем, не добавляли ли мы уже этот текст в это время
-                            if (!scheduleDict[currentTime].includes(finalLessonText)) {
-                                scheduleDict[currentTime].push(finalLessonText);
-                            }
-                        }
-                    }
+                if (!response.ok) {
+                    throw new Error('Помилка сервера');
                 }
+                
+                const data = await response.json();
+                const dayKey = day.toUpperCase(); 
 
-                if (Object.keys(scheduleDict).length === 0) {
+                // Перевіряємо, чи є дані для обраного курсу і дня
+                if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
                     scheduleContent.innerText = `У ${day} пар немає! 🎉`;
                     return;
                 }
 
+                const daySchedule = data[course][dayKey];
                 let resultText = '';
-                for (let time in scheduleDict) {
-                    resultText += `⏰ ${time}\n📚 ${scheduleDict[time].join('\n')}\n\n`;
+                
+                for (let time in daySchedule) {
+                    resultText += `⏰ ${time}\n📚 ${daySchedule[time].join('\n')}\n\n`;
                 }
+                
                 scheduleContent.innerText = resultText.trim();
 
             } catch (error) {
                 console.error(error);
-                scheduleContent.innerText = "Упс, помилка при завантаженні розкладу.";
+                scheduleContent.innerText = "Упс, помилка при з'єднанні з сервером. Спробуйте пізніше.";
             }
         }
     </script>
