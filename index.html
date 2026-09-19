@@ -25,17 +25,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Головний заголовок з іконкою */
+        .main-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: 700;
+            color: #111827;
+            margin: 15px 0 20px 0;
+            line-height: 1.2;
+        }
+        
         #scheduleTitle {
             margin: 10px 0 15px 0;
             font-size: 22px;
         }
 
+        /* --- КНОПКИ --- */
         button {
             background-color: #3b82f6;
             color: white;
             border: none;
             padding: 12px 20px;
-            margin: 6px auto;
+            margin: 8px auto;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
@@ -45,10 +59,38 @@
             max-width: 280px;
             display: block;
             box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+            transition: transform 0.1s, opacity 0.2s;
         }
-        button:active { background-color: #2563eb; transform: scale(0.98); }
-        .btn-secondary { background-color: #9ca3af; box-shadow: 0 2px 4px rgba(156, 163, 175, 0.3); margin-top: 15px; }
-        .btn-secondary:active { background-color: #6b7280; }
+        button:active:not(:disabled) { transform: scale(0.98); }
+        
+        /* Заблоковані кнопки (сірі та неактивні) */
+        button:disabled {
+            background-color: #e5e7eb !important;
+            color: #9ca3af !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Кольори для кнопок днів тижня */
+        .btn-mon { background-color: #ffadad; color: #111827; box-shadow: 0 2px 4px rgba(255, 173, 173, 0.4); }
+        .btn-tue { background-color: #ffd6a5; color: #111827; box-shadow: 0 2px 4px rgba(255, 214, 165, 0.4); }
+        .btn-wed { background-color: #fdffb6; color: #111827; box-shadow: 0 2px 4px rgba(253, 255, 182, 0.4); }
+        .btn-thu { background-color: #caffbf; color: #111827; box-shadow: 0 2px 4px rgba(202, 255, 191, 0.4); }
+        .btn-fri { background-color: #9bf6ff; color: #111827; box-shadow: 0 2px 4px rgba(155, 246, 255, 0.4); }
+        .btn-sat { background-color: #a0c4ff; color: #111827; box-shadow: 0 2px 4px rgba(160, 196, 255, 0.4); }
+
+        /* Кнопки Назад */
+        .btn-secondary { 
+            background-color: #9ca3af; 
+            box-shadow: 0 2px 4px rgba(156, 163, 175, 0.3); 
+            margin-top: 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-secondary:active:not(:disabled) { background-color: #6b7280; }
 
         #scheduleContent { text-align: left; }
 
@@ -86,9 +128,7 @@
             gap: 6px;
         }
 
-        .card-body {
-            padding: 12px 14px;
-        }
+        .card-body { padding: 12px 14px; }
 
         /* Центрування назви пари */
         .lesson-header {
@@ -130,24 +170,9 @@
             margin-bottom: 6px;
         }
 
-        .room-line {
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .teacher-line {
-            font-size: 13px;
-            color: #6b7280;
-        }
-        
-        .other-line {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 4px;
-            font-style: italic;
-            text-align: center;
-        }
+        .room-line { font-size: 13px; font-weight: 600; color: #374151; }
+        .teacher-line { font-size: 13px; color: #6b7280; }
+        .other-line { font-size: 12px; color: #6b7280; margin-top: 4px; font-style: italic; text-align: center; }
 
         .group-label {
             font-size: 12px;
@@ -163,42 +188,52 @@
         }
 
         /* SVG Стилі */
-        .icon-svg {
-            width: 16px;
-            height: 16px;
-            flex-shrink: 0;
-        }
+        .icon-svg { width: 16px; height: 16px; flex-shrink: 0; }
         .icon-clock { color: #111827; }
         .icon-room { color: #4b5563; }
         .icon-teacher { color: #9ca3af; }
+        .icon-title { width: 26px; height: 26px; color: #3b82f6; }
+        .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
     </style>
 </head>
 <body>
 
     <div id="courseScreen" class="screen active">
-        <h1>Розклад Соціології 📚</h1>
+        <h1 class="main-title">
+            <svg class="icon-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M18 4.933V21"/><path d="m4 6 7.106-3.79a2 2 0 0 1 1.788 0L20 6"/><path d="m6 11-3.52 2.147a1 1 0 0 0-.48.854V19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a1 1 0 0 0-.48-.853L18 11"/><path d="M6 4.933V21"/><circle cx="12" cy="9" r="2"/></svg>
+            Розклад факультету соціології!
+        </h1>
         <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
-        <button id="btnCourse1">1 курс</button>
-        <button id="btnCourse2">2 курс</button>
+        <button id="btnCourse1" class="btn-primary">1 курс</button>
+        <button id="btnCourse2" class="btn-primary">2 курс</button>
+        <button id="btnCourse3" class="btn-primary" disabled>3 курс</button>
+        <button id="btnCourse4" class="btn-primary" disabled>4 курс</button>
     </div>
 
     <div id="daysScreen" class="screen">
         <h1 id="daysTitle">Курс 🎓</h1>
         <p style="color: #6b7280; margin-bottom: 20px;">Обери день тижня:</p>
         
-        <button class="dayBtn" data-day="Понеділок">Понеділок</button>
-        <button class="dayBtn" data-day="Вівторок">Вівторок</button>
-        <button class="dayBtn" data-day="Середа">Середа</button>
-        <button class="dayBtn" data-day="Четвер">Четвер</button>
-        <button class="dayBtn" data-day="П'ятниця">П'ятниця</button>
+        <button class="dayBtn btn-mon" data-day="Понеділок">Понеділок</button>
+        <button class="dayBtn btn-tue" data-day="Вівторок">Вівторок</button>
+        <button class="dayBtn btn-wed" data-day="Середа">Середа</button>
+        <button class="dayBtn btn-thu" data-day="Четвер">Четвер</button>
+        <button class="dayBtn btn-fri" data-day="П'ятниця">П'ятниця</button>
+        <button class="dayBtn btn-sat" data-day="Субота" disabled>Субота</button>
         
-        <button id="btnBackToCourse" class="btn-secondary">🔙 Назад до курсів</button>
+        <button id="btnBackToCourse" class="btn-secondary">
+            <svg class="icon-btn-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.971 4.285A2 2 0 0 1 17 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M21 20V4"/></svg>
+            Назад до курсів
+        </button>
     </div>
 
     <div id="scheduleScreen" class="screen">
         <h1 id="scheduleTitle">Розклад</h1>
         <div id="scheduleContent">⏳ Завантаження...</div>
-        <button id="btnBackToDays" class="btn-secondary">🔙 Інший день</button>
+        <button id="btnBackToDays" class="btn-secondary">
+            <svg class="icon-btn-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.971 4.285A2 2 0 0 1 17 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M21 20V4"/></svg>
+            Інший день
+        </button>
     </div>
 
     <script>
@@ -222,7 +257,6 @@
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
 
-        // Іконки SVG як змінні (вбудовуються автоматично)
         const svgClock = `<svg class="icon-svg icon-clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
         const svgRoom = `<svg class="icon-svg icon-room" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2"/><path d="M10 3H7a2 2 0 00-2 2v16"/><path d="M14 12h.01"/><path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z"/><path d="M22 21h-3"/></svg>`;
         const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
@@ -298,17 +332,14 @@
                 subject = subject.replace(typeMatch[0], '').trim();
             }
             
-            // Жорсткий анти-капс: спочатку все в нижній регістр, потім перша буква — велика
             subject = subject.toLowerCase();
             subject = subject.charAt(0).toUpperCase() + subject.slice(1);
             
-            // Збираємо шапку пари: назва по центру, під нею бейдж
             let html = `<div class="lesson-header">
                             <div class="subject-title">${subject}</div>
                             ${typeBadge}
                         </div>`;
                         
-            // Збираємо рядки аудиторії та викладача з вбудованими SVG
             if (room) {
                 let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim();
                 html += `<div class="info-line room-line">${svgRoom} <span>${cleanRoom}</span></div>`;
