@@ -6,68 +6,89 @@
     <title>Розклад КНУ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-       /* Підключаємо сучасний шрифт Inter (чудово читається з екрану) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        /* Підключаємо сучасний шрифт Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-body {
-    /* Застосовуємо новий шрифт до всього додатку */
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f3f4f6; /* Світло-сірий фон сторінки для контрасту */
-    color: #1f2937;
-    margin: 0;
-    padding: 16px;
-}
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f3f4f6; /* Світло-сірий фон */
+            color: #1f2937;
+            margin: 0;
+            padding: 16px;
+            text-align: center; /* Центруємо заголовки */
+        }
 
-/* Стиль для заголовка дня (напр. "Понеділок") */
-.day-title {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: #111827;
-}
+        /* --- СИСТЕМНІ СТИЛІ (для роботи меню) --- */
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-/* Дизайн самої картки пари */
-.lesson-card {
-    background-color: #ffffff;
-    border-radius: 16px; /* Закруглені кути як на ескізі */
-    padding: 16px;
-    margin-bottom: 16px; /* Відстань між парами */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* М'яка тінь */
-    border: 1px solid #e5e7eb;
-}
+        /* --- СТИЛІ КНОПОК --- */
+        button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            margin: 8px auto;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            max-width: 280px;
+            display: block;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        button:active { background-color: #2563eb; transform: scale(0.98); }
+        .btn-secondary { background-color: #9ca3af; box-shadow: 0 2px 4px rgba(156, 163, 175, 0.3); margin-top: 24px; }
+        .btn-secondary:active { background-color: #6b7280; }
 
-/* Стиль для часу всередині картки */
-.lesson-time {
-    font-size: 16px;
-    font-weight: 600;
-    color: #dc2626; /* Червонуватий колір, як ти виділив на скріні */
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        /* --- НОВИЙ ДИЗАЙН КАРТОК ПАР --- */
+        #scheduleContent { text-align: left; margin-top: 20px; }
 
-/* Стиль для тексту пари (предмет, викладач, ауд) */
-.lesson-text {
-    font-size: 15px;
-    line-height: 1.5; /* Більше повітря між рядками */
-    color: #374151;
-}
+        .lesson-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e5e7eb;
+        }
+
+        .lesson-time {
+            font-size: 16px;
+            font-weight: 600;
+            color: #dc2626; /* Червонуватий колір для часу */
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lesson-text {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #374151;
+        }
     </style>
 </head>
 <body>
 
     <div id="courseScreen" class="screen active">
         <h1>Розклад Соціології 📚</h1>
-        <p>Привіт! Обери свій курс, щоб дізнатися розклад.</p>
+        <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
         <button id="btnCourse1">1 курс</button>
         <button id="btnCourse2">2 курс</button>
     </div>
 
     <div id="daysScreen" class="screen">
         <h1 id="daysTitle">Курс 🎓</h1>
-        <p>Обери день тижня:</p>
+        <p style="color: #6b7280; margin-bottom: 20px;">Обери день тижня:</p>
         
         <button class="dayBtn" data-day="Понеділок">Понеділок</button>
         <button class="dayBtn" data-day="Вівторок">Вівторок</button>
@@ -80,6 +101,7 @@ body {
 
     <div id="scheduleScreen" class="screen">
         <h1 id="scheduleTitle">Розклад</h1>
+        <!-- Контейнер, куди JS буде вставляти картки -->
         <div id="scheduleContent">⏳ Завантаження...</div>
         <button id="btnBackToDays" class="btn-secondary">🔙 Інший день</button>
     </div>
@@ -87,6 +109,7 @@ body {
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
+        tg.ready();
 
         let selectedCourse = "1";
 
@@ -134,7 +157,7 @@ body {
                 daysScreen.classList.remove('active');
                 scheduleScreen.classList.add('active');
                 scheduleTitle.innerText = selectedDay;
-                scheduleContent.innerText = "⏳ Отримання даних із сервера...";
+                scheduleContent.innerHTML = "<div style='text-align:center;'>⏳ Отримання даних із сервера...</div>";
                 
                 fetchSchedule(selectedCourse, selectedDay);
             });
@@ -151,23 +174,38 @@ body {
                 const dayKey = day.toUpperCase(); 
 
                 if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
-                    scheduleContent.innerText = `У ${day} пар немає! 🎉`;
+                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 18px; color: #4b5563; margin-top: 40px;">У ${day} пар немає! 🎉</div>`;
                     return;
                 }
 
                 const daySchedule = data[course][dayKey];
-                let resultText = '';
+                
+                // Збираємо HTML-блоки для кожної пари
+                let htmlContent = '';
                 
                 for (let time in daySchedule) {
-                    // Тепер daySchedule[time] - це готовий текст, а не масив
-                    resultText += `⏰ ${time}\n📚 ${daySchedule[time]}\n\n`;
+                    // Замінюємо звичайні переноси рядків (\n) на HTML-теги <br>
+                    let lessonText = daySchedule[time].replace(/\n/g, '<br>');
+                    
+                    // Створюємо картку пари за новим дизайном
+                    htmlContent += `
+                        <div class="lesson-card">
+                            <div class="lesson-time">
+                                ⏰ ${time}
+                            </div>
+                            <div class="lesson-text">
+                                ${lessonText}
+                            </div>
+                        </div>
+                    `;
                 }
                 
-                scheduleContent.innerText = resultText.trim();
+                // Вставляємо готові картки на екран (використовуємо innerHTML замість innerText)
+                scheduleContent.innerHTML = htmlContent;
 
             } catch (error) {
                 console.error(error);
-                scheduleContent.innerText = "Упс, помилка при з'єднанні з сервером. Спробуйте пізніше.";
+                scheduleContent.innerHTML = "<div style='text-align:center; color: #ef4444;'>Упс, помилка при з'єднанні з сервером. Спробуйте пізніше.</div>";
             }
         }
     </script>
