@@ -6,7 +6,6 @@
     <title>Розклад КНУ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         body {
@@ -14,7 +13,7 @@
             background-color: #f3f4f6;
             color: #1f2937;
             margin: 0;
-            padding: 10px; /* Зменшили зовнішні відступи */
+            padding: 10px;
             text-align: center;
         }
 
@@ -26,7 +25,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Компактний заголовок дня */
         #scheduleTitle {
             margin: 10px 0 15px 0;
             font-size: 22px;
@@ -54,7 +52,7 @@
 
         #scheduleContent { text-align: left; }
 
-        /* УЛЬТРА-КОМПАКТНІ КАРТКИ */
+        /* Картки */
         .lesson-card {
             background-color: #ffffff;
             border-radius: 12px;
@@ -67,62 +65,80 @@
         .card-header {
             background-color: #f9fafb;
             text-align: center;
-            padding: 6px 10px; /* Зменшили висоту шапки */
+            padding: 6px 10px;
             border-bottom: 1px solid #f3f4f6;
         }
+        
         .lesson-number {
             font-size: 12px;
             font-weight: 700;
             color: #ef4444;
             margin-bottom: 2px;
         }
+        
         .lesson-time {
             font-size: 15px;
             font-weight: 700;
             color: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .card-body {
-            padding: 10px 14px; /* Зменшили відступи всередині */
+            padding: 12px 14px;
         }
 
+        /* Центрування назви пари */
         .lesson-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 6px;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
         }
+        
         .subject-title {
             font-size: 14px;
             font-weight: 700;
             color: #111827;
-            line-height: 1.2;
+            line-height: 1.3;
+            text-align: center;
         }
 
         .badge {
             font-size: 10px;
             font-weight: 700;
-            padding: 3px 6px;
-            border-radius: 4px;
+            padding: 3px 8px;
+            border-radius: 6px;
             text-transform: uppercase;
             letter-spacing: 0.2px;
             white-space: nowrap;
         }
+        
         .badge-l { background-color: #e0f2fe; color: #0369a1; }  
         .badge-pr { background-color: #dcfce7; color: #15803d; } 
         .badge-lab { background-color: #ffedd5; color: #c2410c; } 
         .badge-s { background-color: #f3e8ff; color: #7e22ce; }  
 
+        /* Рядки з іконками */
+        .info-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
         .room-line {
             font-size: 13px;
             font-weight: 600;
             color: #374151;
-            margin-bottom: 3px;
         }
+        
         .teacher-line {
             font-size: 13px;
-            color: #9ca3af;
+            color: #6b7280;
         }
         
         .other-line {
@@ -130,6 +146,7 @@
             color: #6b7280;
             margin-top: 4px;
             font-style: italic;
+            text-align: center;
         }
 
         .group-label {
@@ -137,22 +154,23 @@
             font-weight: 700;
             color: #6366f1;
             background-color: #e0e7ff;
-            padding: 3px 6px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 6px;
-            margin-top: 6px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: block;
+            text-align: center;
+            margin: 8px auto 12px auto;
+            width: max-content;
         }
 
-        /* Заготовка стилів для майбутніх іконок */
-        .custom-icon {
-            width: 14px;
-            height: 14px;
-            vertical-align: middle;
-            margin-right: 5px;
-            opacity: 0.7;
+        /* SVG Стилі */
+        .icon-svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
         }
-    </style>
+        .icon-clock { color: #111827; }
+        .icon-room { color: #4b5563; }
+        .icon-teacher { color: #9ca3af; }
     </style>
 </head>
 <body>
@@ -204,6 +222,11 @@
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
 
+        // Іконки SVG як змінні (вбудовуються автоматично)
+        const svgClock = `<svg class="icon-svg icon-clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+        const svgRoom = `<svg class="icon-svg icon-room" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2"/><path d="M10 3H7a2 2 0 00-2 2v16"/><path d="M14 12h.01"/><path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z"/><path d="M22 21h-3"/></svg>`;
+        const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
+
         btnCourse1.addEventListener('click', () => {
             selectedCourse = "1";
             daysTitle.innerText = "1 курс 🎓";
@@ -240,7 +263,6 @@
             });
         });
 
-        // РОЗУМНИЙ ПАРСЕР ТЕКСТУ
         function formatLessonBlock(blockText) {
             let lines = blockText.split('<br>').map(l => l.trim()).filter(l => l);
             if (lines.length === 0) return "";
@@ -250,19 +272,17 @@
             let room = "";
             let other = [];
             
-            // Сортуємо рядки по суті (Шукаємо ауд. і викладача)
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
                 if (line.toLowerCase().includes('ауд')) {
                     room = line;
-                } else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫')) {
+                } else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) {
                     teacher = line;
                 } else {
                     other.push(line);
                 }
             }
             
-            // Витягуємо тип пари в кольоровий бейдж
             let typeBadge = "";
             let typeMatch = subject.match(/\s*\((Л\vert{}ПР\vert{}С\vert{}ЛАБ)\)/i);
             if (typeMatch) {
@@ -274,26 +294,28 @@
                 else if (t === 'ЛАБ') { bClass = 'badge-lab'; tName = 'Лабораторна'; }
                 else if (t === 'С') { bClass = 'badge-s'; tName = 'Семінар'; }
                 
-                typeBadge = `<span class="badge ${bClass}">${tName}</span>`;
+                typeBadge = `<div class="badge ${bClass}">${tName}</div>`;
                 subject = subject.replace(typeMatch[0], '').trim();
             }
             
-            // Прибираємо КАПС (Робимо першу велику, інші маленькі)
-            if (subject === subject.toUpperCase() && subject.match(/[А-ЯІЇЄҐ]/)) {
-                subject = subject.charAt(0).toUpperCase() + subject.slice(1).toLowerCase();
-            }
+            // Жорсткий анти-капс: спочатку все в нижній регістр, потім перша буква — велика
+            subject = subject.toLowerCase();
+            subject = subject.charAt(0).toUpperCase() + subject.slice(1);
             
-            // Збираємо блок у правильному порядку (Аудиторія вище викладача)
+            // Збираємо шапку пари: назва по центру, під нею бейдж
             let html = `<div class="lesson-header">
-                            <span class="subject-title">${subject}</span>
+                            <div class="subject-title">${subject}</div>
                             ${typeBadge}
                         </div>`;
                         
+            // Збираємо рядки аудиторії та викладача з вбудованими SVG
             if (room) {
-                html += `<div class="room-line">🚪 ${room.replace('🚪', '').trim()}</div>`;
+                let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim();
+                html += `<div class="info-line room-line">${svgRoom} <span>${cleanRoom}</span></div>`;
             }
             if (teacher) {
-                html += `<div class="teacher-line">👨‍🏫 ${teacher.replace('👨‍🏫', '').trim()}</div>`;
+                let cleanTeacher = teacher.replace('👨‍🏫', '').trim();
+                html += `<div class="info-line teacher-line">${svgTeacher} <span>${cleanTeacher}</span></div>`;
             }
             if (other.length > 0) {
                 html += `<div class="other-line">${other.join('<br>')}</div>`;
@@ -302,7 +324,6 @@
             return html;
         }
 
-        // Парсер для розбивки підгруп
         function parseLessonText(rawText) {
             let text = rawText.replace(/\n/g, '<br>');
             
@@ -339,7 +360,6 @@
                 const daySchedule = data[course][dayKey];
                 let htmlContent = '';
                 
-                // Слова для нумерації
                 const numberWords = ["Перша пара", "Друга пара", "Третя пара", "Четверта пара", "П'ята пара", "Шоста пара"];
                 let lessonIndex = 0;
                 
@@ -352,7 +372,7 @@
                         <div class="lesson-card">
                             <div class="card-header">
                                 <div class="lesson-number">${lessonNumText}</div>
-                                <div class="lesson-time">⏰ ${time}</div>
+                                <div class="lesson-time">${svgClock} <span>${time}</span></div>
                             </div>
                             <div class="card-body">
                                 ${parsedContent}
