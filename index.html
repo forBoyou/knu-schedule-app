@@ -6,28 +6,25 @@
     <title>Розклад КНУ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Підключаємо сучасний шрифт Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f3f4f6; /* Світло-сірий фон */
+            background-color: #f3f4f6;
             color: #1f2937;
             margin: 0;
-            padding: 16px;
-            text-align: center; /* Центруємо заголовки */
+            padding: 14px;
+            text-align: center;
         }
 
-        /* --- СИСТЕМНІ СТИЛІ (для роботи меню) --- */
         .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.3s ease; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- СТИЛІ КНОПОК --- */
         button {
             background-color: #3b82f6;
             color: white;
@@ -36,7 +33,7 @@
             margin: 8px auto;
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             width: 100%;
@@ -48,32 +45,99 @@
         .btn-secondary { background-color: #9ca3af; box-shadow: 0 2px 4px rgba(156, 163, 175, 0.3); margin-top: 24px; }
         .btn-secondary:active { background-color: #6b7280; }
 
-        /* --- НОВИЙ ДИЗАЙН КАРТОК ПАР --- */
-        #scheduleContent { text-align: left; margin-top: 20px; }
+        /* --- КОМПАКТНІ КАРТКИ (Запит 1) --- */
+        #scheduleContent { text-align: left; margin-top: 16px; }
 
         .lesson-card {
             background-color: #ffffff;
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            margin-bottom: 14px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
             border: 1px solid #e5e7eb;
+            overflow: hidden; /* Щоб шапка не вилазила за рамки */
         }
 
+        /* --- ЦЕНТРУВАННЯ ЧАСУ ТА НОМЕРА ПАРИ (Запити 2 і 3) --- */
+        .card-header {
+            background-color: #f9fafb;
+            text-align: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .lesson-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ef4444; /* Червоний колір з твого ескізу */
+            margin-bottom: 2px;
+        }
         .lesson-time {
-            font-size: 16px;
-            font-weight: 600;
-            color: #dc2626; /* Червонуватий колір для часу */
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827; /* Чорний час */
         }
 
-        .lesson-text {
+        .card-body {
+            padding: 14px 16px;
+        }
+
+        /* --- ВІДМОВА ВІД КАПСУ ТА БЕЙДЖІ (Запит 4) --- */
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .subject-title {
             font-size: 15px;
-            line-height: 1.5;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.3;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .badge-l { background-color: #e0f2fe; color: #0369a1; }  /* Лекція - Синій */
+        .badge-pr { background-color: #dcfce7; color: #15803d; } /* Практика - Зелений */
+        .badge-lab { background-color: #ffedd5; color: #c2410c; } /* Лаба - Оранжевий */
+        .badge-s { background-color: #f3e8ff; color: #7e22ce; }  /* Семінар - Фіолетовий */
+
+        /* --- АУДИТОРІЯ ТА ВИКЛАДАЧ (Пріоритети) --- */
+        .room-line {
+            font-size: 14px;
+            font-weight: 600;
             color: #374151;
+            margin-bottom: 4px;
+        }
+        .teacher-line {
+            font-size: 13.5px;
+            color: #9ca3af; /* Приглушений сірий */
+        }
+        
+        .other-line {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .group-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #6366f1;
+            background-color: #e0e7ff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -101,7 +165,6 @@
 
     <div id="scheduleScreen" class="screen">
         <h1 id="scheduleTitle">Розклад</h1>
-        <!-- Контейнер, куди JS буде вставляти картки -->
         <div id="scheduleContent">⏳ Завантаження...</div>
         <button id="btnBackToDays" class="btn-secondary">🔙 Інший день</button>
     </div>
@@ -163,6 +226,87 @@
             });
         });
 
+        // РОЗУМНИЙ ПАРСЕР ТЕКСТУ
+        function formatLessonBlock(blockText) {
+            let lines = blockText.split('<br>').map(l => l.trim()).filter(l => l);
+            if (lines.length === 0) return "";
+            
+            let subject = lines[0];
+            let teacher = "";
+            let room = "";
+            let other = [];
+            
+            // Сортуємо рядки по суті (Шукаємо ауд. і викладача)
+            for (let i = 1; i < lines.length; i++) {
+                let line = lines[i];
+                if (line.toLowerCase().includes('ауд')) {
+                    room = line;
+                } else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫')) {
+                    teacher = line;
+                } else {
+                    other.push(line);
+                }
+            }
+            
+            // Витягуємо тип пари в кольоровий бейдж
+            let typeBadge = "";
+            let typeMatch = subject.match(/\s*\((Л\vert{}ПР\vert{}С\vert{}ЛАБ)\)/i);
+            if (typeMatch) {
+                let t = typeMatch[1].toUpperCase();
+                let bClass = 'badge-l';
+                let tName = 'Лекція';
+                
+                if (t === 'ПР') { bClass = 'badge-pr'; tName = 'Практика'; }
+                else if (t === 'ЛАБ') { bClass = 'badge-lab'; tName = 'Лабораторна'; }
+                else if (t === 'С') { bClass = 'badge-s'; tName = 'Семінар'; }
+                
+                typeBadge = `<span class="badge ${bClass}">${tName}</span>`;
+                subject = subject.replace(typeMatch[0], '').trim();
+            }
+            
+            // Прибираємо КАПС (Робимо першу велику, інші маленькі)
+            if (subject === subject.toUpperCase() && subject.match(/[А-ЯІЇЄҐ]/)) {
+                subject = subject.charAt(0).toUpperCase() + subject.slice(1).toLowerCase();
+            }
+            
+            // Збираємо блок у правильному порядку (Аудиторія вище викладача)
+            let html = `<div class="lesson-header">
+                            <span class="subject-title">${subject}</span>
+                            ${typeBadge}
+                        </div>`;
+                        
+            if (room) {
+                html += `<div class="room-line">🚪 ${room.replace('🚪', '').trim()}</div>`;
+            }
+            if (teacher) {
+                html += `<div class="teacher-line">👨‍🏫 ${teacher.replace('👨‍🏫', '').trim()}</div>`;
+            }
+            if (other.length > 0) {
+                html += `<div class="other-line">${other.join('<br>')}</div>`;
+            }
+            
+            return html;
+        }
+
+        // Парсер для розбивки підгруп
+        function parseLessonText(rawText) {
+            let text = rawText.replace(/\n/g, '<br>');
+            
+            if (text.includes('Група 1:')) {
+                let parts = text.split(/(Група \d+:)/i).filter(p => p.trim() !== "");
+                let html = "";
+                parts.forEach(part => {
+                    if (part.match(/Група \d+:/i)) {
+                        html += `<div class="group-label">${part}</div>`;
+                    } else {
+                        html += formatLessonBlock(part);
+                    }
+                });
+                return html;
+            }
+            return formatLessonBlock(text);
+        }
+
         async function fetchSchedule(course, day) {
             const url = `https://Bohdanyof.pythonanywhere.com/api/schedule?t=${new Date().getTime()}`;
             
@@ -174,33 +318,35 @@
                 const dayKey = day.toUpperCase(); 
 
                 if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
-                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 18px; color: #4b5563; margin-top: 40px;">У ${day} пар немає! 🎉</div>`;
+                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 17px; color: #4b5563; margin-top: 40px;">У ${day} пар немає! 🎉</div>`;
                     return;
                 }
 
                 const daySchedule = data[course][dayKey];
-                
-                // Збираємо HTML-блоки для кожної пари
                 let htmlContent = '';
                 
+                // Слова для нумерації
+                const numberWords = ["Перша пара", "Друга пара", "Третя пара", "Четверта пара", "П'ята пара", "Шоста пара"];
+                let lessonIndex = 0;
+                
                 for (let time in daySchedule) {
-                    // Замінюємо звичайні переноси рядків (\n) на HTML-теги <br>
-                    let lessonText = daySchedule[time].replace(/\n/g, '<br>');
+                    let parsedContent = parseLessonText(daySchedule[time]);
+                    let lessonNumText = numberWords[lessonIndex] || `${lessonIndex + 1}-а пара`;
+                    lessonIndex++;
                     
-                    // Створюємо картку пари за новим дизайном
                     htmlContent += `
                         <div class="lesson-card">
-                            <div class="lesson-time">
-                                ⏰ ${time}
+                            <div class="card-header">
+                                <div class="lesson-number">${lessonNumText}</div>
+                                <div class="lesson-time">⏰ ${time}</div>
                             </div>
-                            <div class="lesson-text">
-                                ${lessonText}
+                            <div class="card-body">
+                                ${parsedContent}
                             </div>
                         </div>
                     `;
                 }
                 
-                // Вставляємо готові картки на екран (використовуємо innerHTML замість innerText)
                 scheduleContent.innerHTML = htmlContent;
 
             } catch (error) {
