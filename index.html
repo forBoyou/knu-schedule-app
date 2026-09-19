@@ -8,85 +8,176 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+        /* --- БАЗОВІ СТИЛІ --- */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Забороняємо скрол всієї сторінки */
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #f3f4f6;
             color: #1f2937;
-            margin: 0;
-            padding: 10px;
+        }
+
+        /* --- СИСТЕМА ЕКРАНІВ --- */
+        .screen { 
+            display: none; 
+            height: 100%; 
+            box-sizing: border-box;
+        }
+        
+        /* Звичайні екрани (з падінгами і скролом) */
+        #courseScreen, #daysScreen {
+            padding: 16px;
+            overflow-y: auto;
             text-align: center;
         }
 
-        .screen { display: none; }
         .screen.active { display: block; animation: fadeIn 0.2s ease; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Головний заголовок з іконкою */
-        .main-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 21px;
-            font-weight: 700;
-            color: #111827;
-            margin: 15px 0 20px 0;
-            line-height: 1.2;
+        /* --- ЖОРСТКИЙ КАРКАС ДЛЯ РОЗКЛАДУ (Запит 5) --- */
+        #scheduleScreen {
+            display: none;
+            flex-direction: column;
+            padding: 0;
+            background-color: #f9fafb;
         }
-        
-        #scheduleTitle {
-            margin: 10px 0 15px 0;
-            font-size: 22px;
-        }
+        #scheduleScreen.active { display: flex; }
 
-        /* --- ПЛАШКА ПОТОЧНОГО ДНЯ --- */
-        .current-day-banner {
-            background-color: #e0f2fe; /* Світло-синій фон */
-            color: #0369a1; /* Темно-синій текст */
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-size: 15px;
-            margin: 0 auto 16px auto;
+        .schedule-header {
+            flex-shrink: 0;
+            background-color: #ffffff;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            max-width: max-content;
-            border: 1px solid #bae6fd;
-            box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; }
+
+        .schedule-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px;
         }
 
-        /* --- КНОПКИ --- */
-        button {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            margin: 8px auto;
-            border-radius: 10px;
-            font-size: 16px;
+        .schedule-footer {
+            flex-shrink: 0;
+            background-color: #ffffff;
+            padding: 12px 16px 20px 16px;
+            border-top: 1px solid #e5e7eb;
+            z-index: 10;
+        }
+
+        /* --- ТАЙМЛАЙН ТА КАРТКИ (Запити 1, 2, 3, 4) --- */
+        .time-group { margin-bottom: 18px; }
+
+        .time-meta {
+            font-size: 13px;
             font-weight: 600;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            max-width: 280px;
-            display: block;
-            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-            transition: transform 0.1s, opacity 0.2s;
+            color: #6b7280;
+            margin-bottom: 6px;
+            padding-left: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .time-dot { width: 6px; height: 6px; border-radius: 50%; background-color: #d1d5db; }
+        .time-divider { color: #d1d5db; font-weight: 400; }
+        .time-clock { color: #374151; font-weight: 700; }
+
+        .lesson-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f3f4f6;
+            border-left: 4px solid #e5e7eb; /* Дефолтний колір, змінюється в JS */
+        }
+        .lesson-card:last-child { margin-bottom: 0; }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .subject-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.25;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        /* Кольори бейджів та бордерів */
+        .type-l { background-color: #e0f2fe; color: #0369a1; border-color: #3b82f6; }   /* Лекція */
+        .type-pr { background-color: #dcfce7; color: #15803d; border-color: #10b981; }  /* Практика */
+        .type-lab { background-color: #ffedd5; color: #c2410c; border-color: #f59e0b; } /* Лаба */
+        .type-s { background-color: #f3e8ff; color: #7e22ce; border-color: #8b5cf6; }   /* Семінар */
+
+        /* Ієрархія інформації (Запит 1) */
+        .info-line { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+        .info-line:last-child { margin-bottom: 0; }
+        
+        .room-line { font-size: 13px; font-weight: 600; color: #4b5563; }
+        .teacher-line { font-size: 12px; font-weight: 500; color: #9ca3af; } /* Найменший акцент */
+        
+        .group-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6366f1;
+            background-color: #e0e7ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        /* --- ІНШІ СТИЛІ (Кнопки, Заголовки) --- */
+        .main-title {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-size: 21px; font-weight: 700; color: #111827; margin: 15px 0 20px 0; line-height: 1.2;
+        }
+        #daysTitle {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin: 10px 0 15px 0; font-size: 22px;
+        }
+        
+        .current-day-banner {
+            background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px;
+            font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px;
+            max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4);
+        }
+
+        button {
+            background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto;
+            border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+            width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s;
         }
         button:active:not(:disabled) { transform: scale(0.98); }
-        
-        button:disabled {
-            background-color: #e5e7eb !important;
-            color: #9ca3af !important;
-            box-shadow: none !important;
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
+        button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
         .btn-mon { background-color: #ffadad; color: #111827; box-shadow: 0 2px 4px rgba(255, 173, 173, 0.4); }
         .btn-tue { background-color: #ffd6a5; color: #111827; box-shadow: 0 2px 4px rgba(255, 214, 165, 0.4); }
@@ -96,97 +187,14 @@
         .btn-sat { background-color: #a0c4ff; color: #111827; box-shadow: 0 2px 4px rgba(160, 196, 255, 0.4); }
 
         .btn-secondary { 
-            background-color: #9ca3af; 
-            box-shadow: 0 2px 4px rgba(156, 163, 175, 0.3); 
-            margin-top: 15px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            background-color: #9ca3af; box-shadow: 0 2px 4px rgba(156, 163, 175, 0.3); 
+            margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 0;
         }
         .btn-secondary:active:not(:disabled) { background-color: #6b7280; }
 
-        #scheduleContent { text-align: left; }
-
-        /* Картки */
-        .lesson-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
-        }
-
-        .card-header {
-            background-color: #f9fafb;
-            text-align: center;
-            padding: 6px 10px;
-            border-bottom: 1px solid #f3f4f6;
-        }
-        
-        .lesson-number { font-size: 12px; font-weight: 700; color: #ef4444; margin-bottom: 2px; }
-        
-        .lesson-time {
-            font-size: 15px;
-            font-weight: 700;
-            color: #111827;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .card-body { padding: 12px 14px; }
-
-        .lesson-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .subject-title { font-size: 14px; font-weight: 700; color: #111827; line-height: 1.3; text-align: center; }
-
-        .badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-            white-space: nowrap;
-        }
-        
-        .badge-l { background-color: #e0f2fe; color: #0369a1; }  
-        .badge-pr { background-color: #dcfce7; color: #15803d; } 
-        .badge-lab { background-color: #ffedd5; color: #c2410c; } 
-        .badge-s { background-color: #f3e8ff; color: #7e22ce; }  
-
-        .info-line { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .room-line { font-size: 13px; font-weight: 600; color: #374151; }
-        .teacher-line { font-size: 13px; color: #6b7280; }
-        .other-line { font-size: 12px; color: #6b7280; margin-top: 4px; font-style: italic; text-align: center; }
-
-        .group-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #6366f1;
-            background-color: #e0e7ff;
-            padding: 4px 8px;
-            border-radius: 6px;
-            display: block;
-            text-align: center;
-            margin: 8px auto 12px auto;
-            width: max-content;
-        }
-
-        /* SVG Стилі */
-        .icon-svg { width: 16px; height: 16px; flex-shrink: 0; }
-        .icon-clock { color: #111827; }
-        .icon-room { color: #4b5563; }
-        .icon-teacher { color: #9ca3af; }
+        .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
+        .icon-room { color: #6b7280; }
+        .icon-teacher { color: #d1d5db; }
         .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
@@ -194,6 +202,7 @@
 </head>
 <body>
 
+    <!-- ЕКРАН 1: КУРСИ -->
     <div id="courseScreen" class="screen active">
         <h1 class="main-title">
             <svg class="icon-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M18 4.933V21"/><path d="m4 6 7.106-3.79a2 2 0 0 1 1.788 0L20 6"/><path d="m6 11-3.52 2.147a1 1 0 0 0-.48.854V19a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a1 1 0 0 0-.48-.853L18 11"/><path d="M6 4.933V21"/><circle cx="12" cy="9" r="2"/></svg>
@@ -206,12 +215,14 @@
         <button id="btnCourse4" class="btn-primary" disabled>4 курс</button>
     </div>
 
+    <!-- ЕКРАН 2: ДНІ ТИЖНЯ -->
     <div id="daysScreen" class="screen">
-        <h1 id="daysTitle">Курс 🎓</h1>
+        <h1 id="daysTitle">
+            <svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+            Курс
+        </h1>
         
-        <!-- Нова плашка поточного дня -->
         <div id="currentDayBanner" class="current-day-banner"></div>
-        
         <p style="color: #6b7280; margin-bottom: 20px;">Обери день тижня:</p>
         
         <button class="dayBtn btn-mon" data-day="Понеділок">Понеділок</button>
@@ -227,13 +238,23 @@
         </button>
     </div>
 
+    <!-- ЕКРАН 3: РОЗКЛАД (НОВИЙ КАРКАС) -->
     <div id="scheduleScreen" class="screen">
-        <h1 id="scheduleTitle">Розклад</h1>
-        <div id="scheduleContent">⏳ Завантаження...</div>
-        <button id="btnBackToDays" class="btn-secondary">
-            <svg class="icon-btn-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.971 4.285A2 2 0 0 1 17 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M21 20V4"/></svg>
-            Інший день
-        </button>
+        <div class="schedule-header">
+            <svg class="icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <h1 id="scheduleTitle">Розклад</h1>
+        </div>
+        
+        <div class="schedule-scroll" id="scheduleContent">
+            <!-- Тут будуть картки -->
+        </div>
+
+        <div class="schedule-footer">
+            <button id="btnBackToDays" class="btn-secondary">
+                <svg class="icon-btn-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.971 4.285A2 2 0 0 1 17 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M21 20V4"/></svg>
+                Інший день
+            </button>
+        </div>
     </div>
 
     <script>
@@ -258,32 +279,28 @@
         const scheduleContent = document.getElementById('scheduleContent');
         const currentDayBanner = document.getElementById('currentDayBanner');
 
-        const svgClock = `<svg class="icon-svg icon-clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
         const svgRoom = `<svg class="icon-svg icon-room" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2"/><path d="M10 3H7a2 2 0 00-2 2v16"/><path d="M14 12h.01"/><path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z"/><path d="M22 21h-3"/></svg>`;
         const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
         const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
 
-        // Функція для визначення поточного дня
         function updateCurrentDayBanner() {
             const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
-            const todayIndex = new Date().getDay(); // 0 = Неділя, 1 = Понеділок...
+            const todayIndex = new Date().getDay();
             const todayName = daysOfWeek[todayIndex];
             currentDayBanner.innerHTML = `${svgCalendar} <span>Сьогодні: <strong>${todayName}</strong></span>`;
         }
-
-        // Викликаємо функцію одразу при завантаженні
         updateCurrentDayBanner();
 
         btnCourse1.addEventListener('click', () => {
             selectedCourse = "1";
-            daysTitle.innerText = "1 курс 🎓";
+            daysTitle.innerHTML = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg> 1 курс`;
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
         });
 
         btnCourse2.addEventListener('click', () => {
             selectedCourse = "2";
-            daysTitle.innerText = "2 курс 🎓";
+            daysTitle.innerHTML = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg> 2 курс`;
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
         });
@@ -304,43 +321,40 @@
                 daysScreen.classList.remove('active');
                 scheduleScreen.classList.add('active');
                 scheduleTitle.innerText = selectedDay;
-                scheduleContent.innerHTML = "<div style='text-align:center;'>⏳ Отримання даних із сервера...</div>";
+                scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
                 
                 fetchSchedule(selectedCourse, selectedDay);
             });
         });
 
-        function formatLessonBlock(blockText) {
+        // Формує саму картку предмета (Внутрішній блок без часу)
+        function formatLessonCard(blockText, groupLabel = "") {
             let lines = blockText.split('<br>').map(l => l.trim()).filter(l => l);
             if (lines.length === 0) return "";
             
             let subject = lines[0];
             let teacher = "";
             let room = "";
-            let other = [];
             
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
-                if (line.toLowerCase().includes('ауд')) {
-                    room = line;
-                } else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) {
-                    teacher = line;
-                } else {
-                    other.push(line);
-                }
+                if (line.toLowerCase().includes('ауд')) { room = line; } 
+                else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) { teacher = line; }
             }
             
+            // Визначаємо колірну схему
             let typeBadge = "";
+            let borderColorClass = "";
+            
             let typeMatch = subject.match(/\s*\((Л\vert{}ПР\vert{}С\vert{}ЛАБ)\)/i);
             if (typeMatch) {
                 let t = typeMatch[1].toUpperCase();
-                let bClass = 'badge-l';
-                let tName = 'Лекція';
+                let bClass = 'type-l'; let tName = 'Лекція';
+                if (t === 'ПР') { bClass = 'type-pr'; tName = 'Практика'; }
+                else if (t === 'ЛАБ') { bClass = 'type-lab'; tName = 'Лабораторна'; }
+                else if (t === 'С') { bClass = 'type-s'; tName = 'Семінар'; }
                 
-                if (t === 'ПР') { bClass = 'badge-pr'; tName = 'Практика'; }
-                else if (t === 'ЛАБ') { bClass = 'badge-lab'; tName = 'Лабораторна'; }
-                else if (t === 'С') { bClass = 'badge-s'; tName = 'Семінар'; }
-                
+                borderColorClass = bClass;
                 typeBadge = `<div class="badge ${bClass}">${tName}</div>`;
                 subject = subject.replace(typeMatch[0], '').trim();
             }
@@ -348,10 +362,14 @@
             subject = subject.toLowerCase();
             subject = subject.charAt(0).toUpperCase() + subject.slice(1);
             
-            let html = `<div class="lesson-header">
-                            <div class="subject-title">${subject}</div>
-                            ${typeBadge}
-                        </div>`;
+            let groupHtml = groupLabel ? `<div class="group-label">${groupLabel}</div>` : "";
+            
+            let html = `<div class="lesson-card ${borderColorClass}">
+                            ${groupHtml}
+                            <div class="lesson-header">
+                                <div class="subject-title">${subject}</div>
+                                ${typeBadge}
+                            </div>`;
                         
             if (room) {
                 let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim();
@@ -361,29 +379,30 @@
                 let cleanTeacher = teacher.replace('👨‍🏫', '').trim();
                 html += `<div class="info-line teacher-line">${svgTeacher} <span>${cleanTeacher}</span></div>`;
             }
-            if (other.length > 0) {
-                html += `<div class="other-line">${other.join('<br>')}</div>`;
-            }
             
+            html += `</div>`;
             return html;
         }
 
-        function parseLessonText(rawText) {
+        // Парсить текст на підгрупи і повертає готові картки
+        function parseTimeSlotContent(rawText) {
             let text = rawText.replace(/\n/g, '<br>');
             
             if (text.includes('Група 1:')) {
                 let parts = text.split(/(Група \d+:)/i).filter(p => p.trim() !== "");
                 let html = "";
+                let currentGroup = "";
+                
                 parts.forEach(part => {
                     if (part.match(/Група \d+:/i)) {
-                        html += `<div class="group-label">${part}</div>`;
+                        currentGroup = part.replace(':', '').trim();
                     } else {
-                        html += formatLessonBlock(part);
+                        html += formatLessonCard(part, currentGroup);
                     }
                 });
                 return html;
             }
-            return formatLessonBlock(text);
+            return formatLessonCard(text);
         }
 
         async function fetchSchedule(course, day) {
@@ -397,30 +416,32 @@
                 const dayKey = day.toUpperCase(); 
 
                 if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
-                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 17px; color: #4b5563; margin-top: 40px;">У ${day} пар немає! 🎉</div>`;
+                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px;">У ${day} пар немає! 🎉</div>`;
                     return;
                 }
 
                 const daySchedule = data[course][dayKey];
                 let htmlContent = '';
                 
-                const numberWords = ["Перша пара", "Друга пара", "Третя пара", "Четверта пара", "П'ята пара", "Шоста пара"];
+                const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара"];
                 let lessonIndex = 0;
                 
+                // Генеруємо блоки часу, всередині яких лежать картки
                 for (let time in daySchedule) {
-                    let parsedContent = parseLessonText(daySchedule[time]);
                     let lessonNumText = numberWords[lessonIndex] || `${lessonIndex + 1}-а пара`;
                     lessonIndex++;
                     
+                    let cardsHtml = parseTimeSlotContent(daySchedule[time]);
+                    
                     htmlContent += `
-                        <div class="lesson-card">
-                            <div class="card-header">
-                                <div class="lesson-number">${lessonNumText}</div>
-                                <div class="lesson-time">${svgClock} <span>${time}</span></div>
+                        <div class="time-group">
+                            <div class="time-meta">
+                                <div class="time-dot"></div>
+                                <span>${lessonNumText}</span>
+                                <span class="time-divider">|</span>
+                                <span class="time-clock">${time}</span>
                             </div>
-                            <div class="card-body">
-                                ${parsedContent}
-                            </div>
+                            ${cardsHtml}
                         </div>
                     `;
                 }
@@ -429,7 +450,7 @@
 
             } catch (error) {
                 console.error(error);
-                scheduleContent.innerHTML = "<div style='text-align:center; color: #ef4444;'>Упс, помилка при з'єднанні з сервером. Спробуйте пізніше.</div>";
+                scheduleContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.</div>";
             }
         }
     </script>
