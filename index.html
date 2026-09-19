@@ -6,47 +6,54 @@
     <title>Розклад КНУ</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            padding: 20px;
-            text-align: center;
-            margin: 0;
-        }
-        .screen { display: none; }
-        .active { display: block; }
-        
-        button {
-            background-color: var(--tg-theme-button-color, #3390ec);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            padding: 14px 24px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 8px 0;
-            width: 100%;
-            cursor: pointer;
-        }
-        .btn-secondary {
-            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
-            color: var(--tg-theme-text-color, #000000);
-            margin-top: 20px;
-        }
-        
-        #scheduleContent {
-            background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            text-align: left;
-            font-size: 15px;
-            white-space: pre-line;
-        }
+       /* Підключаємо сучасний шрифт Inter (чудово читається з екрану) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        h1 { font-size: 24px; margin-bottom: 10px; }
-        p { font-size: 15px; color: var(--tg-theme-hint-color, #999999); margin-bottom: 25px; }
+body {
+    /* Застосовуємо новий шрифт до всього додатку */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f3f4f6; /* Світло-сірий фон сторінки для контрасту */
+    color: #1f2937;
+    margin: 0;
+    padding: 16px;
+}
+
+/* Стиль для заголовка дня (напр. "Понеділок") */
+.day-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+/* Дизайн самої картки пари */
+.lesson-card {
+    background-color: #ffffff;
+    border-radius: 16px; /* Закруглені кути як на ескізі */
+    padding: 16px;
+    margin-bottom: 16px; /* Відстань між парами */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* М'яка тінь */
+    border: 1px solid #e5e7eb;
+}
+
+/* Стиль для часу всередині картки */
+.lesson-time {
+    font-size: 16px;
+    font-weight: 600;
+    color: #dc2626; /* Червонуватий колір, як ти виділив на скріні */
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Стиль для тексту пари (предмет, викладач, ауд) */
+.lesson-text {
+    font-size: 15px;
+    line-height: 1.5; /* Більше повітря між рядками */
+    color: #374151;
+}
     </style>
 </head>
 <body>
