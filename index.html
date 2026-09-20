@@ -22,11 +22,7 @@
         }
 
         /* --- СИСТЕМА ЕКРАНІВ --- */
-        .screen { 
-            display: none; 
-            height: 100%; 
-            box-sizing: border-box;
-        }
+        .screen { display: none; height: 100%; box-sizing: border-box; }
         
         #courseScreen, #daysScreen {
             padding: 16px;
@@ -94,7 +90,6 @@
         .time-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #d1d5db; }
         .time-divider { color: #d1d5db; font-weight: 400; }
         
-        /* Змінено колір часу на червоний + flex для іконки */
         .time-clock { 
             color: #ef4444; 
             font-weight: 700; 
@@ -110,7 +105,7 @@
             margin-bottom: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             border: 1px solid #f3f4f6;
-            border-left: 4px solid #e5e7eb; /* Змінюється динамічно через JS */
+            border-left: 4px solid #e5e7eb;
         }
         .lesson-card:last-child { margin-bottom: 0; }
 
@@ -138,10 +133,12 @@
             letter-spacing: 0.3px;
             white-space: nowrap;
         }
-        .type-l { background-color: #f3f4f6; color: #4b5563; }
-        .type-pr { background-color: #f3f4f6; color: #4b5563; } 
-        .type-lab { background-color: #f3f4f6; color: #4b5563; } 
-        .type-s { background-color: #f3f4f6; color: #4b5563; }  
+        
+        /* Повертаємо красиві кольори самим бейджам */
+        .type-l { background-color: #e0f2fe; color: #0369a1; }
+        .type-pr { background-color: #dcfce7; color: #15803d; } 
+        .type-lab { background-color: #ffedd5; color: #c2410c; } 
+        .type-s { background-color: #f3e8ff; color: #7e22ce; }  
 
         /* Ієрархія інформації */
         .info-line { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
@@ -204,7 +201,7 @@
         .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
-        .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } /* Червоний годинник */
+        .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
     </style>
 </head>
 <body>
@@ -291,19 +288,20 @@
         const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
         const svgClockRed = `<svg class="icon-clock-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
 
-        // БАЗА КОЛЬОРІВ ПРЕДМЕТІВ
+        // БАЗА КОЛЬОРІВ (Тепер шукаємо за надійними коренями слів, щоб уникнути багів з опечатками)
         const subjectColors = {
-            "інформаційні технології": "#81ecec",
-            "університетських студій": "#a29bfe",
-            "соціальна антропологія": "#fab1a0",
-            "англійська мова": "#74b9ff",
-            "вступ до спеціальності": "#55efc4",
-            "філософія": "#ffeaa7",
-            "національного спротиву": "#ff7675",
-            "теорія та історія": "#dfe6e9"
+            "технолог": "#81ecec",       // інформаційні технології
+            "університет": "#a29bfe",    // вступ до університетських студій
+            "антрополог": "#fab1a0",     // соціальна антропологія
+            "англійськ": "#74b9ff",      // англійська мова
+            "спеціальност": "#55efc4",   // вступ до спеціальності
+            "філософ": "#ffeaa7",        // філософія
+            "спротив": "#ff7675",        // основи національного спротиву
+            "теорія": "#dfe6e9",         // теорія та історія
+            "істор": "#dfe6e9"
         };
 
-        // Функція визначення кольору за назвою
+        // Безвідмовна функція пошуку кольору
         function getSubjectColor(text) {
             let lowerText = text.toLowerCase();
             for (let key in subjectColors) {
@@ -311,7 +309,7 @@
                     return subjectColors[key];
                 }
             }
-            return "#e5e7eb"; // Стандартний сірий, якщо не знайдено
+            return "#e5e7eb"; 
         }
 
         function updateCurrentDayBanner() {
@@ -375,28 +373,37 @@
             
             let typeBadge = "";
             let subjectClean = subject;
-            let typeMatch = subject.match(/\s*\((Л\vert{}ПР\vert{}С\vert{}ЛАБ)\)/i);
+            
+            // Надійний пошук типу пари (ігнорує регістр і працює на всіх пристроях)
+            let typeMatch = subject.match(/\s*\(\s*(л\vert{}Л\vert{}пр\vert{}ПР\vert{}Пр\vert{}с\vert{}С\vert{}лаб\vert{}ЛАБ\vert{}Лаб)\.?\s*\)/);
             if (typeMatch) {
-                let t = typeMatch[1].toUpperCase();
+                let t = typeMatch[1].toLowerCase();
                 let bClass = 'type-l'; let tName = 'Лекція';
-                if (t === 'ПР') { bClass = 'type-pr'; tName = 'Практика'; }
-                else if (t === 'ЛАБ') { bClass = 'type-lab'; tName = 'Лабораторна'; }
-                else if (t === 'С') { bClass = 'type-s'; tName = 'Семінар'; }
+                if (t === 'пр') { bClass = 'type-pr'; tName = 'Практика'; }
+                else if (t === 'лаб') { bClass = 'type-lab'; tName = 'Лабораторна'; }
+                else if (t === 'с') { bClass = 'type-s'; tName = 'Семінар'; }
                 
                 typeBadge = `<div class="badge ${bClass}">${tName}</div>`;
                 subjectClean = subjectClean.replace(typeMatch[0], '').trim();
             }
 
-            // Отримуємо колір для предмета
+            // Отримуємо колір для предмета (до того як змінимо регістр)
             let cardColor = getSubjectColor(subjectClean);
             
-            subjectClean = subjectClean.toLowerCase();
-            subjectClean = subjectClean.charAt(0).toUpperCase() + subjectClean.slice(1);
+            // Прибираємо капс
+            subjectClean = subjectClean.toLowerCase().trim();
+            if (subjectClean.length > 0) {
+                subjectClean = subjectClean.charAt(0).toUpperCase() + subjectClean.slice(1);
+            }
+            
+            // Автовиправлення опечатки, якщо хтось в таблиці забув першу букву "І"
+            if (subjectClean.startsWith("нформаційні")) {
+                subjectClean = "І" + subjectClean;
+            }
             
             let groupHtml = groupLabel ? `<div class="group-label">${groupLabel}</div>` : "";
             
-            // Вбудовуємо колір у лівий бордер
-            let html = `<div class="lesson-card" style="border-left-color: ${cardColor};">
+            let html = `<div class="lesson-card" style="border-left-color: ${cardColor}; border-left-width: 5px;">
                             ${groupHtml}
                             <div class="lesson-header">
                                 <div class="subject-title">${subjectClean}</div>
@@ -460,7 +467,7 @@
                 const daySchedule = data[course][dayKey];
                 let htmlContent = '';
                 
-                const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара"];
+                const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
                 let lessonIndex = 0;
                 
                 for (let time in daySchedule) {
@@ -469,7 +476,7 @@
                     
                     let parsedData = parseTimeSlotContent(daySchedule[time]);
                     let cardsHtml = parsedData.html;
-                    let dotColor = parsedData.color; // Отримуємо колір для кружечка
+                    let dotColor = parsedData.color; 
                     
                     htmlContent += `
                         <div class="time-group">
