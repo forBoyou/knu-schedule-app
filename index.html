@@ -13,7 +13,7 @@
             margin: 0; padding: 0; height: 100vh; height: 100dvh; 
             overflow: hidden; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #f3f4f6; color: #1f2937; display: flex; flex-direction: column;
-            transition: background-color 0.3s, color 0.3s; /* Плавна зміна теми */
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .main-container { flex-grow: 1; overflow: hidden; position: relative; }
@@ -149,14 +149,21 @@
             padding-bottom: 12px; display: flex; align-items: center; gap: 8px; transition: color 0.3s, border-color 0.3s;
         }
         .settings-card h3 svg { color: #6b7280; width: 20px; height: 20px; transition: color 0.3s; }
-        .settings-card label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; transition: color 0.3s; }
-        
-        .custom-select {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #d1d5db;
-            background-color: #f9fafb; font-family: 'Inter', sans-serif; font-size: 15px; color: #111827;
-            outline: none; appearance: none; transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+
+        /* КРАСИВИЙ СПИСОК КУРСІВ ЗАМІСТЬ SELECT */
+        .course-options {
+            display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;
         }
-        .custom-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .course-option {
+            padding: 14px 16px; background-color: #f9fafb; border: 1px solid #e5e7eb;
+            border-radius: 10px; font-size: 14px; font-weight: 600; color: #374151;
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.2s ease;
+        }
+        .course-option.active {
+            border-color: #3b82f6; background-color: #eff6ff; color: #1d4ed8;
+        }
+        .check-icon { width: 18px; height: 18px; color: #3b82f6; }
 
         /* =========================================
            ТЕМНА ТЕМА (DARK MODE) 
@@ -171,15 +178,14 @@
         body.dark-theme .profile-card,
         body.dark-theme .settings-card { background-color: #1f2937; border-color: #374151; }
         
-        body.dark-theme .lesson-card { border-left-color: #4b5563; /* якщо предмет не має кольору */ }
+        body.dark-theme .lesson-card { border-left-color: #4b5563; }
         
         body.dark-theme .schedule-header h1,
         body.dark-theme .profile-info h2,
         body.dark-theme .settings-card h3,
         body.dark-theme .subject-title,
         body.dark-theme .main-title,
-        body.dark-theme #daysTitle,
-        body.dark-theme label { color: #f9fafb; }
+        body.dark-theme #daysTitle { color: #f9fafb; }
         
         body.dark-theme .settings-card h3 { border-bottom-color: #374151; }
         body.dark-theme .settings-card h3 svg { color: #9ca3af; }
@@ -193,8 +199,6 @@
         body.dark-theme .or-divider::before, 
         body.dark-theme .or-divider::after { background-color: #374151; }
 
-        body.dark-theme .custom-select { background-color: #374151; border-color: #4b5563; color: #f9fafb; }
-        
         body.dark-theme .segment-control { background-color: #374151; }
         body.dark-theme .segment { color: #9ca3af; }
         body.dark-theme .segment.active { background-color: #4b5563; color: #f9fafb; }
@@ -207,6 +211,11 @@
         body.dark-theme button:disabled { background-color: #374151 !important; color: #6b7280 !important; }
         body.dark-theme .time-dot { background-color: #4b5563; }
         body.dark-theme .time-divider { color: #4b5563; }
+
+        /* Темна тема для вибору курсів */
+        body.dark-theme .course-option { background-color: #374151; border-color: #4b5563; color: #d1d5db; }
+        body.dark-theme .course-option.active { border-color: #3b82f6; background-color: #1e3a8a; color: #bfdbfe; }
+        body.dark-theme .check-icon { color: #60a5fa; }
 
     </style>
 </head>
@@ -305,15 +314,16 @@
             <div class="settings-card">
                 <h3>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
-                    Налаштування
+                    Налаштування курсу
                 </h3>
-                <label for="defaultCourseSelect">Мій курс за замовчуванням:</label>
-                <select id="defaultCourseSelect" class="custom-select">
-                    <option value="">Не обрано (питати завжди)</option>
-                    <option value="1">1 курс (Соціологи)</option>
-                    <option value="2">2 курс (Соціологи)</option>
-                    <option value="1М">1 курс (Менеджери)</option>
-                </select>
+                
+                <div class="course-options" id="courseOptions">
+                    <div class="course-option active" data-val="">Не обрано (питати завжди)</div>
+                    <div class="course-option" data-val="1">1 курс (Соціологи)</div>
+                    <div class="course-option" data-val="2">2 курс (Соціологи)</div>
+                    <div class="course-option" data-val="1М">1 курс (Менеджери)</div>
+                </div>
+
                 <p style="font-size: 12px; color: #9ca3af; margin-top: 12px; line-height: 1.4;">
                     Якщо обрати курс, додаток одразу відкриватиме вибір днів тижня для твого розкладу.
                 </p>
@@ -325,12 +335,12 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon preview-icon"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
                     Тема оформлення
                 </h3>
-                <label for="themeSelect">Колірна тема:</label>
-                <select id="themeSelect" class="custom-select">
-                    <option value="auto">Автоматично (як у Telegram)</option>
-                    <option value="light">Світла тема</option>
-                    <option value="dark">Темна тема</option>
-                </select>
+                
+                <div class="segment-control" id="themeSegmentControl" style="margin: 0; max-width: 100%;">
+                    <div class="segment" data-theme="light">Світла</div>
+                    <div class="segment" data-theme="dark">Темна</div>
+                    <div class="segment" data-theme="auto">Авто</div>
+                </div>
             </div>
 
         </div>
@@ -359,19 +369,27 @@
         tg.ready();
 
         // ==========================================
-        // ЛОГІКА ТЕМНЬОЇ ТЕМИ
+        // ЛОГІКА ТЕМНЬОЇ ТЕМИ З СЕГМЕНТАМИ
         // ==========================================
-        const themeSelect = document.getElementById('themeSelect');
+        const themeSegments = document.querySelectorAll('#themeSegmentControl .segment');
         let savedTheme = localStorage.getItem('themePref') || 'auto';
-        themeSelect.value = savedTheme;
+
+        function updateThemeUI() {
+            themeSegments.forEach(seg => {
+                if (seg.getAttribute('data-theme') === savedTheme) {
+                    seg.classList.add('active');
+                } else {
+                    seg.classList.remove('active');
+                }
+            });
+        }
+        updateThemeUI();
 
         function applyTheme() {
             let currentTheme = savedTheme;
             if (currentTheme === 'auto') {
-                // Беремо тему з самого Телеграму
                 currentTheme = tg.colorScheme || 'light';
             }
-            
             if (currentTheme === 'dark') {
                 document.body.classList.add('dark-theme');
             } else {
@@ -379,54 +397,64 @@
             }
         }
         
-        // Запускаємо при старті
         applyTheme();
 
-        // Відстежуємо, якщо користувач змінив тему в самому Телеграмі
         tg.onEvent('themeChanged', () => {
-            if (savedTheme === 'auto') {
-                applyTheme();
-            }
+            if (savedTheme === 'auto') { applyTheme(); }
         });
 
-        // Коли користувач змінює тему в налаштуваннях
-        themeSelect.addEventListener('change', (e) => {
-            savedTheme = e.target.value;
-            localStorage.setItem('themePref', savedTheme);
-            applyTheme();
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        themeSegments.forEach(seg => {
+            seg.addEventListener('click', (e) => {
+                savedTheme = e.currentTarget.getAttribute('data-theme');
+                localStorage.setItem('themePref', savedTheme);
+                updateThemeUI();
+                applyTheme();
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            });
         });
 
         // ==========================================
-        // ЛОГІКА ПРОФІЛЮ ТА НАЛАШТУВАНЬ КУРСУ
+        // ЛОГІКА ПРОФІЛЮ ТА КРАСИВОГО ВИБОРУ КУРСУ
         // ==========================================
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            if (user.username) {
-                document.getElementById('userUsername').innerText = '@' + user.username;
-            } else {
-                document.getElementById('userUsername').innerText = 'ID: ' + user.id;
-            }
-            if (user.photo_url) {
-                document.getElementById('userAvatar').src = user.photo_url;
-            }
+            if (user.username) { document.getElementById('userUsername').innerText = '@' + user.username; } 
+            else { document.getElementById('userUsername').innerText = 'ID: ' + user.id; }
+            if (user.photo_url) { document.getElementById('userAvatar').src = user.photo_url; }
         }
 
         const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
-        let selectedCourse = "1";
+        const checkSvg = `<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
         
+        let selectedCourse = "1";
         const courseScreen = document.getElementById('courseScreen');
         const daysScreen = document.getElementById('daysScreen');
         const daysTitle = document.getElementById('daysTitle');
+        const courseOptions = document.querySelectorAll('.course-option');
 
-        const savedCourse = localStorage.getItem('defaultCoursePref');
-        const courseSelect = document.getElementById('defaultCourseSelect');
+        // Функція оновлення галочок
+        function updateCourseListUI(val) {
+            courseOptions.forEach(opt => {
+                const optVal = opt.getAttribute('data-val');
+                // Видаляємо стару галочку, якщо є
+                let baseText = opt.innerText.replace('✓', '').trim();
+                
+                if (optVal === val) {
+                    opt.classList.add('active');
+                    opt.innerHTML = `${baseText} ${checkSvg}`;
+                } else {
+                    opt.classList.remove('active');
+                    opt.innerHTML = baseText;
+                }
+            });
+        }
+
+        const savedCourse = localStorage.getItem('defaultCoursePref') || "";
+        updateCourseListUI(savedCourse);
         
         if (savedCourse) {
             selectedCourse = savedCourse;
-            courseSelect.value = savedCourse; 
-            
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
             
@@ -435,14 +463,18 @@
             else if(savedCourse === '1М') daysTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
         }
 
-        courseSelect.addEventListener('change', (e) => {
-            const val = e.target.value;
-            if (val) {
-                localStorage.setItem('defaultCoursePref', val);
+        // Кліки по новому списку курсів
+        courseOptions.forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const val = e.currentTarget.getAttribute('data-val');
+                if (val) {
+                    localStorage.setItem('defaultCoursePref', val);
+                } else {
+                    localStorage.removeItem('defaultCoursePref');
+                }
+                updateCourseListUI(val);
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            } else {
-                localStorage.removeItem('defaultCoursePref');
-            }
+            });
         });
 
         // ==========================================
@@ -465,7 +497,7 @@
         // ==========================================
         // ЛОГІКА ПЕРЕМИКАННЯ СПЕЦІАЛЬНОСТЕЙ
         // ==========================================
-        const segments = document.querySelectorAll('.segment');
+        const segments = document.querySelectorAll('.segment-control .segment[data-spec]');
         const groupSoc = document.getElementById('groupSoc');
         const groupMan = document.getElementById('groupMan');
 
