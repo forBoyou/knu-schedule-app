@@ -16,7 +16,7 @@
         }
 
         .main-container { flex-grow: 1; overflow: hidden; position: relative; }
-        .tab-content { display: none; height: 100%; width: 100%; }
+        .tab-content { display: none; height: 100%; width: 100%; overflow-y: auto;}
         .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
 
         .screen { display: none; height: 100%; box-sizing: border-box; }
@@ -56,20 +56,12 @@
             z-index: 10; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; }
-
         .schedule-scroll { flex-grow: 1; overflow-y: auto; padding: 16px; }
-
-        .schedule-footer {
-            flex-shrink: 0; background-color: #ffffff; padding: 12px 16px; border-top: 1px solid #e5e7eb; z-index: 10;
-        }
+        .schedule-footer { flex-shrink: 0; background-color: #ffffff; padding: 12px 16px; border-top: 1px solid #e5e7eb; z-index: 10; }
 
         /* --- ТАЙМЛАЙН ТА КАРТКИ --- */
         .time-group { margin-bottom: 18px; }
-
-        .time-meta {
-            font-size: 13px; font-weight: 600; color: #9ca3af; margin-bottom: 6px;
-            padding-left: 2px; display: flex; align-items: center; gap: 6px;
-        }
+        .time-meta { font-size: 13px; font-weight: 600; color: #9ca3af; margin-bottom: 6px; padding-left: 2px; display: flex; align-items: center; gap: 6px; }
         .time-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #d1d5db; }
         .time-divider { color: #d1d5db; font-weight: 400; }
         .time-clock { color: #ef4444; font-weight: 700; display: flex; align-items: center; gap: 4px; }
@@ -93,42 +85,24 @@
         .info-line:last-child { margin-bottom: 0; }
         .room-line { font-size: 13px; font-weight: 600; color: #4b5563; }
         .teacher-line { font-size: 12px; font-weight: 500; color: #9ca3af; }
-        
         .group-label { font-size: 11px; font-weight: 700; color: #6366f1; background-color: #e0e7ff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
-
-        /* --- РОЗДІЛЮВАЧ "АБО" (ЧИСЕЛЬНИК/ЗНАМЕННИК) --- */
+        
         .or-divider {
-            text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af;
-            text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .or-divider::before, .or-divider::after {
-            content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb;
-        }
+        .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; }
 
         /* --- ІНШІ СТИЛІ (Кнопки, Заголовки) --- */
         .main-title { display: block; text-align: center; font-size: 24px; font-weight: 700; color: #111827; margin: 15px 0 20px 0; line-height: 1.2; }
         #daysTitle { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 10px 0 15px 0; font-size: 22px; }
-        
         .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); }
 
-        /* --- ПЕРЕМИКАЧ СПЕЦІАЛЬНОСТЕЙ --- */
-        .segment-control {
-            display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px;
-            margin: 0 auto 40px auto; max-width: 320px;
-        }
-        
-        .segment {
-            flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600;
-            color: #6b7280; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
-        }
-        
+        .segment-control { display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px; margin: 0 auto 40px auto; max-width: 320px; }
+        .segment { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: #6b7280; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
         .segment.active { background-color: #ffffff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        
         .course-group { display: none; animation: fadeIn 0.2s ease; }
         .course-group.active { display: block; }
 
-        /* --- КНОПКИ --- */
         button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s; }
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
@@ -150,6 +124,31 @@
         .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
+
+        /* --- СТИЛІ ВКЛАДКИ ПРОФІЛЮ (ЩЕ) --- */
+        .profile-card {
+            background-color: #ffffff; border-radius: 16px; padding: 20px; margin: 16px;
+            display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            border: 1px solid #e5e7eb;
+        }
+        .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background-color: #dbeafe; object-fit: cover; }
+        .profile-info { text-align: left; }
+        .profile-info h2 { margin: 0 0 4px 0; font-size: 18px; color: #111827; }
+        .profile-info p { margin: 0; font-size: 14px; color: #6b7280; }
+
+        .settings-card {
+            background-color: #ffffff; border-radius: 16px; padding: 20px; margin: 0 16px 16px 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid #e5e7eb; text-align: left;
+        }
+        .settings-card h3 { margin: 0 0 16px 0; font-size: 16px; color: #111827; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px;}
+        .settings-card label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+        
+        .custom-select {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #d1d5db;
+            background-color: #f9fafb; font-family: 'Inter', sans-serif; font-size: 15px; color: #111827;
+            outline: none; appearance: none;
+        }
+        .custom-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     </style>
 </head>
 <body>
@@ -166,20 +165,16 @@
             </div>
         </div>
 
-        <!-- Вкладка 2: РОЗКЛАД (Активна) -->
+        <!-- Вкладка 2: РОЗКЛАД -->
         <div id="tabSchedule" class="tab-content active">
             
-            <!-- ЕКРАН 1: КУРСИ -->
             <div id="courseScreen" class="screen active">
                 <h1 class="main-title">Розклад факультету соціології!</h1>
-                
-                <!-- ПЕРЕМИКАЧ СПЕЦІАЛЬНОСТЕЙ -->
                 <div class="segment-control">
                     <div class="segment active" data-spec="soc">Соціологи</div>
                     <div class="segment" data-spec="man">Менеджери індустрій</div>
                 </div>
                 
-                <!-- ГРУПА 1: СОЦІОЛОГИ -->
                 <div id="groupSoc" class="course-group active">
                     <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
                     <button id="btnCourse1" class="btn-primary">1 курс</button>
@@ -188,7 +183,6 @@
                     <button class="btn-primary" disabled>4 курс</button>
                 </div>
                 
-                <!-- ГРУПА 2: МЕНЕДЖЕРИ -->
                 <div id="groupMan" class="course-group">
                     <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
                     <button id="btnMan1" class="btn-primary">1 курс</button>
@@ -198,7 +192,6 @@
                 </div>
             </div>
 
-            <!-- ЕКРАН 2: ДНІ ТИЖНЯ -->
             <div id="daysScreen" class="screen">
                 <h1 id="daysTitle">
                     <svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
@@ -220,16 +213,13 @@
                 </button>
             </div>
 
-            <!-- ЕКРАН 3: РОЗКЛАД -->
             <div id="scheduleScreen" class="screen">
                 <div class="schedule-header">
                     <svg class="icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <h1 id="scheduleTitle">Розклад</h1>
                 </div>
                 
-                <div class="schedule-scroll" id="scheduleContent">
-                    <!-- Тут будуть картки -->
-                </div>
+                <div class="schedule-scroll" id="scheduleContent"></div>
 
                 <div class="schedule-footer">
                     <button id="btnBackToDays" class="btn-secondary">
@@ -241,13 +231,32 @@
             
         </div>
 
-        <!-- Вкладка 3: ЩЕ -->
+        <!-- Вкладка 3: ЩЕ (Профіль та Налаштування) -->
         <div id="tabMore" class="tab-content">
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #9ca3af;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/><path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/></svg>
-                <h2>Ще</h2>
-                <p>Налаштування та інше.</p>
+            
+            <div class="profile-card">
+                <!-- Дефолтна іконка користувача (заміниться на фото з ТГ, якщо воно є) -->
+                <img id="userAvatar" class="profile-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239ca3af'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
+                <div class="profile-info">
+                    <h2 id="userName">Студент</h2>
+                    <p id="userUsername">@telegram_user</p>
+                </div>
             </div>
+
+            <div class="settings-card">
+                <h3>⚙️ Налаштування</h3>
+                <label for="defaultCourseSelect">Мій курс за замовчуванням:</label>
+                <select id="defaultCourseSelect" class="custom-select">
+                    <option value="">Не обрано (питати завжди)</option>
+                    <option value="1">1 курс (Соціологи)</option>
+                    <option value="2">2 курс (Соціологи)</option>
+                    <option value="1М">1 курс (Менеджери)</option>
+                </select>
+                <p style="font-size: 12px; color: #9ca3af; margin-top: 12px; line-height: 1.4;">
+                    Якщо обрати курс, додаток одразу відкриватиме вибір днів тижня для твого розкладу, пропускаючи головний екран.
+                </p>
+            </div>
+
         </div>
 
     </div>
@@ -272,6 +281,60 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
+
+        // --- ЛОГІКА ПРОФІЛЮ ТА НАЛАШТУВАНЬ (НОВЕ) ---
+        
+        // 1. Отримуємо дані користувача з Телеграму
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            if (user.username) {
+                document.getElementById('userUsername').innerText = '@' + user.username;
+            } else {
+                document.getElementById('userUsername').innerText = 'ID: ' + user.id;
+            }
+            // В нових версіях Telegram WebApp API можна отримати фото
+            if (user.photo_url) {
+                document.getElementById('userAvatar').src = user.photo_url;
+            }
+        }
+
+        const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
+        let selectedCourse = "1";
+        
+        const courseScreen = document.getElementById('courseScreen');
+        const daysScreen = document.getElementById('daysScreen');
+        const daysTitle = document.getElementById('daysTitle');
+
+        // 2. Логіка перевірки збереженого курсу при старті
+        const savedCourse = localStorage.getItem('defaultCoursePref');
+        const courseSelect = document.getElementById('defaultCourseSelect');
+        
+        if (savedCourse) {
+            selectedCourse = savedCourse;
+            courseSelect.value = savedCourse; // Ставимо правильне значення в селекті
+            
+            // Пропускаємо головний екран і одразу показуємо дні тижня!
+            courseScreen.classList.remove('active');
+            daysScreen.classList.add('active');
+            
+            if(savedCourse === '1') daysTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
+            else if(savedCourse === '2') daysTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
+            else if(savedCourse === '1М') daysTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
+        }
+
+        // 3. Логіка збереження вибору в налаштуваннях
+        courseSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                localStorage.setItem('defaultCoursePref', val);
+                // Телеграмівське віконце сповіщення (вібрує на телефоні)
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            } else {
+                localStorage.removeItem('defaultCoursePref');
+            }
+        });
+
 
         // --- ЛОГІКА ПЕРЕКЛЮЧЕННЯ ВНИЗУ (TABS) ---
         const navItems = document.querySelectorAll('.nav-item');
@@ -310,10 +373,6 @@
         });
 
         // --- СТАРА ЛОГІКА РОЗКЛАДУ ---
-        let selectedCourse = "1";
-
-        const courseScreen = document.getElementById('courseScreen');
-        const daysScreen = document.getElementById('daysScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
 
         const btnCourse1 = document.getElementById('btnCourse1');
@@ -324,7 +383,6 @@
         const btnBackToDays = document.getElementById('btnBackToDays');
         const dayButtons = document.querySelectorAll('.dayBtn');
 
-        const daysTitle = document.getElementById('daysTitle');
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
         const currentDayBanner = document.getElementById('currentDayBanner');
@@ -333,8 +391,7 @@
         const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
         const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
         const svgClockRed = `<svg class="icon-clock-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
-        const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
-
+        
         const subjectColors = {
             "технолог": "#81ecec",       
             "університет": "#a29bfe",    
@@ -476,23 +533,18 @@
             return { html: html, color: cardColor };
         }
 
-        // ОНОВЛЕНИЙ ПАРСЕР З ПІДТРИМКОЮ "АБО"
         function parseTimeSlotContent(rawText) {
             let text = rawText.replace(/\n/g, '<br>');
             let firstColor = null;
             let html = "";
             
-            // Спочатку розбиваємо по слову "АБО", яке стоїть на окремому рядку
             let orParts = text.split(/<br>\s*АБО\s*<br>/i);
             
             orParts.forEach((orPart, index) => {
-                
-                // Додаємо розділювач, якщо це друга (або третя) альтернатива
                 if (index > 0) {
                     html += `<div class="or-divider">або (чисельник / знаменник)</div>`;
                 }
                 
-                // Далі застосовуємо стандартну логіку для підгруп всередині кожної частини
                 if (orPart.includes('Група 1:')) {
                     let parts = orPart.split(/(Група \d+:)/i).filter(p => p.trim() !== "");
                     let currentGroup = "";
