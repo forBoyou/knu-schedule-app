@@ -110,6 +110,7 @@
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
+        /* Дефолтні (Світлі) кольори кнопок днів тижня */
         .btn-mon { background-color: #ffadad; color: #111827; box-shadow: 0 2px 4px rgba(255, 173, 173, 0.4); }
         .btn-tue { background-color: #ffd6a5; color: #111827; box-shadow: 0 2px 4px rgba(255, 214, 165, 0.4); }
         .btn-wed { background-color: #fdffb6; color: #111827; box-shadow: 0 2px 4px rgba(253, 255, 182, 0.4); }
@@ -144,16 +145,25 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid #e5e7eb; text-align: left;
             transition: background-color 0.3s, border-color 0.3s;
         }
+        /* Прибрано border-bottom та padding-bottom */
         .settings-card h3 { 
-            margin: 0 0 16px 0; font-size: 16px; color: #111827; border-bottom: 1px solid #f3f4f6; 
-            padding-bottom: 12px; display: flex; align-items: center; gap: 8px; transition: color 0.3s, border-color 0.3s;
+            margin: 0 0 16px 0; font-size: 16px; color: #111827; 
+            display: flex; align-items: center; gap: 8px; transition: color 0.3s;
         }
         .settings-card h3 svg { color: #6b7280; width: 20px; height: 20px; transition: color 0.3s; }
 
-        /* КРАСИВИЙ СПИСОК КУРСІВ ЗАМІСТЬ SELECT */
+        /* КРАСИВИЙ СПИСОК КУРСІВ ІЗ СКРОЛОМ */
         .course-options {
             display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;
+            max-height: 200px; /* Обмеження висоти */
+            overflow-y: auto; /* Скрол всередині блоку */
+            padding-right: 4px; /* Місце для повзунка */
         }
+        /* Кастомізація повзунка скролу */
+        .course-options::-webkit-scrollbar { width: 4px; }
+        .course-options::-webkit-scrollbar-track { background: transparent; }
+        .course-options::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 4px; }
+        
         .course-option {
             padding: 14px 16px; background-color: #f9fafb; border: 1px solid #e5e7eb;
             border-radius: 10px; font-size: 14px; font-weight: 600; color: #374151;
@@ -187,7 +197,6 @@
         body.dark-theme .main-title,
         body.dark-theme #daysTitle { color: #f9fafb; }
         
-        body.dark-theme .settings-card h3 { border-bottom-color: #374151; }
         body.dark-theme .settings-card h3 svg { color: #9ca3af; }
 
         body.dark-theme .time-meta,
@@ -212,10 +221,19 @@
         body.dark-theme .time-dot { background-color: #4b5563; }
         body.dark-theme .time-divider { color: #4b5563; }
 
-        /* Темна тема для вибору курсів */
+        /* Темна тема для вибору курсів (зі скролом) */
+        body.dark-theme .course-options::-webkit-scrollbar-thumb { background-color: #4b5563; }
         body.dark-theme .course-option { background-color: #374151; border-color: #4b5563; color: #d1d5db; }
         body.dark-theme .course-option.active { border-color: #3b82f6; background-color: #1e3a8a; color: #bfdbfe; }
         body.dark-theme .check-icon { color: #60a5fa; }
+
+        /* Спеціальні кольори кнопок днів тижня для ТЕМНОЇ теми */
+        body.dark-theme .btn-mon { background-color: #c96f6f; color: #f9fafb; box-shadow: 0 2px 4px rgba(201, 111, 111, 0.3); }
+        body.dark-theme .btn-tue { background-color: #c9946f; color: #f9fafb; box-shadow: 0 2px 4px rgba(201, 148, 111, 0.3); }
+        body.dark-theme .btn-wed { background-color: #c7b767; color: #111827; box-shadow: 0 2px 4px rgba(199, 183, 103, 0.3); } /* Темний текст для контрасту */
+        body.dark-theme .btn-thu { background-color: #78ad82; color: #f9fafb; box-shadow: 0 2px 4px rgba(120, 173, 130, 0.3); }
+        body.dark-theme .btn-fri { background-color: #68a6b3; color: #f9fafb; box-shadow: 0 2px 4px rgba(104, 166, 179, 0.3); }
+        body.dark-theme .btn-sat { background-color: #7188c9; color: #f9fafb; box-shadow: 0 2px 4px rgba(113, 136, 201, 0.3); }
 
     </style>
 </head>
@@ -433,11 +451,9 @@
         const daysTitle = document.getElementById('daysTitle');
         const courseOptions = document.querySelectorAll('.course-option');
 
-        // Функція оновлення галочок
         function updateCourseListUI(val) {
             courseOptions.forEach(opt => {
                 const optVal = opt.getAttribute('data-val');
-                // Видаляємо стару галочку, якщо є
                 let baseText = opt.innerText.replace('✓', '').trim();
                 
                 if (optVal === val) {
@@ -463,7 +479,6 @@
             else if(savedCourse === '1М') daysTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
         }
 
-        // Кліки по новому списку курсів
         courseOptions.forEach(opt => {
             opt.addEventListener('click', (e) => {
                 const val = e.currentTarget.getAttribute('data-val');
