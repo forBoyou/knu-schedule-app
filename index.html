@@ -13,6 +13,7 @@
             margin: 0; padding: 0; height: 100vh; height: 100dvh; 
             overflow: hidden; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #f3f4f6; color: #1f2937; display: flex; flex-direction: column;
+            transition: background-color 0.3s, color 0.3s; /* Плавна зміна теми */
         }
 
         .main-container { flex-grow: 1; overflow: hidden; position: relative; }
@@ -33,7 +34,7 @@
         .bottom-nav {
             flex-shrink: 0; background-color: #ffffff; border-top: 1px solid #e5e7eb;
             display: flex; justify-content: center; gap: 50px; padding: 8px 0 12px 0; 
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.03); z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.03); z-index: 100; transition: background-color 0.3s, border-color 0.3s;
         }
 
         .nav-item {
@@ -48,16 +49,17 @@
         .nav-item span { font-size: 11px; font-weight: 600; }
 
         /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНУ РОЗКЛАДУ --- */
-        #scheduleScreen { display: none; flex-direction: column; padding: 0; background-color: #f9fafb; }
+        #scheduleScreen { display: none; flex-direction: column; padding: 0; background-color: #f9fafb; transition: background-color 0.3s; }
         #scheduleScreen.active { display: flex; }
 
         .schedule-header {
             flex-shrink: 0; background-color: #ffffff; padding: 12px 16px; border-bottom: 1px solid #e5e7eb;
             z-index: 10; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: background-color 0.3s, border-color 0.3s;
         }
-        .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; }
+        .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; transition: color 0.3s;}
         .schedule-scroll { flex-grow: 1; overflow-y: auto; padding: 16px; }
-        .schedule-footer { flex-shrink: 0; background-color: #ffffff; padding: 12px 16px; border-top: 1px solid #e5e7eb; z-index: 10; }
+        .schedule-footer { flex-shrink: 0; background-color: #ffffff; padding: 12px 16px; border-top: 1px solid #e5e7eb; z-index: 10; transition: background-color 0.3s, border-color 0.3s;}
 
         /* --- ТАЙМЛАЙН ТА КАРТКИ --- */
         .time-group { margin-bottom: 18px; }
@@ -69,11 +71,12 @@
         .lesson-card {
             background-color: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #e5e7eb;
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .lesson-card:last-child { margin-bottom: 0; }
 
         .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
-        .subject-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.25; }
+        .subject-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.25; transition: color 0.3s; }
 
         .badge { font-size: 10px; font-weight: 700; padding: 3px 6px; border-radius: 5px; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
         .type-l { background-color: #e0f2fe; color: #0369a1; }
@@ -83,27 +86,27 @@
 
         .info-line { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
         .info-line:last-child { margin-bottom: 0; }
-        .room-line { font-size: 13px; font-weight: 600; color: #4b5563; }
+        .room-line { font-size: 13px; font-weight: 600; color: #4b5563; transition: color 0.3s; }
         .teacher-line { font-size: 12px; font-weight: 500; color: #9ca3af; }
         .group-label { font-size: 11px; font-weight: 700; color: #6366f1; background-color: #e0e7ff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
         
         .or-divider {
             text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; }
+        .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; transition: background-color 0.3s; }
 
         /* --- ІНШІ СТИЛІ (Кнопки, Заголовки) --- */
-        .main-title { display: block; text-align: center; font-size: 24px; font-weight: 700; color: #111827; margin: 15px 0 20px 0; line-height: 1.2; }
-        #daysTitle { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 10px 0 15px 0; font-size: 22px; }
-        .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); }
+        .main-title { display: block; text-align: center; font-size: 24px; font-weight: 700; color: #111827; margin: 15px 0 20px 0; line-height: 1.2; transition: color 0.3s; }
+        #daysTitle { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 10px 0 15px 0; font-size: 22px; transition: color 0.3s;}
+        .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
 
-        .segment-control { display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px; margin: 0 auto 40px auto; max-width: 320px; }
+        .segment-control { display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px; margin: 0 auto 40px auto; max-width: 320px; transition: background-color 0.3s; }
         .segment { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: #6b7280; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
         .segment.active { background-color: #ffffff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .course-group { display: none; animation: fadeIn 0.2s ease; }
         .course-group.active { display: block; }
 
-        button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s; }
+        button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; }
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
@@ -118,7 +121,7 @@
         .btn-secondary:active:not(:disabled) { background-color: #6b7280; }
 
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
-        .icon-room { color: #6b7280; }
+        .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
         .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
@@ -129,26 +132,82 @@
         .profile-card {
             background-color: #ffffff; border-radius: 16px; padding: 20px; margin: 16px;
             display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            border: 1px solid #e5e7eb;
+            border: 1px solid #e5e7eb; transition: background-color 0.3s, border-color 0.3s;
         }
         .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background-color: #dbeafe; object-fit: cover; }
         .profile-info { text-align: left; }
-        .profile-info h2 { margin: 0 0 4px 0; font-size: 18px; color: #111827; }
+        .profile-info h2 { margin: 0 0 4px 0; font-size: 18px; color: #111827; transition: color 0.3s; }
         .profile-info p { margin: 0; font-size: 14px; color: #6b7280; }
 
         .settings-card {
             background-color: #ffffff; border-radius: 16px; padding: 20px; margin: 0 16px 16px 16px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid #e5e7eb; text-align: left;
+            transition: background-color 0.3s, border-color 0.3s;
         }
-        .settings-card h3 { margin: 0 0 16px 0; font-size: 16px; color: #111827; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px;}
-        .settings-card label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+        .settings-card h3 { 
+            margin: 0 0 16px 0; font-size: 16px; color: #111827; border-bottom: 1px solid #f3f4f6; 
+            padding-bottom: 12px; display: flex; align-items: center; gap: 8px; transition: color 0.3s, border-color 0.3s;
+        }
+        .settings-card h3 svg { color: #6b7280; width: 20px; height: 20px; transition: color 0.3s; }
+        .settings-card label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; transition: color 0.3s; }
         
         .custom-select {
             width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #d1d5db;
             background-color: #f9fafb; font-family: 'Inter', sans-serif; font-size: 15px; color: #111827;
-            outline: none; appearance: none;
+            outline: none; appearance: none; transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
         .custom-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        /* =========================================
+           ТЕМНА ТЕМА (DARK MODE) 
+           ========================================= */
+        body.dark-theme { background-color: #111827; color: #f9fafb; }
+        body.dark-theme #scheduleScreen { background-color: #111827; }
+        
+        body.dark-theme .bottom-nav,
+        body.dark-theme .schedule-header,
+        body.dark-theme .schedule-footer,
+        body.dark-theme .lesson-card,
+        body.dark-theme .profile-card,
+        body.dark-theme .settings-card { background-color: #1f2937; border-color: #374151; }
+        
+        body.dark-theme .lesson-card { border-left-color: #4b5563; /* якщо предмет не має кольору */ }
+        
+        body.dark-theme .schedule-header h1,
+        body.dark-theme .profile-info h2,
+        body.dark-theme .settings-card h3,
+        body.dark-theme .subject-title,
+        body.dark-theme .main-title,
+        body.dark-theme #daysTitle,
+        body.dark-theme label { color: #f9fafb; }
+        
+        body.dark-theme .settings-card h3 { border-bottom-color: #374151; }
+        body.dark-theme .settings-card h3 svg { color: #9ca3af; }
+
+        body.dark-theme .time-meta,
+        body.dark-theme .teacher-line,
+        body.dark-theme .or-divider,
+        body.dark-theme .icon-room { color: #9ca3af; }
+        
+        body.dark-theme .room-line { color: #d1d5db; }
+        body.dark-theme .or-divider::before, 
+        body.dark-theme .or-divider::after { background-color: #374151; }
+
+        body.dark-theme .custom-select { background-color: #374151; border-color: #4b5563; color: #f9fafb; }
+        
+        body.dark-theme .segment-control { background-color: #374151; }
+        body.dark-theme .segment { color: #9ca3af; }
+        body.dark-theme .segment.active { background-color: #4b5563; color: #f9fafb; }
+        
+        body.dark-theme .current-day-banner { background-color: #1e3a8a; border-color: #1e3a8a; color: #bfdbfe; }
+        body.dark-theme .current-day-banner .icon-calendar { color: #60a5fa; }
+        
+        body.dark-theme .group-label { background-color: #3730a3; color: #c7d2fe; }
+        body.dark-theme .btn-secondary { background-color: #4b5563; }
+        body.dark-theme button:disabled { background-color: #374151 !important; color: #6b7280 !important; }
+        body.dark-theme .time-dot { background-color: #4b5563; }
+        body.dark-theme .time-divider { color: #4b5563; }
+
     </style>
 </head>
 <body>
@@ -235,7 +294,6 @@
         <div id="tabMore" class="tab-content">
             
             <div class="profile-card">
-                <!-- Дефолтна іконка користувача (заміниться на фото з ТГ, якщо воно є) -->
                 <img id="userAvatar" class="profile-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239ca3af'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E">
                 <div class="profile-info">
                     <h2 id="userName">Студент</h2>
@@ -243,8 +301,12 @@
                 </div>
             </div>
 
+            <!-- Картка налаштувань Курсу -->
             <div class="settings-card">
-                <h3>⚙️ Налаштування</h3>
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+                    Налаштування
+                </h3>
                 <label for="defaultCourseSelect">Мій курс за замовчуванням:</label>
                 <select id="defaultCourseSelect" class="custom-select">
                     <option value="">Не обрано (питати завжди)</option>
@@ -253,8 +315,22 @@
                     <option value="1М">1 курс (Менеджери)</option>
                 </select>
                 <p style="font-size: 12px; color: #9ca3af; margin-top: 12px; line-height: 1.4;">
-                    Якщо обрати курс, додаток одразу відкриватиме вибір днів тижня для твого розкладу, пропускаючи головний екран.
+                    Якщо обрати курс, додаток одразу відкриватиме вибір днів тижня для твого розкладу.
                 </p>
+            </div>
+
+            <!-- Картка налаштувань Теми -->
+            <div class="settings-card">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon preview-icon"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+                    Тема оформлення
+                </h3>
+                <label for="themeSelect">Колірна тема:</label>
+                <select id="themeSelect" class="custom-select">
+                    <option value="auto">Автоматично (як у Telegram)</option>
+                    <option value="light">Світла тема</option>
+                    <option value="dark">Темна тема</option>
+                </select>
             </div>
 
         </div>
@@ -282,9 +358,48 @@
         tg.expand();
         tg.ready();
 
-        // --- ЛОГІКА ПРОФІЛЮ ТА НАЛАШТУВАНЬ (НОВЕ) ---
+        // ==========================================
+        // ЛОГІКА ТЕМНЬОЇ ТЕМИ
+        // ==========================================
+        const themeSelect = document.getElementById('themeSelect');
+        let savedTheme = localStorage.getItem('themePref') || 'auto';
+        themeSelect.value = savedTheme;
+
+        function applyTheme() {
+            let currentTheme = savedTheme;
+            if (currentTheme === 'auto') {
+                // Беремо тему з самого Телеграму
+                currentTheme = tg.colorScheme || 'light';
+            }
+            
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+        }
         
-        // 1. Отримуємо дані користувача з Телеграму
+        // Запускаємо при старті
+        applyTheme();
+
+        // Відстежуємо, якщо користувач змінив тему в самому Телеграмі
+        tg.onEvent('themeChanged', () => {
+            if (savedTheme === 'auto') {
+                applyTheme();
+            }
+        });
+
+        // Коли користувач змінює тему в налаштуваннях
+        themeSelect.addEventListener('change', (e) => {
+            savedTheme = e.target.value;
+            localStorage.setItem('themePref', savedTheme);
+            applyTheme();
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        });
+
+        // ==========================================
+        // ЛОГІКА ПРОФІЛЮ ТА НАЛАШТУВАНЬ КУРСУ
+        // ==========================================
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
@@ -293,7 +408,6 @@
             } else {
                 document.getElementById('userUsername').innerText = 'ID: ' + user.id;
             }
-            // В нових версіях Telegram WebApp API можна отримати фото
             if (user.photo_url) {
                 document.getElementById('userAvatar').src = user.photo_url;
             }
@@ -306,15 +420,13 @@
         const daysScreen = document.getElementById('daysScreen');
         const daysTitle = document.getElementById('daysTitle');
 
-        // 2. Логіка перевірки збереженого курсу при старті
         const savedCourse = localStorage.getItem('defaultCoursePref');
         const courseSelect = document.getElementById('defaultCourseSelect');
         
         if (savedCourse) {
             selectedCourse = savedCourse;
-            courseSelect.value = savedCourse; // Ставимо правильне значення в селекті
+            courseSelect.value = savedCourse; 
             
-            // Пропускаємо головний екран і одразу показуємо дні тижня!
             courseScreen.classList.remove('active');
             daysScreen.classList.add('active');
             
@@ -323,20 +435,19 @@
             else if(savedCourse === '1М') daysTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
         }
 
-        // 3. Логіка збереження вибору в налаштуваннях
         courseSelect.addEventListener('change', (e) => {
             const val = e.target.value;
             if (val) {
                 localStorage.setItem('defaultCoursePref', val);
-                // Телеграмівське віконце сповіщення (вібрує на телефоні)
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             } else {
                 localStorage.removeItem('defaultCoursePref');
             }
         });
 
-
-        // --- ЛОГІКА ПЕРЕКЛЮЧЕННЯ ВНИЗУ (TABS) ---
+        // ==========================================
+        // ЛОГІКА ПЕРЕКЛЮЧЕННЯ ВНИЗУ (TABS)
+        // ==========================================
         const navItems = document.querySelectorAll('.nav-item');
         const tabScreens = document.querySelectorAll('.tab-content');
 
@@ -351,7 +462,9 @@
             });
         });
 
-        // --- ЛОГІКА ПЕРЕМИКАННЯ СПЕЦІАЛЬНОСТЕЙ ---
+        // ==========================================
+        // ЛОГІКА ПЕРЕМИКАННЯ СПЕЦІАЛЬНОСТЕЙ
+        // ==========================================
         const segments = document.querySelectorAll('.segment');
         const groupSoc = document.getElementById('groupSoc');
         const groupMan = document.getElementById('groupMan');
@@ -372,17 +485,16 @@
             });
         });
 
-        // --- СТАРА ЛОГІКА РОЗКЛАДУ ---
+        // ==========================================
+        // ЛОГІКА РОЗКЛАДУ
+        // ==========================================
         const scheduleScreen = document.getElementById('scheduleScreen');
-
         const btnCourse1 = document.getElementById('btnCourse1');
         const btnCourse2 = document.getElementById('btnCourse2');
         const btnMan1 = document.getElementById('btnMan1');
-
         const btnBackToCourse = document.getElementById('btnBackToCourse');
         const btnBackToDays = document.getElementById('btnBackToDays');
         const dayButtons = document.querySelectorAll('.dayBtn');
-
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
         const currentDayBanner = document.getElementById('currentDayBanner');
@@ -391,28 +503,13 @@
         const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
         const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
         const svgClockRed = `<svg class="icon-clock-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
-        
+
         const subjectColors = {
-            "технолог": "#81ecec",       
-            "університет": "#a29bfe",    
-            "антрополог": "#fab1a0",     
-            "англійськ": "#74b9ff",      
-            "спеціальност": "#55efc4",   
-            "філософ": "#ffeaa7",        
-            "спротив": "#ff7675",        
-            "теорія": "#b8c6cb",         
-            "теорiя": "#b8c6cb",
-            "істор": "#b8c6cb",         
-            "iстор": "#b8c6cb",
-            "нерівност": "#ff9ff3",      
-            "науков": "#feca57",         
-            "образ світ": "#feca57",     
-            "гендерн": "#c8d6e5",        
-            "кількісн": "#1dd1a1",       
-            "вибірков": "#ff9f43",       
-            "еколог": "#b8e994",         
-            "статистик": "#f8c291",      
-            "демограф": "#f8c291"        
+            "технолог": "#81ecec", "університет": "#a29bfe", "антрополог": "#fab1a0", "англійськ": "#74b9ff",      
+            "спеціальност": "#55efc4", "філософ": "#ffeaa7", "спротив": "#ff7675", "теорія": "#b8c6cb",         
+            "теорiя": "#b8c6cb", "істор": "#b8c6cb", "iстор": "#b8c6cb", "нерівност": "#ff9ff3",      
+            "науков": "#feca57", "образ світ": "#feca57", "гендерн": "#c8d6e5", "кількісн": "#1dd1a1",       
+            "вибірков": "#ff9f43", "еколог": "#b8e994", "статистик": "#f8c291", "демограф": "#f8c291"        
         };
 
         function getSubjectColor(text) {
@@ -431,45 +528,17 @@
         }
         updateCurrentDayBanner();
 
-        btnCourse1.addEventListener('click', () => {
-            selectedCourse = "1";
-            daysTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
-            courseScreen.classList.remove('active');
-            daysScreen.classList.add('active');
-        });
-
-        btnCourse2.addEventListener('click', () => {
-            selectedCourse = "2";
-            daysTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
-            courseScreen.classList.remove('active');
-            daysScreen.classList.add('active');
-        });
-
-        btnMan1.addEventListener('click', () => {
-            selectedCourse = "1М"; 
-            daysTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
-            courseScreen.classList.remove('active');
-            daysScreen.classList.add('active');
-        });
-
-        btnBackToCourse.addEventListener('click', () => {
-            daysScreen.classList.remove('active');
-            courseScreen.classList.add('active');
-        });
-
-        btnBackToDays.addEventListener('click', () => {
-            scheduleScreen.classList.remove('active');
-            daysScreen.classList.add('active');
-        });
+        btnCourse1.addEventListener('click', () => { selectedCourse = "1"; daysTitle.innerHTML = `${svgCap} 1 курс (Соц.)`; courseScreen.classList.remove('active'); daysScreen.classList.add('active'); });
+        btnCourse2.addEventListener('click', () => { selectedCourse = "2"; daysTitle.innerHTML = `${svgCap} 2 курс (Соц.)`; courseScreen.classList.remove('active'); daysScreen.classList.add('active'); });
+        btnMan1.addEventListener('click', () => { selectedCourse = "1М"; daysTitle.innerHTML = `${svgCap} 1 курс (Мен.)`; courseScreen.classList.remove('active'); daysScreen.classList.add('active'); });
+        btnBackToCourse.addEventListener('click', () => { daysScreen.classList.remove('active'); courseScreen.classList.add('active'); });
+        btnBackToDays.addEventListener('click', () => { scheduleScreen.classList.remove('active'); daysScreen.classList.add('active'); });
 
         dayButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const selectedDay = e.target.getAttribute('data-day');
-                daysScreen.classList.remove('active');
-                scheduleScreen.classList.add('active');
-                scheduleTitle.innerText = selectedDay;
+                daysScreen.classList.remove('active'); scheduleScreen.classList.add('active'); scheduleTitle.innerText = selectedDay;
                 scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
-                
                 fetchSchedule(selectedCourse, selectedDay);
             });
         });
@@ -478,9 +547,7 @@
             let lines = blockText.split('<br>').map(l => l.trim()).filter(l => l);
             if (lines.length === 0) return { html: "", color: "#e5e7eb" };
             
-            let subject = lines[0];
-            let teacher = "";
-            let room = "";
+            let subject = lines[0]; let teacher = ""; let room = "";
             
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
@@ -488,132 +555,83 @@
                 else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) { teacher = line; }
             }
             
-            let typeBadge = "";
-            let subjectClean = subject;
-            
+            let typeBadge = ""; let subjectClean = subject;
             let typeMatch = subject.match(/\s*\(\s*(л\vert{}Л\vert{}пр\vert{}ПР\vert{}Пр\vert{}с\vert{}С\vert{}лаб\vert{}ЛАБ\vert{}Лаб)\.?\s*\)/);
             if (typeMatch) {
                 let t = typeMatch[1].toLowerCase();
                 let bClass = 'type-l'; let tName = 'Лекція';
-                if (t === 'пр') { bClass = 'type-pr'; tName = 'Практика'; }
-                else if (t === 'лаб') { bClass = 'type-lab'; tName = 'Лабораторна'; }
-                else if (t === 'с') { bClass = 'type-s'; tName = 'Семінар'; }
-                
+                if (t === 'пр') { bClass = 'type-pr'; tName = 'Практика'; } else if (t === 'лаб') { bClass = 'type-lab'; tName = 'Лабораторна'; } else if (t === 'с') { bClass = 'type-s'; tName = 'Семінар'; }
                 typeBadge = `<div class="badge ${bClass}">${tName}</div>`;
                 subjectClean = subjectClean.replace(typeMatch[0], '').trim();
             }
 
             let cardColor = getSubjectColor(subjectClean);
-            
             subjectClean = subjectClean.toLowerCase().trim();
-            if (subjectClean.length > 0) {
-                subjectClean = subjectClean.charAt(0).toUpperCase() + subjectClean.slice(1);
-            }
+            if (subjectClean.length > 0) { subjectClean = subjectClean.charAt(0).toUpperCase() + subjectClean.slice(1); }
             if (subjectClean.startsWith("нформаційні")) { subjectClean = "І" + subjectClean; }
             
             let groupHtml = groupLabel ? `<div class="group-label">${groupLabel}</div>` : "";
             
             let html = `<div class="lesson-card" style="border-left-color: ${cardColor}; border-left-width: 5px;">
                             ${groupHtml}
-                            <div class="lesson-header">
-                                <div class="subject-title">${subjectClean}</div>
-                                ${typeBadge}
-                            </div>`;
-                        
-            if (room) {
-                let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim();
-                html += `<div class="info-line room-line">${svgRoom} <span>${cleanRoom}</span></div>`;
-            }
-            if (teacher) {
-                let cleanTeacher = teacher.replace('👨‍🏫', '').trim();
-                html += `<div class="info-line teacher-line">${svgTeacher} <span>${cleanTeacher}</span></div>`;
-            }
-            
-            html += `</div>`;
-            return { html: html, color: cardColor };
+                            <div class="lesson-header"><div class="subject-title">${subjectClean}</div>${typeBadge}</div>`;
+            if (room) { let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim(); html += `<div class="info-line room-line">${svgRoom} <span>${cleanRoom}</span></div>`; }
+            if (teacher) { let cleanTeacher = teacher.replace('👨‍🏫', '').trim(); html += `<div class="info-line teacher-line">${svgTeacher} <span>${cleanTeacher}</span></div>`; }
+            html += `</div>`; return { html: html, color: cardColor };
         }
 
         function parseTimeSlotContent(rawText) {
             let text = rawText.replace(/\n/g, '<br>');
-            let firstColor = null;
-            let html = "";
-            
+            let firstColor = null; let html = "";
             let orParts = text.split(/<br>\s*АБО\s*<br>/i);
             
             orParts.forEach((orPart, index) => {
-                if (index > 0) {
-                    html += `<div class="or-divider">або (чисельник / знаменник)</div>`;
-                }
-                
+                if (index > 0) { html += `<div class="or-divider">або (чисельник / знаменник)</div>`; }
                 if (orPart.includes('Група 1:')) {
                     let parts = orPart.split(/(Група \d+:)/i).filter(p => p.trim() !== "");
                     let currentGroup = "";
-                    
                     parts.forEach(part => {
-                        if (part.match(/Група \d+:/i)) {
-                            currentGroup = part.replace(':', '').trim();
-                        } else {
-                            let parsed = formatLessonCard(part, currentGroup);
-                            html += parsed.html;
-                            if (!firstColor) firstColor = parsed.color;
-                        }
+                        if (part.match(/Група \d+:/i)) { currentGroup = part.replace(':', '').trim(); } 
+                        else { let parsed = formatLessonCard(part, currentGroup); html += parsed.html; if (!firstColor) firstColor = parsed.color; }
                     });
                 } else {
-                    let parsed = formatLessonCard(orPart);
-                    html += parsed.html;
-                    if (!firstColor) firstColor = parsed.color;
+                    let parsed = formatLessonCard(orPart); html += parsed.html; if (!firstColor) firstColor = parsed.color;
                 }
             });
-            
             return { html: html, color: firstColor || "#e5e7eb" };
         }
 
         async function fetchSchedule(course, day) {
             const url = `https://Bohdanyof.pythonanywhere.com/api/schedule?t=${new Date().getTime()}`;
-            
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Помилка сервера');
-                
                 const data = await response.json();
                 const dayKey = day.toUpperCase(); 
 
                 if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
-                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px;">У ${day} пар немає! 🎉</div>`;
-                    return;
+                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px;">У ${day} пар немає! 🎉</div>`; return;
                 }
 
                 const daySchedule = data[course][dayKey];
                 let htmlContent = '';
-                
                 const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
                 let lessonIndex = 0;
                 
                 for (let time in daySchedule) {
                     let lessonNumText = numberWords[lessonIndex] || `${lessonIndex + 1}-а пара`;
                     lessonIndex++;
-                    
                     let parsedData = parseTimeSlotContent(daySchedule[time]);
-                    let cardsHtml = parsedData.html;
-                    let dotColor = parsedData.color; 
-                    
+                    let cardsHtml = parsedData.html; let dotColor = parsedData.color; 
                     htmlContent += `
                         <div class="time-group">
                             <div class="time-meta">
-                                <div class="time-dot" style="background-color: ${dotColor};"></div>
-                                <span>${lessonNumText}</span>
-                                <span class="time-divider">|</span>
-                                <span class="time-clock">
-                                    ${svgClockRed} ${time}
-                                </span>
-                            </div>
-                            ${cardsHtml}
-                        </div>
-                    `;
+                                <div class="time-dot" style="background-color: ${dotColor};"></div><span>${lessonNumText}</span><span class="time-divider">|</span>
+                                <span class="time-clock">${svgClockRed} ${time}</span>
+                            </div>${cardsHtml}
+                        </div>`;
                 }
-                
                 scheduleContent.innerHTML = htmlContent;
-
             } catch (error) {
                 console.error(error);
                 scheduleContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.</div>";
