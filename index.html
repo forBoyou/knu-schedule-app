@@ -66,7 +66,7 @@
         .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; transition: color 0.3s; display: flex; align-items: center; gap: 8px;}
         .schedule-scroll { flex-grow: 1; overflow-y: auto; padding: 16px; }
 
-        /* ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ */
+        /* ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ (ТЕПЕР КОЛЬОРОВІ) */
         .day-tabs-container {
             background-color: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 10px 16px;
             display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; transition: background-color 0.3s, border-color 0.3s;
@@ -74,11 +74,17 @@
         }
         .day-tabs-container::-webkit-scrollbar { display: none; }
         .day-tab {
-            background-color: #f3f4f6; color: #4b5563; border: none; border-radius: 8px;
-            padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; white-space: nowrap; flex: 1; text-align: center;
+            border: 2px solid transparent; border-radius: 8px; padding: 8px 16px; 
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; 
+            white-space: nowrap; flex: 1; text-align: center;
+            opacity: 0.55; /* Неактивні дні напівпрозорі */
         }
-        .day-tab.active { background-color: #3b82f6; color: #ffffff; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); }
+        .day-tab.active { 
+            opacity: 1; 
+            transform: scale(1.05); 
+            border-color: rgba(17, 24, 39, 0.15); 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+        }
 
         /* --- ТАЙМЛАЙН ТА КАРТКИ --- */
         .time-group { margin-bottom: 18px; }
@@ -136,11 +142,18 @@
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
+        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) */
+        .btn-mon { background-color: #ffadad; color: #111827; }
+        .btn-tue { background-color: #ffd6a5; color: #111827; }
+        .btn-wed { background-color: #fdffb6; color: #111827; }
+        .btn-thu { background-color: #caffbf; color: #111827; }
+        .btn-fri { background-color: #9bf6ff; color: #111827; }
+        .btn-sat { background-color: #a0c4ff; color: #111827; }
+
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
         .icon-title { width: 26px; height: 26px; color: #3b82f6; }
-        .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
 
@@ -242,9 +255,14 @@
         body.dark-theme .hint-text { background-color: #374151; color: #d1d5db; border-color: #4b5563; }
         body.dark-theme .online-link-btn { background-color: #1e3a8a; color: #bfdbfe; }
 
-        /* Таби днів тижня */
-        body.dark-theme .day-tab { background-color: #374151; color: #d1d5db; }
-        body.dark-theme .day-tab.active { background-color: #3b82f6; color: #ffffff; }
+        /* СПЕЦІАЛЬНІ КОЛЬОРИ ДЛЯ ТЕМНОЇ ТЕМИ */
+        body.dark-theme .btn-mon { background-color: #c96f6f; color: #f9fafb; }
+        body.dark-theme .btn-tue { background-color: #c9946f; color: #f9fafb; }
+        body.dark-theme .btn-wed { background-color: #c7b767; color: #111827; } 
+        body.dark-theme .btn-thu { background-color: #78ad82; color: #f9fafb; }
+        body.dark-theme .btn-fri { background-color: #68a6b3; color: #f9fafb; }
+        body.dark-theme .btn-sat { background-color: #7188c9; color: #f9fafb; }
+        body.dark-theme .day-tab.active { border-color: rgba(249, 250, 251, 0.4); }
 
     </style>
 </head>
@@ -297,16 +315,16 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                     </button>
                     <h1 id="scheduleTitle">Розклад</h1>
-                    <div style="width: 24px;"></div> <!-- Пустий блок для ідеального центрування тексту -->
+                    <div style="width: 24px;"></div> 
                 </div>
                 
-                <!-- ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ -->
+                <!-- ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ (ТЕПЕР З КОЛЬОРАМИ) -->
                 <div class="day-tabs-container">
-                    <button class="day-tab" data-day="Понеділок">Пн</button>
-                    <button class="day-tab" data-day="Вівторок">Вт</button>
-                    <button class="day-tab" data-day="Середа">Ср</button>
-                    <button class="day-tab" data-day="Четвер">Чт</button>
-                    <button class="day-tab" data-day="П'ятниця">Пт</button>
+                    <button class="day-tab btn-mon" data-day="Понеділок">Пн</button>
+                    <button class="day-tab btn-tue" data-day="Вівторок">Вт</button>
+                    <button class="day-tab btn-wed" data-day="Середа">Ср</button>
+                    <button class="day-tab btn-thu" data-day="Четвер">Чт</button>
+                    <button class="day-tab btn-fri" data-day="П'ятниця">Пт</button>
                 </div>
                 
                 <div class="schedule-scroll" id="scheduleScrollArea">
@@ -430,6 +448,43 @@
         tg.expand();
         tg.ready();
 
+        // --- ЛОГІКА ВИЗНАЧЕННЯ ДНЯ ТИЖНЯ ---
+        const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
+        function getActiveDay() {
+            let todayIndex = new Date().getDay();
+            if (todayIndex === 0 || todayIndex === 6) { return "Понеділок"; }
+            return daysOfWeek[todayIndex];
+        }
+        let currentActiveDay = getActiveDay();
+
+        const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
+        let selectedCourse = "1";
+        const courseScreen = document.getElementById('courseScreen');
+        const scheduleScreen = document.getElementById('scheduleScreen');
+        const scheduleTitle = document.getElementById('scheduleTitle');
+
+        // Функція відкриття розкладу
+        function openScheduleScreen(courseVal) {
+            selectedCourse = courseVal;
+            courseScreen.classList.remove('active');
+            scheduleScreen.classList.add('active');
+            
+            if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
+            else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
+            else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
+
+            document.querySelectorAll('.day-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-day') === currentActiveDay) {
+                    tab.classList.add('active');
+                    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
+
+            document.getElementById('scheduleContent').innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
+            fetchSchedule(selectedCourse, currentActiveDay);
+        }
+
         // ==========================================
         // ЛОГІКА ТЕМНЬОЇ ТЕМИ З СЕГМЕНТАМИ
         // ==========================================
@@ -473,7 +528,7 @@
         });
 
         // ==========================================
-        // ЛОГІКА ПРОФІЛЮ ТА КРАСИВОГО ВИБОРУ КУРСУ
+        // ЛОГІКА ПРОФІЛЮ ТА ВИБОРУ КУРСУ
         // ==========================================
         const user = tg.initDataUnsafe?.user;
         if (user) {
@@ -483,16 +538,9 @@
             if (user.photo_url) { document.getElementById('userAvatar').src = user.photo_url; }
         }
 
-        const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
         const checkSvg = `<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-        
-        let selectedCourse = "1";
-        const courseScreen = document.getElementById('courseScreen');
-        const scheduleScreen = document.getElementById('scheduleScreen');
-        const scheduleTitle = document.getElementById('scheduleTitle');
         const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
 
-        // Аккордеон
         const courseAccordionToggle = document.getElementById('courseAccordionToggle');
         const courseAccordionContent = document.getElementById('courseAccordionContent');
         const courseChevron = document.getElementById('courseChevron');
@@ -503,7 +551,6 @@
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
-        // Перемикач всередині налаштувань
         const settingsSegments = document.querySelectorAll('.settings-segment');
         const settingsGridSoc = document.getElementById('settingsGridSoc');
         const settingsGridMan = document.getElementById('settingsGridMan');
@@ -532,62 +579,33 @@
             });
         }
 
-        // --- ЛОГІКА ВИЗНАЧЕННЯ ДНЯ ТИЖНЯ ---
-        const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
-        function getActiveDay() {
-            let todayIndex = new Date().getDay();
-            // Якщо неділя або субота, за замовчуванням показуємо розклад на понеділок
-            if (todayIndex === 0 || todayIndex === 6) { return "Понеділок"; }
-            return daysOfWeek[todayIndex];
-        }
-        let currentActiveDay = getActiveDay();
-
         const savedCourse = localStorage.getItem('defaultCoursePref') || "";
+        
         if (savedCourse && savedCourse.includes("М")) {
             document.querySelector('.settings-segment[data-settings-spec="man"]').click();
         }
 
         updateCourseListUI(savedCourse);
         
-        // Функція відкриття розкладу (одразу на потрібний день)
-        function openScheduleScreen(courseVal) {
-            selectedCourse = courseVal;
-            courseScreen.classList.remove('active');
-            scheduleScreen.classList.add('active');
-            
-            if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
-            else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
-            else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
-
-            // Оновлюємо таби днів тижня
-            document.querySelectorAll('.day-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.getAttribute('data-day') === currentActiveDay) {
-                    tab.classList.add('active');
-                    // Скролимо таби так, щоб активний день було видно
-                    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            });
-
-            document.getElementById('scheduleContent').innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
-            fetchSchedule(selectedCourse, currentActiveDay);
+        if (savedCourse) {
+            openScheduleScreen(savedCourse);
         }
-
-        // Автозапуск якщо є збережений курс
-        if (savedCourse) { openScheduleScreen(savedCourse); }
 
         courseOptions.forEach(opt => {
             opt.addEventListener('click', (e) => {
                 const val = e.currentTarget.getAttribute('data-val');
-                if (val) { localStorage.setItem('defaultCoursePref', val); } 
-                else { localStorage.removeItem('defaultCoursePref'); }
+                if (val) {
+                    localStorage.setItem('defaultCoursePref', val);
+                } else {
+                    localStorage.removeItem('defaultCoursePref');
+                }
                 updateCourseListUI(val);
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             });
         });
 
         // ==========================================
-        // ЛОГІКА РЕЖИМУ ОНЛАЙНУ
+        // РЕЖИМ ОНЛАЙНУ
         // ==========================================
         const onlineModeToggle = document.getElementById('onlineModeToggle');
         const onlineHelpToggle = document.getElementById('onlineHelpToggle');
@@ -604,7 +622,7 @@
         });
 
         // ==========================================
-        // ЛОГІКА ПЕРЕКЛЮЧЕННЯ ВНИЗУ (TABS)
+        // ЛОГІКА ПЕРЕКЛЮЧЕННЯ ВНИЗУ (TABS) ТА СКИДАННЯ СТАНУ
         // ==========================================
         const navItems = document.querySelectorAll('.nav-item');
         const tabScreens = document.querySelectorAll('.tab-content');
@@ -617,6 +635,18 @@
                 item.classList.add('active');
                 const targetId = item.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
+
+                // СИСТЕМА СКИДАННЯ (RESET STATE)
+                if (targetId === 'tabSchedule') {
+                    const saved = localStorage.getItem('defaultCoursePref') || "";
+                    if (saved) {
+                        currentActiveDay = getActiveDay(); 
+                        openScheduleScreen(saved);
+                    } else {
+                        scheduleScreen.classList.remove('active');
+                        courseScreen.classList.add('active');
+                    }
+                }
             });
         });
 
@@ -640,7 +670,7 @@
         });
 
         // ==========================================
-        // ЛОГІКА РОЗКЛАДУ (БЕЗ ПРОМІЖНОГО ЕКРАНУ)
+        // ЛОГІКА РОЗКЛАДУ
         // ==========================================
         const btnCourse1 = document.getElementById('btnCourse1');
         const btnCourse2 = document.getElementById('btnCourse2');
@@ -678,9 +708,9 @@
         updateCurrentDayBanner();
 
         // Кліки на головному екрані
-        btnCourse1.addEventListener('click', () => { openScheduleScreen("1"); });
-        btnCourse2.addEventListener('click', () => { openScheduleScreen("2"); });
-        btnMan1.addEventListener('click', () => { openScheduleScreen("1М"); });
+        btnCourse1.addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
+        btnCourse2.addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
+        btnMan1.addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         
         // Кнопка назад
         btnBackToCourse.addEventListener('click', () => { 
@@ -688,7 +718,7 @@
             courseScreen.classList.add('active'); 
         });
 
-        // Горизонтальні таби (замість кнопок на весь екран)
+        // Горизонтальні таби
         dayTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 dayTabs.forEach(t => t.classList.remove('active'));
