@@ -77,13 +77,13 @@
             border: 2px solid transparent; border-radius: 8px; padding: 8px 16px; 
             font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; 
             white-space: nowrap; flex: 1; text-align: center;
-            opacity: 0.55;
+            opacity: 0.65; /* Трохи яскравіше для неактивних */
         }
         .day-tab.active { 
             opacity: 1; 
             transform: scale(1.05); 
             border-color: rgba(17, 24, 39, 0.15); 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
         }
 
         /* --- ТАЙМЛАЙН ТА КАРТКИ --- */
@@ -109,7 +109,7 @@
         .type-lab { background-color: #ffedd5; color: #c2410c; } 
         .type-s { background-color: #f3e8ff; color: #7e22ce; }  
 
-        /* СТРУКТУРА ТІЛА КАРТКИ (З кнопкою онлайну) */
+        /* СТРУКТУРА ТІЛА КАРТКИ */
         .lesson-body-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
         .lesson-info-col { display: flex; flex-direction: column; flex-grow: 1; }
 
@@ -147,6 +147,14 @@
         button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; }
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
+
+        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) З !important */
+        .btn-mon { background-color: #ffadad !important; color: #111827 !important; }
+        .btn-tue { background-color: #ffd6a5 !important; color: #111827 !important; }
+        .btn-wed { background-color: #fdffb6 !important; color: #111827 !important; }
+        .btn-thu { background-color: #caffbf !important; color: #111827 !important; }
+        .btn-fri { background-color: #9bf6ff !important; color: #111827 !important; }
+        .btn-sat { background-color: #a0c4ff !important; color: #111827 !important; }
 
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
@@ -254,13 +262,13 @@
         body.dark-theme .hint-text { background-color: #374151; color: #d1d5db; border-color: #4b5563; }
         body.dark-theme .online-icon-btn { background-color: #1e3a8a; color: #60a5fa; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        /* СПЕЦІАЛЬНІ КОЛЬОРИ ДЛЯ ТЕМНОЇ ТЕМИ */
-        body.dark-theme .btn-mon { background-color: #c96f6f; color: #f9fafb; }
-        body.dark-theme .btn-tue { background-color: #c9946f; color: #f9fafb; }
-        body.dark-theme .btn-wed { background-color: #c7b767; color: #111827; } 
-        body.dark-theme .btn-thu { background-color: #78ad82; color: #f9fafb; }
-        body.dark-theme .btn-fri { background-color: #68a6b3; color: #f9fafb; }
-        body.dark-theme .btn-sat { background-color: #7188c9; color: #f9fafb; }
+        /* СПЕЦІАЛЬНІ КОЛЬОРИ ДЛЯ ТЕМНОЇ ТЕМИ З !important */
+        body.dark-theme .btn-mon { background-color: #c96f6f !important; color: #f9fafb !important; }
+        body.dark-theme .btn-tue { background-color: #c9946f !important; color: #f9fafb !important; }
+        body.dark-theme .btn-wed { background-color: #c7b767 !important; color: #111827 !important; } 
+        body.dark-theme .btn-thu { background-color: #78ad82 !important; color: #f9fafb !important; }
+        body.dark-theme .btn-fri { background-color: #68a6b3 !important; color: #f9fafb !important; }
+        body.dark-theme .btn-sat { background-color: #7188c9 !important; color: #f9fafb !important; }
         body.dark-theme .day-tab.active { border-color: rgba(249, 250, 251, 0.4); }
 
     </style>
@@ -384,7 +392,6 @@
                 </div>
             </div>
 
-            <!-- Картка Режим Онлайну -->
             <div class="settings-card">
                 <div class="settings-header">
                     <div class="settings-header-left">
@@ -404,7 +411,6 @@
                 </div>
             </div>
 
-            <!-- Картка налаштувань Теми -->
             <div class="settings-card">
                 <div class="settings-header" style="margin-bottom: 16px;">
                     <div class="settings-header-left">
@@ -727,21 +733,28 @@
         });
 
         function formatLessonCard(blockText, groupLabel = "") {
+            let onlineLink = "";
+            const isOnlineMode = localStorage.getItem('onlineModePref') === 'true';
+            
+            // Витягуємо посилання ДО того, як розіб'ємо текст на рядки
+            if (isOnlineMode) {
+                let urlMatch = blockText.match(/(https?:\/\/[^\s<]+)/);
+                if (urlMatch) {
+                    onlineLink = urlMatch[0];
+                    // Видаляємо посилання з тексту
+                    blockText = blockText.replace(urlMatch[0], '');
+                }
+            }
+
             let lines = blockText.split('<br>').map(l => l.trim()).filter(l => l);
             if (lines.length === 0) return { html: "", color: "#e5e7eb" };
             
             let subject = lines[0]; let teacher = ""; let room = "";
-            let onlineLink = "";
-            const isOnlineMode = localStorage.getItem('onlineModePref') === 'true';
             
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
                 if (line.toLowerCase().includes('ауд')) { room = line; } 
                 else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) { teacher = line; }
-                else if (isOnlineMode && line.includes('http')) {
-                    let urlMatch = line.match(/(https?:\/\/[^\s]+)/);
-                    if (urlMatch) onlineLink = urlMatch[0];
-                }
             }
             
             let typeBadge = ""; let subjectClean = subject;
@@ -761,7 +774,6 @@
             
             let groupHtml = groupLabel ? `<div class="group-label">${groupLabel}</div>` : "";
             
-            // НОВА ВЕРСТКА ДЛЯ КНОПКИ ОНЛАЙНУ
             let html = `<div class="lesson-card" style="border-left-color: ${cardColor}; border-left-width: 5px;">
                             ${groupHtml}
                             <div class="lesson-header"><div class="subject-title">${subjectClean}</div>${typeBadge}</div>
@@ -771,14 +783,13 @@
             if (room) { let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim(); html += `<div class="info-line room-line">${svgRoom} <span>${cleanRoom}</span></div>`; }
             if (teacher) { let cleanTeacher = teacher.replace('👨‍🏫', '').trim(); html += `<div class="info-line teacher-line">${svgTeacher} <span>${cleanTeacher}</span></div>`; }
             
-            html += `</div>`; // Закриваємо ліву колонку
+            html += `</div>`;
             
             if (onlineLink) {
                 html += `<a href="${onlineLink}" target="_blank" class="online-icon-btn">${svgVideo}</a>`;
             }
 
-            html += `</div></div>`; // Закриваємо рядок та картку
-            return { html: html, color: cardColor };
+            html += `</div></div>`; return { html: html, color: cardColor };
         }
 
         function parseTimeSlotContent(rawText) {
