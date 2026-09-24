@@ -161,7 +161,6 @@
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
         .icon-title { width: 26px; height: 26px; color: #3b82f6; }
-        .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
@@ -407,7 +406,7 @@
                         </h3>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="onlineModeToggle" checked>
+                        <input type="checkbox" id="onlineModeToggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -452,12 +451,16 @@
         </button>
     </nav>
 
+    <!-- СКРИПТИ -->
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
 
-        // 1. КОНСТАНТИ ТА SVG ІКОНКИ
+        // 1. ГЛОБАЛЬНИЙ КЕШ (Рішення для миттєвого завантаження)
+        let globalScheduleData = null;
+
+        // 2. КОНСТАНТИ ТА SVG ІКОНКИ
         const svgRoom = `<svg class="icon-svg icon-room" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2"/><path d="M10 3H7a2 2 0 00-2 2v16"/><path d="M14 12h.01"/><path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z"/><path d="M22 21h-3"/></svg>`;
         const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
         const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
@@ -477,14 +480,14 @@
             "вибірков": "#ff9f43", "еколог": "#b8e994", "статистик": "#f8c291", "демограф": "#f8c291"        
         };
 
-        // 2. DOM ЕЛЕМЕНТИ
+        // 3. DOM ЕЛЕМЕНТИ
         const currentDayBanner = document.getElementById('currentDayBanner');
         const scheduleContent = document.getElementById('scheduleContent');
         const scheduleTitle = document.getElementById('scheduleTitle');
         const courseScreen = document.getElementById('courseScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
 
-        // 3. ДОПОМІЖНІ ФУНКЦІЇ
+        // 4. ДОПОМІЖНІ ФУНКЦІЇ
         function getActiveDay() {
             let todayIndex = new Date().getDay();
             if (todayIndex === 0 || todayIndex === 6) { return "Понеділок"; }
@@ -519,6 +522,27 @@
             } catch(e) { return false; }
         }
 
+        // Централізована функція перемикання дня (використовується для кліків та свайпів)
+        function switchDay(newDay) {
+            currentActiveDay = newDay;
+            
+            document.querySelectorAll('.day-tab').forEach(t => {
+                t.classList.remove('active');
+                if (t.getAttribute('data-day') === newDay) {
+                    t.classList.add('active');
+                    t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
+
+            // Якщо кеш порожній, показуємо загрузку. Інакше рендер буде миттєвим.
+            if (!globalScheduleData) {
+                scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
+            }
+            
+            fetchSchedule(selectedCourse, currentActiveDay);
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+
         function openScheduleScreen(courseVal) {
             selectedCourse = courseVal;
             courseScreen.classList.remove('active');
@@ -528,23 +552,16 @@
             else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
             else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
 
-            document.querySelectorAll('.day-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.getAttribute('data-day') === currentActiveDay) {
-                    tab.classList.add('active');
-                    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            });
-
-            updateCurrentDayBanner(); // Оновлюємо плашку
-            scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
-            fetchSchedule(selectedCourse, currentActiveDay);
+            updateCurrentDayBanner();
+            
+            // Відкриваємо розклад (за замовчуванням поточний день, або понеділок)
+            switchDay(currentActiveDay);
         }
 
         // --- ІНІЦІАЛІЗАЦІЯ ПРИ ЗАВАНТАЖЕННІ ---
         updateCurrentDayBanner();
 
-        // ТЕМА
+        // 5. ТЕМА ОФОРМЛЕННЯ
         const themeSegments = document.querySelectorAll('#themeSegmentControl .segment');
         let savedTheme = localStorage.getItem('themePref') || 'auto';
 
@@ -575,7 +592,7 @@
             });
         });
 
-        // ПРОФІЛЬ
+        // 6. ПРОФІЛЬ КОРИСТУВАЧА
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
@@ -584,7 +601,7 @@
             if (user.photo_url) { document.getElementById('userAvatar').src = user.photo_url; }
         }
 
-        // НАЛАШТУВАННЯ КУРСУ
+        // 7. НАЛАШТУВАННЯ КУРСУ
         const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
         const courseAccordionToggle = document.getElementById('courseAccordionToggle');
         const courseAccordionContent = document.getElementById('courseAccordionContent');
@@ -641,7 +658,7 @@
             });
         });
 
-        // РЕЖИМ ОНЛАЙНУ
+        // 8. РЕЖИМ ОНЛАЙНУ
         const onlineModeToggle = document.getElementById('onlineModeToggle');
         const onlineHelpToggle = document.getElementById('onlineHelpToggle');
         const onlineHintText = document.getElementById('onlineHintText');
@@ -662,7 +679,7 @@
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
-        // НИЖНЯ НАВІГАЦІЯ ТА СКИДАННЯ СТАНУ
+        // 9. НИЖНЯ НАВІГАЦІЯ ТА СКИДАННЯ СТАНУ
         const navItems = document.querySelectorAll('.nav-item');
         const tabScreens = document.querySelectorAll('.tab-content');
 
@@ -705,7 +722,7 @@
             });
         });
 
-        // ЛОГІКА РОЗКЛАДУ ТА ФОРМАТУВАННЯ
+        // 10. КЛІКИ ДЛЯ КНОПОК РОЗКЛАДУ
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
@@ -717,23 +734,59 @@
 
         document.querySelectorAll('.day-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
-                document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                currentActiveDay = e.target.getAttribute('data-day');
-                
-                scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
-                fetchSchedule(selectedCourse, currentActiveDay);
-                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+                switchDay(e.target.getAttribute('data-day'));
             });
         });
 
+        // 11. ЛОГІКА СВАЙПІВ ДЛЯ ДНІВ ТИЖНЯ
+        const scheduleScrollArea = document.getElementById('scheduleScrollArea');
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+        const swipeDays = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"];
+
+        scheduleScrollArea.addEventListener('touchstart', function(event) {
+            touchStartX = event.changedTouches[0].screenX;
+            touchStartY = event.changedTouches[0].screenY;
+        }, {passive: true});
+
+        scheduleScrollArea.addEventListener('touchend', function(event) {
+            touchEndX = event.changedTouches[0].screenX;
+            touchEndY = event.changedTouches[0].screenY;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Свайп вважається дійсним, якщо він довший за 60px і горизонтальний
+            if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                let currentIndex = swipeDays.indexOf(currentActiveDay);
+                if (currentIndex === -1) return;
+                
+                let newIndex = currentIndex;
+                if (deltaX < 0) {
+                    newIndex++; // Свайп вліво -> Наступний день
+                } else {
+                    newIndex--; // Свайп вправо -> Попередній день
+                }
+                
+                if (newIndex >= 0 && newIndex < swipeDays.length) {
+                    switchDay(swipeDays[newIndex]);
+                }
+            }
+        }
+
+        // 12. ФОРМАТУВАННЯ ТА ПАРСИНГ КАРТОЧОК
         function formatLessonCard(blockText, groupLabel = "") {
             let onlineLink = "";
             let savedOnlinePref = localStorage.getItem('onlineModePref');
             if (savedOnlinePref === null) savedOnlinePref = 'true';
             const isOnlineMode = (savedOnlinePref === 'true');
             
-            if (isOnlineMode) {
+            if (isOnlineMode && blockText) {
                 let urlMatch = blockText.match(/(https?:\/\/[^\s<]+)/);
                 if (urlMatch) {
                     onlineLink = urlMatch[0];
@@ -741,7 +794,7 @@
                 }
             }
 
-            let lines = blockText.split('<br>').map(l => l.trim()).filter(l => l);
+            let lines = blockText ? blockText.split('<br>').map(l => l.trim()).filter(l => l) : [];
             if (lines.length === 0) return { html: "", color: "#e5e7eb" };
             
             let subject = lines[0]; let teacher = ""; let room = "";
@@ -788,7 +841,8 @@
         }
 
         function parseTimeSlotContent(rawText) {
-            let text = rawText.replace(/\n/g, '<br>');
+            if (!rawText) return { html: "", color: "#e5e7eb" };
+            let text = String(rawText).replace(/\n/g, '<br>');
             let firstColor = null; let html = "";
             let orParts = text.split(/<br>\s*АБО\s*<br>/i);
             
@@ -808,49 +862,56 @@
             return { html: html, color: firstColor || "#e5e7eb" };
         }
 
+        // 13. ОТРИМАННЯ ДАНИХ З СЕРВЕРА
         async function fetchSchedule(course, day) {
-            const url = `https://Bohdanyof.pythonanywhere.com/api/schedule?t=${new Date().getTime()}`;
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Помилка сервера');
-                const data = await response.json();
-                const dayKey = day.toUpperCase(); 
-
-                if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
-                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px;">У ${day} пар немає! 🎉</div>`; return;
+            
+            if (!globalScheduleData) {
+                try {
+                    const url = `https://Bohdanyof.pythonanywhere.com/api/schedule?t=${new Date().getTime()}`;
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Помилка сервера');
+                    globalScheduleData = await response.json();
+                } catch (error) {
+                    console.error(error);
+                    scheduleContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.</div>";
+                    return;
                 }
-
-                const daySchedule = data[course][dayKey];
-                let htmlContent = '';
-                const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
-                let lessonIndex = 0;
-                
-                const realTodayName = daysOfWeek[new Date().getDay()];
-                
-                for (let time in daySchedule) {
-                    let lessonNumText = numberWords[lessonIndex] || `${lessonIndex + 1}-а пара`;
-                    lessonIndex++;
-                    let parsedData = parseTimeSlotContent(daySchedule[time]);
-                    let cardsHtml = parsedData.html; 
-                    let dotColor = parsedData.color; 
-                    
-                    let isNow = (currentActiveDay === realTodayName && isTimeNow(time));
-                    let currentSvgClock = isNow ? svgClockGreen : svgClockRed;
-                    let clockClass = isNow ? "time-clock-active" : "time-clock";
-                    
-                    htmlContent += `
-                        <div class="time-group">
-                            <div class="time-meta">
-                                <div class="time-dot" style="background-color: ${dotColor};"></div><span>${lessonNumText}</span><span class="time-divider">|</span>
-                                <span class="${clockClass}">${currentSvgClock} ${time}</span>
-                            </div>${cardsHtml}
-                        </div>`;
-                }
-                scheduleContent.innerHTML = htmlContent;
-            } catch (error) {
-                console.error(error);
-                scheduleContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.</div>";
             }
+
+            const data = globalScheduleData;
+            const dayKey = day.toUpperCase(); 
+
+            if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
+                scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px; animation: fadeIn 0.2s ease;">У ${day} пар немає! 🎉</div>`; return;
+            }
+
+            const daySchedule = data[course][dayKey];
+            let htmlContent = '';
+            const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
+            let lessonIndex = 0;
+            
+            const realTodayName = daysOfWeek[new Date().getDay()];
+            
+            for (let time in daySchedule) {
+                let lessonNumText = numberWords[lessonIndex] || `${lessonIndex + 1}-а пара`;
+                lessonIndex++;
+                let parsedData = parseTimeSlotContent(daySchedule[time]);
+                let cardsHtml = parsedData.html; 
+                let dotColor = parsedData.color; 
+                
+                let isNow = (currentActiveDay === realTodayName && isTimeNow(time));
+                let currentSvgClock = isNow ? svgClockGreen : svgClockRed;
+                let clockClass = isNow ? "time-clock-active" : "time-clock";
+                
+                htmlContent += `
+                    <div class="time-group">
+                        <div class="time-meta">
+                            <div class="time-dot" style="background-color: ${dotColor};"></div><span>${lessonNumText}</span><span class="time-divider">|</span>
+                            <span class="${clockClass}">${currentSvgClock} ${time}</span>
+                        </div>${cardsHtml}
+                    </div>`;
+            }
+            scheduleContent.innerHTML = `<div style="animation: fadeIn 0.2s ease;">${htmlContent}</div>`;
         }
     </script>
 </body>
