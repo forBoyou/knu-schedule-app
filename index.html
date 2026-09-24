@@ -25,7 +25,7 @@
         .screen { display: none; height: 100%; box-sizing: border-box; }
         .screen.active { display: block; animation: fadeIn 0.2s ease; }
         
-        #courseScreen { padding: 16px; overflow-y: auto; text-align: center; }
+        #facultyScreen, #courseScreen { padding: 16px; overflow-y: auto; text-align: center; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
@@ -49,6 +49,20 @@
         .nav-item.active { color: #3b82f6 !important; }
         .nav-item svg { width: 24px; height: 24px; }
         .nav-item span { font-size: 11px; font-weight: 600; }
+
+        /* --- НОВИНИ (БАНЕР) --- */
+        .news-banner {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            border-radius: 14px; padding: 16px; margin: 10px auto 24px auto; max-width: 320px;
+            box-shadow: 0 4px 12px rgba(3, 105, 161, 0.1); display: flex; flex-direction: column; 
+            align-items: flex-start; gap: 8px; border: 1px solid #bae6fd;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .news-badge {
+            background-color: #0284c7; color: white; font-size: 10px; font-weight: 800;
+            padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .news-text { font-size: 15px; font-weight: 700; color: #0c4a6e; margin: 0; text-align: left; line-height: 1.3; }
 
         /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНУ РОЗКЛАДУ --- */
         #scheduleScreen { display: none; flex-direction: column; padding: 0; background-color: #f9fafb; transition: background-color 0.3s; }
@@ -149,13 +163,6 @@
         button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; }
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
-
-        .btn-mon { background-color: #ffadad !important; color: #111827 !important; }
-        .btn-tue { background-color: #ffd6a5 !important; color: #111827 !important; }
-        .btn-wed { background-color: #fdffb6 !important; color: #111827 !important; }
-        .btn-thu { background-color: #caffbf !important; color: #111827 !important; }
-        .btn-fri { background-color: #9bf6ff !important; color: #111827 !important; }
-        .btn-sat { background-color: #a0c4ff !important; color: #111827 !important; }
 
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
@@ -273,6 +280,14 @@
         body.dark-theme .btn-sat { background-color: #7188c9 !important; color: #f9fafb !important; }
         body.dark-theme .day-tab.active { border-color: rgba(249, 250, 251, 0.4); }
 
+        /* ТЕМНА ТЕМА ДЛЯ БАНЕРА НОВИН */
+        body.dark-theme .news-banner {
+            background: linear-gradient(135deg, #1e3a8a, #172554);
+            border-color: #1e3a8a; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        body.dark-theme .news-badge { background-color: #3b82f6; }
+        body.dark-theme .news-text { color: #eff6ff; }
+
     </style>
 </head>
 <body>
@@ -288,12 +303,34 @@
             </div>
         </div>
 
-        <!-- Вкладка 2: ГОЛОВНА (Вибір курсу / Розклад) -->
+        <!-- Вкладка 2: ГОЛОВНА (Вибір факультету -> курсу -> розклад) -->
         <div id="tabSchedule" class="tab-content active">
             
-            <!-- ЕКРАН ВИБОРУ КУРСУ -->
-            <div id="courseScreen" class="screen active">
-                <h1 class="main-title">Розклад факультету соціології!</h1>
+            <!-- РІВЕНЬ 1: ЕКРАН ВИБОРУ ФАКУЛЬТЕТУ -->
+            <div id="facultyScreen" class="screen active">
+                <h1 class="main-title">KNU Schedule</h1>
+                
+                <div class="news-banner">
+                    <span class="news-badge">Новина</span>
+                    <p class="news-text">Новий дизайн вже тут! 🎉</p>
+                </div>
+
+                <p style="color: #6b7280; margin-bottom: 24px;">Обери свій факультет:</p>
+                
+                <button id="btnFacultySoc" class="btn-primary">Факультет соціології</button>
+                <button class="btn-primary" disabled>Факультет психології</button>
+                <button class="btn-primary" disabled>Економічний факультет</button>
+            </div>
+
+            <!-- РІВЕНЬ 2: ЕКРАН ВИБОРУ КУРСУ (Соціологія) -->
+            <div id="courseScreen" class="screen">
+                <div style="display: flex; align-items: center; justify-content: center; position: relative; margin: 15px 0 24px 0;">
+                    <button id="btnBackToFaculty" class="header-back-btn" style="position: absolute; left: 0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <h1 class="main-title" style="margin: 0; font-size: 20px;">Факультет соціології</h1>
+                </div>
+
                 <div class="segment-control">
                     <div class="segment active" data-spec="soc">Соціологи</div>
                     <div class="segment" data-spec="man">Менеджери індустрій</div>
@@ -316,7 +353,7 @@
                 </div>
             </div>
 
-            <!-- ЕКРАН РОЗКЛАДУ -->
+            <!-- РІВЕНЬ 3: ЕКРАН РОЗКЛАДУ -->
             <div id="scheduleScreen" class="screen">
                 
                 <div class="schedule-header">
@@ -448,6 +485,7 @@
         </button>
     </nav>
 
+    <!-- СКРИПТИ -->
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
@@ -506,6 +544,7 @@
         }
 
         // --- DOM ЕЛЕМЕНТИ ---
+        const facultyScreen = document.getElementById('facultyScreen');
         const courseScreen = document.getElementById('courseScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
         const scheduleTitle = document.getElementById('scheduleTitle');
@@ -638,7 +677,39 @@
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
-        // --- НИЖНЯ НАВІГАЦІЯ ---
+        // --- НАВІГАЦІЯ ---
+        function switchDay(newDay) {
+            currentActiveDay = newDay;
+            document.querySelectorAll('.day-tab').forEach(t => {
+                t.classList.remove('active');
+                if (t.getAttribute('data-day') === newDay) {
+                    t.classList.add('active');
+                    t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
+
+            if (!globalScheduleData) {
+                scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
+            }
+            fetchSchedule(selectedCourse, currentActiveDay);
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+
+        function openScheduleScreen(courseVal) {
+            selectedCourse = courseVal;
+            facultyScreen.classList.remove('active');
+            courseScreen.classList.remove('active');
+            scheduleScreen.classList.add('active');
+            
+            if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
+            else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
+            else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
+            else if(courseVal === '2М') scheduleTitle.innerHTML = `${svgCap} 2 курс (Мен.)`;
+
+            updateCurrentDayBanner();
+            switchDay(currentActiveDay);
+        }
+
         const navItems = document.querySelectorAll('.nav-item');
         const tabScreens = document.querySelectorAll('.tab-content');
 
@@ -658,13 +729,27 @@
                         openScheduleScreen(saved);
                     } else {
                         scheduleScreen.classList.remove('active');
-                        courseScreen.classList.add('active');
+                        courseScreen.classList.remove('active');
+                        facultyScreen.classList.add('active');
                     }
                 }
             });
         });
 
-        // --- ПЕРЕМИКАННЯ СПЕЦІАЛЬНОСТЕЙ НА ГОЛОВНІЙ ---
+        // --- ЕКРАНИ ВИБОРУ (ФАКУЛЬТЕТИ -> КУРСИ) ---
+        const btnFacultySoc = document.getElementById('btnFacultySoc');
+        const btnBackToFaculty = document.getElementById('btnBackToFaculty');
+        
+        btnFacultySoc.addEventListener('click', () => {
+            facultyScreen.classList.remove('active');
+            courseScreen.classList.add('active');
+        });
+
+        btnBackToFaculty.addEventListener('click', () => {
+            courseScreen.classList.remove('active');
+            facultyScreen.classList.add('active');
+        });
+
         const mainSegments = document.querySelectorAll('#courseScreen .segment-control .segment[data-spec]');
         const groupSoc = document.getElementById('groupSoc');
         const groupMan = document.getElementById('groupMan');
@@ -680,6 +765,48 @@
                 }
             });
         });
+
+        document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
+        document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
+        document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
+        document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
+        
+        document.getElementById('btnBackToCourse').addEventListener('click', () => { 
+            scheduleScreen.classList.remove('active'); 
+            courseScreen.classList.add('active'); 
+        });
+
+        dayTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => { switchDay(e.target.getAttribute('data-day')); });
+        });
+
+        // --- ЛОГІКА СВАЙПІВ ---
+        let touchStartX = 0; let touchStartY = 0; let touchEndX = 0; let touchEndY = 0;
+        const swipeDays = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"];
+
+        scheduleScrollArea.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, {passive: true});
+
+        scheduleScrollArea.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                let currentIndex = swipeDays.indexOf(currentActiveDay);
+                if (currentIndex === -1) return;
+                
+                let newIndex = deltaX < 0 ? currentIndex + 1 : currentIndex - 1;
+                if (newIndex >= 0 && newIndex < swipeDays.length) switchDay(swipeDays[newIndex]);
+            }
+        }
 
         // --- РОЗКЛАД: ФОРМАТУВАННЯ ---
         function formatLessonCard(blockText, groupLabel = "") {
@@ -807,83 +934,10 @@
             scheduleContent.innerHTML = `<div style="animation: fadeIn 0.2s ease;">${htmlContent}</div>`;
         }
 
-        function switchDay(newDay) {
-            currentActiveDay = newDay;
-            dayTabs.forEach(t => {
-                t.classList.remove('active');
-                if (t.getAttribute('data-day') === newDay) {
-                    t.classList.add('active');
-                    t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-            });
-            if (!globalScheduleData) scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
-            fetchSchedule(selectedCourse, currentActiveDay);
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        }
-
-        function openScheduleScreen(courseVal) {
-            selectedCourse = courseVal;
-            courseScreen.classList.remove('active');
-            scheduleScreen.classList.add('active');
-            
-            if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
-            else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
-            else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
-            else if(courseVal === '2М') scheduleTitle.innerHTML = `${svgCap} 2 курс (Мен.)`;
-
-            updateCurrentDayBanner();
-            switchDay(currentActiveDay);
-        }
-
-        // --- КЛІКИ ДЛЯ КНОПОК ГОЛОВНОГО ЕКРАНУ ТА НАВІГАЦІЇ ---
-        document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
-        document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
-        document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
-        document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
-        
-        document.getElementById('btnBackToCourse').addEventListener('click', () => { 
-            scheduleScreen.classList.remove('active'); 
-            courseScreen.classList.add('active'); 
-        });
-
-        dayTabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                switchDay(e.target.getAttribute('data-day'));
-            });
-        });
-
-        // --- ЛОГІКА СВАЙПІВ ---
-        let touchStartX = 0; let touchStartY = 0; let touchEndX = 0; let touchEndY = 0;
-        const swipeDays = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"];
-
-        scheduleScrollArea.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, {passive: true});
-
-        scheduleScrollArea.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            handleSwipe();
-        }, {passive: true});
-
-        function handleSwipe() {
-            const deltaX = touchEndX - touchStartX;
-            const deltaY = touchEndY - touchStartY;
-            
-            if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
-                let currentIndex = swipeDays.indexOf(currentActiveDay);
-                if (currentIndex === -1) return;
-                
-                let newIndex = deltaX < 0 ? currentIndex + 1 : currentIndex - 1;
-                if (newIndex >= 0 && newIndex < swipeDays.length) {
-                    switchDay(swipeDays[newIndex]);
-                }
-            }
-        }
-
         // АВТОЗАПУСК ЯКЩО ЗБЕРЕЖЕНО КУРС
-        if (savedCourse) openScheduleScreen(savedCourse);
+        if (savedCourse) {
+            openScheduleScreen(savedCourse);
+        }
 
     </script>
 </body>
