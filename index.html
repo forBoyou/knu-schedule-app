@@ -407,7 +407,7 @@
                         </h3>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="onlineModeToggle">
+                        <input type="checkbox" id="onlineModeToggle" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -452,7 +452,6 @@
         </button>
     </nav>
 
-    <!-- СКРИПТИ (Все завантажується по порядку для уникнення ReferenceError) -->
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
@@ -647,7 +646,13 @@
         const onlineHelpToggle = document.getElementById('onlineHelpToggle');
         const onlineHintText = document.getElementById('onlineHintText');
 
-        onlineModeToggle.checked = (localStorage.getItem('onlineModePref') === 'true');
+        let savedOnlineMode = localStorage.getItem('onlineModePref');
+        if (savedOnlineMode === null) {
+            savedOnlineMode = 'true';
+            localStorage.setItem('onlineModePref', 'true');
+        }
+        onlineModeToggle.checked = (savedOnlineMode === 'true');
+
         onlineModeToggle.addEventListener('change', (e) => {
             localStorage.setItem('onlineModePref', e.target.checked);
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -724,7 +729,9 @@
 
         function formatLessonCard(blockText, groupLabel = "") {
             let onlineLink = "";
-            const isOnlineMode = localStorage.getItem('onlineModePref') === 'true';
+            let savedOnlinePref = localStorage.getItem('onlineModePref');
+            if (savedOnlinePref === null) savedOnlinePref = 'true';
+            const isOnlineMode = (savedOnlinePref === 'true');
             
             if (isOnlineMode) {
                 let urlMatch = blockText.match(/(https?:\/\/[^\s<]+)/);
