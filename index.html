@@ -161,7 +161,6 @@
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
         .icon-title { width: 26px; height: 26px; color: #3b82f6; }
-        .icon-btn-svg { width: 18px; height: 18px; flex-shrink: 0; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
@@ -356,7 +355,6 @@
                 </div>
             </div>
 
-            <!-- Картка налаштувань Курсу -->
             <div class="settings-card">
                 <div class="settings-header" id="courseAccordionToggle">
                     <div class="settings-header-left">
@@ -396,7 +394,6 @@
                 </div>
             </div>
 
-            <!-- Картка Режим Онлайну -->
             <div class="settings-card">
                 <div class="settings-header">
                     <div class="settings-header-left">
@@ -406,8 +403,9 @@
                             <svg id="onlineHelpToggle" style="cursor:pointer; width:16px; height:16px; margin-left:4px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-question-mark preview-icon"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
                         </h3>
                     </div>
+                    <!-- Додано атрибут checked за замовчуванням для першого рендера -->
                     <label class="toggle-switch">
-                        <input type="checkbox" id="onlineModeToggle">
+                        <input type="checkbox" id="onlineModeToggle" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -416,7 +414,6 @@
                 </div>
             </div>
 
-            <!-- Картка налаштувань Теми -->
             <div class="settings-card">
                 <div class="settings-header" style="margin-bottom: 16px;">
                     <div class="settings-header-left">
@@ -613,15 +610,21 @@
         });
 
         // ==========================================
-        // РЕЖИМ ОНЛАЙНУ
+        // РЕЖИМ ОНЛАЙНУ (ТЕПЕР ЗАВЖДИ УВІМКНЕНО ПРИ ПЕРШОМУ ВХОДІ)
         // ==========================================
         const onlineModeToggle = document.getElementById('onlineModeToggle');
         const onlineHelpToggle = document.getElementById('onlineHelpToggle');
         const onlineHintText = document.getElementById('onlineHintText');
 
+        // Перевіряємо локальне сховище. Якщо нічого немає (перший вхід) - примусово ставимо 'true'
         let savedOnlineMode = localStorage.getItem('onlineModePref');
-        onlineModeToggle.checked = savedOnlineMode === null ? true : (savedOnlineMode === 'true');
+        if (savedOnlineMode === null) {
+            localStorage.setItem('onlineModePref', 'true');
+            savedOnlineMode = 'true';
+        }
         
+        onlineModeToggle.checked = (savedOnlineMode === 'true');
+
         onlineModeToggle.addEventListener('change', (e) => {
             localStorage.setItem('onlineModePref', e.target.checked);
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -742,8 +745,11 @@
         function formatLessonCard(blockText, groupLabel = "") {
             let onlineLink = "";
             let savedOnlinePref = localStorage.getItem('onlineModePref');
-            const isOnlineMode = savedOnlinePref === null ? true : (savedOnlinePref === 'true');
+            // Підтягуємо значення безпосередньо з пам'яті (захист)
+            if (savedOnlinePref === null) { savedOnlinePref = 'true'; }
+            const isOnlineMode = (savedOnlinePref === 'true');
             
+            // Завжди витягуємо лінк ДО розбиття тексту на рядки
             if (isOnlineMode) {
                 let urlMatch = blockText.match(/(https?:\/\/[^\s<]+)/);
                 if (urlMatch) {
@@ -798,8 +804,10 @@
             html += `</div></div>`; return { html: html, color: cardColor };
         }
 
+        // ДОДАНО: Перевірка на null, щоб уникнути помилки сервера для пустих пар
         function parseTimeSlotContent(rawText) {
-            let text = rawText.replace(/\n/g, '<br>');
+            if (!rawText) return { html: "", color: "#e5e7eb" };
+            let text = String(rawText).replace(/\n/g, '<br>');
             let firstColor = null; let html = "";
             let orParts = text.split(/<br>\s*АБО\s*<br>/i);
             
