@@ -53,7 +53,7 @@
         /* --- НОВИНИ (БАНЕР) --- */
         .news-banner {
             background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-            border-radius: 14px; padding: 16px; margin: 10px auto 24px auto; max-width: 320px;
+            border-radius: 14px; padding: 16px; margin: 32px auto 24px auto; max-width: 320px;
             box-shadow: 0 4px 12px rgba(3, 105, 161, 0.1); display: flex; flex-direction: column; 
             align-items: flex-start; gap: 8px; border: 1px solid #bae6fd;
             transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
@@ -163,6 +163,14 @@
         button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; }
         button:active:not(:disabled) { transform: scale(0.98); }
         button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
+
+        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) З !important */
+        .btn-mon { background-color: #ffadad !important; color: #111827 !important; }
+        .btn-tue { background-color: #ffd6a5 !important; color: #111827 !important; }
+        .btn-wed { background-color: #fdffb6 !important; color: #111827 !important; }
+        .btn-thu { background-color: #caffbf !important; color: #111827 !important; }
+        .btn-fri { background-color: #9bf6ff !important; color: #111827 !important; }
+        .btn-sat { background-color: #a0c4ff !important; color: #111827 !important; }
 
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
@@ -310,16 +318,17 @@
             <div id="facultyScreen" class="screen active">
                 <h1 class="main-title">KNU Schedule</h1>
                 
-                <div class="news-banner">
-                    <span class="news-badge">Новина</span>
-                    <p class="news-text">Новий дизайн вже тут! 🎉</p>
-                </div>
-
                 <p style="color: #6b7280; margin-bottom: 24px;">Обери свій факультет:</p>
                 
                 <button id="btnFacultySoc" class="btn-primary">Факультет соціології</button>
                 <button class="btn-primary" disabled>Факультет психології</button>
                 <button class="btn-primary" disabled>Економічний факультет</button>
+
+                <!-- НОВИНИ ПЕРЕНЕСЕНО СЮДИ -->
+                <div class="news-banner" style="margin-top: 32px;">
+                    <span class="news-badge">Новина</span>
+                    <p class="news-text">-Ішак не той хто йде, а той хто везе-</p>
+                </div>
             </div>
 
             <!-- РІВЕНЬ 2: ЕКРАН ВИБОРУ КУРСУ (Соціологія) -->
