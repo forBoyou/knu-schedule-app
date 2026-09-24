@@ -452,73 +452,25 @@
         </button>
     </nav>
 
-    <!-- СКРИПТИ (Все завантажується по порядку для уникнення ReferenceError) -->
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
 
-        // 1. КОНСТАНТИ ТА SVG ІКОНКИ
-        const svgRoom = `<svg class="icon-svg icon-room" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2"/><path d="M10 3H7a2 2 0 00-2 2v16"/><path d="M14 12h.01"/><path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z"/><path d="M22 21h-3"/></svg>`;
-        const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
-        const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
-        const svgClockRed = `<svg class="icon-clock-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
-        const svgClockGreen = `<svg class="icon-clock-active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
-        const svgVideo = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>`;
-        const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
-        const checkSvg = `<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-
+        // --- ЛОГІКА ВИЗНАЧЕННЯ ДНЯ ТИЖНЯ ---
         const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
-        
-        const subjectColors = {
-            "технолог": "#81ecec", "університет": "#a29bfe", "антрополог": "#fab1a0", "англійськ": "#74b9ff",      
-            "спеціальност": "#55efc4", "філософ": "#ffeaa7", "спротив": "#ff7675", "теорія": "#b8c6cb",         
-            "теорiя": "#b8c6cb", "істор": "#b8c6cb", "iстор": "#b8c6cb", "нерівност": "#ff9ff3",      
-            "науков": "#feca57", "образ світ": "#feca57", "гендерн": "#c8d6e5", "кількісн": "#1dd1a1",       
-            "вибірков": "#ff9f43", "еколог": "#b8e994", "статистик": "#f8c291", "демограф": "#f8c291"        
-        };
-
-        // 2. DOM ЕЛЕМЕНТИ
-        const currentDayBanner = document.getElementById('currentDayBanner');
-        const scheduleContent = document.getElementById('scheduleContent');
-        const scheduleTitle = document.getElementById('scheduleTitle');
-        const courseScreen = document.getElementById('courseScreen');
-        const scheduleScreen = document.getElementById('scheduleScreen');
-
-        // 3. ДОПОМІЖНІ ФУНКЦІЇ
         function getActiveDay() {
             let todayIndex = new Date().getDay();
             if (todayIndex === 0 || todayIndex === 6) { return "Понеділок"; }
             return daysOfWeek[todayIndex];
         }
         let currentActiveDay = getActiveDay();
+
+        const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
         let selectedCourse = "1";
-
-        function updateCurrentDayBanner() {
-            const todayIndex = new Date().getDay();
-            const todayName = daysOfWeek[todayIndex];
-            currentDayBanner.innerHTML = `${svgCalendar} <span>Сьогодні: <strong>${todayName}</strong></span>`;
-        }
-
-        function getSubjectColor(text) {
-            let lowerText = text.toLowerCase();
-            for (let key in subjectColors) { if (lowerText.includes(key)) { return subjectColors[key]; } }
-            return "#e5e7eb"; 
-        }
-
-        function isTimeNow(timeStr) {
-            try {
-                const parts = timeStr.split('-');
-                if(parts.length !== 2) return false;
-                const now = new Date();
-                const curMins = now.getHours() * 60 + now.getMinutes();
-                const startParts = parts[0].trim().split(':');
-                const startMins = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
-                const endParts = parts[1].trim().split(':');
-                const endMins = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
-                return curMins >= startMins && curMins <= endMins;
-            } catch(e) { return false; }
-        }
+        const courseScreen = document.getElementById('courseScreen');
+        const scheduleScreen = document.getElementById('scheduleScreen');
+        const scheduleTitle = document.getElementById('scheduleTitle');
 
         function openScheduleScreen(courseVal) {
             selectedCourse = courseVal;
@@ -537,31 +489,37 @@
                 }
             });
 
-            updateCurrentDayBanner(); // Оновлюємо плашку
-            scheduleContent.innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
+            document.getElementById('scheduleContent').innerHTML = "<div style='text-align:center; padding-top:20px;'>⏳ Отримання даних...</div>";
             fetchSchedule(selectedCourse, currentActiveDay);
         }
 
-        // --- ІНІЦІАЛІЗАЦІЯ ПРИ ЗАВАНТАЖЕННІ ---
-        updateCurrentDayBanner();
-
-        // ТЕМА
+        // ==========================================
+        // ЛОГІКА ТЕМНЬОЇ ТЕМИ З СЕГМЕНТАМИ
+        // ==========================================
         const themeSegments = document.querySelectorAll('#themeSegmentControl .segment');
         let savedTheme = localStorage.getItem('themePref') || 'auto';
 
         function updateThemeUI() {
             themeSegments.forEach(seg => {
-                if (seg.getAttribute('data-theme') === savedTheme) { seg.classList.add('active'); } 
-                else { seg.classList.remove('active'); }
+                if (seg.getAttribute('data-theme') === savedTheme) {
+                    seg.classList.add('active');
+                } else {
+                    seg.classList.remove('active');
+                }
             });
         }
         updateThemeUI();
 
         function applyTheme() {
             let currentTheme = savedTheme;
-            if (currentTheme === 'auto') { currentTheme = tg.colorScheme || 'light'; }
-            if (currentTheme === 'dark') { document.body.classList.add('dark-theme'); } 
-            else { document.body.classList.remove('dark-theme'); }
+            if (currentTheme === 'auto') {
+                currentTheme = tg.colorScheme || 'light';
+            }
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
         }
         applyTheme();
 
@@ -571,12 +529,15 @@
             seg.addEventListener('click', (e) => {
                 savedTheme = e.currentTarget.getAttribute('data-theme');
                 localStorage.setItem('themePref', savedTheme);
-                updateThemeUI(); applyTheme();
+                updateThemeUI();
+                applyTheme();
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             });
         });
 
-        // ПРОФІЛЬ
+        // ==========================================
+        // ЛОГІКА ПРОФІЛЮ ТА ВИБОРУ КУРСУ
+        // ==========================================
         const user = tg.initDataUnsafe?.user;
         if (user) {
             document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
@@ -585,8 +546,9 @@
             if (user.photo_url) { document.getElementById('userAvatar').src = user.photo_url; }
         }
 
-        // НАЛАШТУВАННЯ КУРСУ
+        const checkSvg = `<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
         const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
+
         const courseAccordionToggle = document.getElementById('courseAccordionToggle');
         const courseAccordionContent = document.getElementById('courseAccordionContent');
         const courseChevron = document.getElementById('courseChevron');
@@ -626,38 +588,53 @@
         }
 
         const savedCourse = localStorage.getItem('defaultCoursePref') || "";
+        
         if (savedCourse && savedCourse.includes("М")) {
             document.querySelector('.settings-segment[data-settings-spec="man"]').click();
         }
+
         updateCourseListUI(savedCourse);
-        if (savedCourse) { openScheduleScreen(savedCourse); }
+        
+        if (savedCourse) {
+            openScheduleScreen(savedCourse);
+        }
 
         courseOptions.forEach(opt => {
             opt.addEventListener('click', (e) => {
                 const val = e.currentTarget.getAttribute('data-val');
-                if (val) { localStorage.setItem('defaultCoursePref', val); } 
-                else { localStorage.removeItem('defaultCoursePref'); }
+                if (val) {
+                    localStorage.setItem('defaultCoursePref', val);
+                } else {
+                    localStorage.removeItem('defaultCoursePref');
+                }
                 updateCourseListUI(val);
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             });
         });
 
+        // ==========================================
         // РЕЖИМ ОНЛАЙНУ
+        // ==========================================
         const onlineModeToggle = document.getElementById('onlineModeToggle');
         const onlineHelpToggle = document.getElementById('onlineHelpToggle');
         const onlineHintText = document.getElementById('onlineHintText');
 
-        onlineModeToggle.checked = (localStorage.getItem('onlineModePref') === 'true');
+        let savedOnlineMode = localStorage.getItem('onlineModePref');
+        onlineModeToggle.checked = savedOnlineMode === null ? true : (savedOnlineMode === 'true');
+        
         onlineModeToggle.addEventListener('change', (e) => {
             localStorage.setItem('onlineModePref', e.target.checked);
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
         });
+        
         onlineHelpToggle.addEventListener('click', () => {
             onlineHintText.classList.toggle('active');
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
-        // НИЖНЯ НАВІГАЦІЯ ТА СКИДАННЯ СТАНУ
+        // ==========================================
+        // ЛОГІКА ПЕРЕКЛЮЧЕННЯ ВНИЗУ (TABS) ТА СКИДАННЯ СТАНУ
+        // ==========================================
         const navItems = document.querySelectorAll('.nav-item');
         const tabScreens = document.querySelectorAll('.tab-content');
 
@@ -683,7 +660,9 @@
             });
         });
 
-        // ПЕРЕМИКАННЯ СПЕЦІАЛЬНОСТЕЙ НА ГОЛОВНІЙ
+        // ==========================================
+        // ЛОГІКА ПЕРЕМИКАННЯ СПЕЦІАЛЬНОСТЕЙ НА ГОЛОВНІЙ
+        // ==========================================
         const mainSegments = document.querySelectorAll('#courseScreen .segment-control .segment[data-spec]');
         const groupSoc = document.getElementById('groupSoc');
         const groupMan = document.getElementById('groupMan');
@@ -700,19 +679,57 @@
             });
         });
 
-        // ЛОГІКА РОЗКЛАДУ ТА ФОРМАТУВАННЯ
-        document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
-        document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
-        document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
+        // ==========================================
+        // ЛОГІКА РОЗКЛАДУ
+        // ==========================================
+        const btnCourse1 = document.getElementById('btnCourse1');
+        const btnCourse2 = document.getElementById('btnCourse2');
+        const btnMan1 = document.getElementById('btnMan1');
+        const btnBackToCourse = document.getElementById('btnBackToCourse');
+        const dayTabs = document.querySelectorAll('.day-tab');
+        const scheduleContent = document.getElementById('scheduleContent');
+        const currentDayBanner = document.getElementById('currentDayBanner');
+
+        const svgRoom = `<svg class="icon-svg icon-room" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2"/><path d="M10 3H7a2 2 0 00-2 2v16"/><path d="M14 12h.01"/><path d="M19 21V5a2 2 0 00-1.675-1.974l-6.163-1.013A1 1 0 0010 3v18a1 1 0 001.124.992z"/><path d="M22 21h-3"/></svg>`;
+        const svgTeacher = `<svg class="icon-svg icon-teacher" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>`;
+        const svgCalendar = `<svg class="icon-svg icon-calendar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+        const svgClockRed = `<svg class="icon-clock-red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+        const svgClockGreen = `<svg class="icon-clock-active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+        const svgVideo = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>`;
+
+        const subjectColors = {
+            "технолог": "#81ecec", "університет": "#a29bfe", "антрополог": "#fab1a0", "англійськ": "#74b9ff",      
+            "спеціальност": "#55efc4", "філософ": "#ffeaa7", "спротив": "#ff7675", "теорія": "#b8c6cb",         
+            "теорiя": "#b8c6cb", "істор": "#b8c6cb", "iстор": "#b8c6cb", "нерівност": "#ff9ff3",      
+            "науков": "#feca57", "образ світ": "#feca57", "гендерн": "#c8d6e5", "кількісн": "#1dd1a1",       
+            "вибірков": "#ff9f43", "еколог": "#b8e994", "статистик": "#f8c291", "демограф": "#f8c291"        
+        };
+
+        function getSubjectColor(text) {
+            let lowerText = text.toLowerCase();
+            for (let key in subjectColors) { if (lowerText.includes(key)) { return subjectColors[key]; } }
+            return "#e5e7eb"; 
+        }
+
+        function updateCurrentDayBanner() {
+            const todayIndex = new Date().getDay();
+            const todayName = daysOfWeek[todayIndex];
+            currentDayBanner.innerHTML = `${svgCalendar} <span>Сьогодні: <strong>${todayName}</strong></span>`;
+        }
+        updateCurrentDayBanner();
+
+        btnCourse1.addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
+        btnCourse2.addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
+        btnMan1.addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         
-        document.getElementById('btnBackToCourse').addEventListener('click', () => { 
+        btnBackToCourse.addEventListener('click', () => { 
             scheduleScreen.classList.remove('active'); 
             courseScreen.classList.add('active'); 
         });
 
-        document.querySelectorAll('.day-tab').forEach(tab => {
+        dayTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
-                document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+                dayTabs.forEach(t => t.classList.remove('active'));
                 e.target.classList.add('active');
                 currentActiveDay = e.target.getAttribute('data-day');
                 
@@ -724,7 +741,8 @@
 
         function formatLessonCard(blockText, groupLabel = "") {
             let onlineLink = "";
-            const isOnlineMode = localStorage.getItem('onlineModePref') === 'true';
+            let savedOnlinePref = localStorage.getItem('onlineModePref');
+            const isOnlineMode = savedOnlinePref === null ? true : (savedOnlinePref === 'true');
             
             if (isOnlineMode) {
                 let urlMatch = blockText.match(/(https?:\/\/[^\s<]+)/);
