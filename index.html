@@ -28,10 +28,9 @@
         #mainScreen { padding: 16px; overflow-y: auto; text-align: center; display: flex; flex-direction: column; min-height: 100%;}
         #scheduleScreen { padding: 0; }
 
-        /* Прибрано зсув по вертикалі (translateY), тепер лише плавна зміна прозорості */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- НИЖНЯ НАВІГАЦІЯ --- */
@@ -196,6 +195,7 @@
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
+        .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
         .icon-clock-active { color: #10b981; width: 15px; height: 15px; } 
