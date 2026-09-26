@@ -28,9 +28,10 @@
         #mainScreen { padding: 16px; overflow-y: auto; text-align: center; display: flex; flex-direction: column; min-height: 100%;}
         #scheduleScreen { padding: 0; }
 
+        /* Прибрано зсув по вертикалі (translateY), тепер лише плавна зміна прозорості */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* --- НИЖНЯ НАВІГАЦІЯ --- */
@@ -448,7 +449,7 @@
                         </h3>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="onlineModeToggle" checked>
+                        <input type="checkbox" id="onlineModeToggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -608,12 +609,10 @@
         btnChangeFaculty.addEventListener('click', openModal);
         btnCloseModal.addEventListener('click', closeModal);
 
-        // Закриття модалки при кліку на темний фон
         facultyModal.addEventListener('click', (e) => {
             if (e.target === facultyModal) closeModal();
         });
 
-        // Вибір факультету соціології в модалці
         btnModalSoc.addEventListener('click', () => {
             savedFaculty = 'soc';
             localStorage.setItem('selectedFacultyPref', 'soc');
@@ -938,6 +937,7 @@
             return { html: html, color: firstColor || "#e5e7eb" };
         }
 
+        // --- РОЗКЛАД: РЕНДЕР ТА ЗАВАНТАЖЕННЯ ---
         async function fetchSchedule(course, day) {
             if (!globalScheduleData) {
                 try {
