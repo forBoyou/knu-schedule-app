@@ -25,14 +25,12 @@
         .screen { display: none; height: 100%; box-sizing: border-box; }
         .screen.active { display: block; animation: fadeIn 0.2s ease; }
         
-        /* ВИПРАВЛЕНО БАГ З НАСЛАРУВАННЯМ ЕКРАНІВ */
         #mainScreen { padding: 16px; overflow-y: auto; text-align: center; flex-direction: column; min-height: 100%; }
         #mainScreen.active { display: flex; }
         
         #scheduleScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
         #scheduleScreen.active { display: flex; }
 
-        /* Прибрано підстрибування екрану знизу, тепер лише прозорість */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -59,6 +57,17 @@
         /* --- ГОЛОВНИЙ ЕКРАН (KNU Schedule) --- */
         .main-title { display: block; text-align: center; font-size: 28px; font-weight: 800; color: #111827; margin: 10px 0 15px 0; letter-spacing: -0.5px; transition: color 0.3s; }
         .sub-title { font-size: 20px; font-weight: 700; color: #374151; margin: 0 0 10px 0; transition: color 0.3s; }
+
+        /* --- ПЛАШКА СЕРІЇ ЗАХОДІВ (STREAK) --- */
+        .streak-badge {
+            position: absolute; left: 0;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            background-color: #ffffff; padding: 4px 10px; border-radius: 12px;
+            border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .streak-badge img { width: 16px; height: 16px; object-fit: contain; }
+        .streak-badge span { font-size: 13px; font-weight: 700; color: #f97316; }
 
         /* Кнопка пошуку факультету (Велика) */
         .btn-search-large {
@@ -282,6 +291,7 @@
         body.dark-theme .modal-overlay { background: rgba(0, 0, 0, 0.6); }
         body.dark-theme .modal-content { background: #1f2937; border: 1px solid #374151; }
         body.dark-theme .modal-title { color: #f9fafb; }
+        body.dark-theme .streak-badge { background-color: #1f2937; border-color: #374151; }
 
         /* СПЕЦІАЛЬНІ КОЛЬОРИ ДЛЯ ТЕМНОЇ ТЕМИ З !important */
         body.dark-theme .btn-mon { background-color: #c96f6f !important; color: #f9fafb !important; }
@@ -317,15 +327,20 @@
             
             <div id="mainScreen" class="screen active">
                 
-                <!-- Якщо хочеш додати логотип, розкоментуй цей рядок і зміни 'logo.png' на назву свого файлу: -->
-                <!-- <img src="logo.png" alt="Логотип" style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 10px auto; display: block;"> -->
-
                 <!-- Статичний заголовок -->
                 <h1 class="main-title">KNU Schedule</h1>
                 
                 <!-- Блок вибраного факультету (прихований до вибору) -->
                 <div id="selectedFacultyDisplay" style="display: none;">
-                    <h2 id="facultyNameDisplay" class="sub-title">Факультет соціології</h2>
+                    
+                    <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                        <div class="streak-badge" id="streakBadge">
+                            <img src="fire_series.webp" alt="🔥">
+                            <span id="streakCountText">1</span>
+                        </div>
+                        <h2 id="facultyNameDisplay" class="sub-title" style="margin: 0;">Факультет соціології</h2>
+                    </div>
+
                     <button id="btnChangeFaculty" class="btn-change-fac">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
                         Змінити факультет
@@ -569,6 +584,39 @@
             } catch(e) { return false; }
         }
 
+        // --- ЛОГІКА СЕРІЙ (STREAK) ---
+        function updateStreak() {
+            let lastLoginStr = localStorage.getItem('lastLoginDate');
+            let streak = parseInt(localStorage.getItem('streakCount') || '0');
+            
+            let now = new Date();
+            let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            
+            if (lastLoginStr) {
+                let lastLogin = new Date(parseInt(lastLoginStr));
+                let diffTime = today.getTime() - lastLogin.getTime();
+                let diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    streak += 1;
+                    localStorage.setItem('lastLoginDate', today.getTime().toString());
+                    localStorage.setItem('streakCount', streak.toString());
+                } else if (diffDays > 1) {
+                    streak = 1;
+                    localStorage.setItem('lastLoginDate', today.getTime().toString());
+                    localStorage.setItem('streakCount', streak.toString());
+                }
+            } else {
+                streak = 1;
+                localStorage.setItem('lastLoginDate', today.getTime().toString());
+                localStorage.setItem('streakCount', streak.toString());
+            }
+            
+            const streakElem = document.getElementById('streakCountText');
+            if(streakElem) streakElem.innerText = streak;
+        }
+        updateStreak();
+
         // --- DOM ЕЛЕМЕНТИ ---
         const mainScreen = document.getElementById('mainScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
@@ -579,7 +627,6 @@
         const scheduleScrollArea = document.getElementById('scheduleScrollArea');
         const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
 
-        // Елементи вибору факультету
         const btnSelectFacultyLarge = document.getElementById('btnSelectFacultyLarge');
         const selectedFacultyDisplay = document.getElementById('selectedFacultyDisplay');
         const facultyNameDisplay = document.getElementById('facultyNameDisplay');
