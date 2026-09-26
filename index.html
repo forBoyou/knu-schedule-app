@@ -25,7 +25,8 @@
         .screen { display: none; height: 100%; box-sizing: border-box; }
         .screen.active { display: block; animation: fadeIn 0.2s ease; }
         
-        #facultyScreen, #courseScreen { padding: 16px; overflow-y: auto; text-align: center; }
+        #mainScreen { padding: 16px; overflow-y: auto; text-align: center; display: flex; flex-direction: column; min-height: 100%;}
+        #scheduleScreen { padding: 0; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
@@ -50,10 +51,56 @@
         .nav-item svg { width: 24px; height: 24px; }
         .nav-item span { font-size: 11px; font-weight: 600; }
 
+        /* --- ГОЛОВНИЙ ЕКРАН (KNU Schedule) --- */
+        .main-title { display: block; text-align: center; font-size: 28px; font-weight: 800; color: #111827; margin: 10px 0 15px 0; letter-spacing: -0.5px; transition: color 0.3s; }
+        .sub-title { font-size: 20px; font-weight: 700; color: #374151; margin: 0 0 10px 0; transition: color 0.3s; }
+
+        /* Кнопка пошуку факультету (Велика) */
+        .btn-search-large {
+            background-color: #3b82f6; color: white; border: none; padding: 16px 20px; margin: 20px auto; 
+            border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 280px; 
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); transition: all 0.2s;
+        }
+        .btn-search-large:active { transform: scale(0.96); box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2); }
+        .btn-search-large svg { width: 20px; height: 20px; }
+
+        /* Кнопка зміни факультету (Маленька) */
+        .btn-change-fac {
+            background-color: #e5e7eb; color: #4b5563; border: none; padding: 8px 16px; margin: 0 auto 24px auto; 
+            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-change-fac:active { background-color: #d1d5db; transform: scale(0.96); }
+        .btn-change-fac svg { width: 14px; height: 14px; }
+
+        /* --- МОДАЛЬНЕ ВІКНО (BLUR) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 999; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-content {
+            background: #ffffff; width: 85%; max-width: 320px; border-radius: 20px; padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(20px); transition: transform 0.3s ease;
+            text-align: center;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        
+        .modal-title { font-size: 18px; font-weight: 700; margin: 0 0 20px 0; color: #111827; }
+        
+        .btn-modal-close {
+            background: transparent; color: #ef4444; border: none; font-size: 15px; font-weight: 600;
+            margin-top: 10px; padding: 10px; width: 100%; cursor: pointer;
+        }
+
         /* --- НОВИНИ (БАНЕР) --- */
         .news-banner {
             background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-            border-radius: 14px; padding: 16px; margin: 32px auto 24px auto; max-width: 320px;
+            border-radius: 14px; padding: 16px; margin: auto auto 20px auto; max-width: 320px; width: calc(100% - 32px);
             box-shadow: 0 4px 12px rgba(3, 105, 161, 0.1); display: flex; flex-direction: column; 
             align-items: flex-start; gap: 8px; border: 1px solid #bae6fd;
             transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
@@ -64,8 +111,19 @@
         }
         .news-text { font-size: 15px; font-weight: 700; color: #0c4a6e; margin: 0; text-align: left; line-height: 1.3; }
 
+        /* --- ЕЛЕМЕНТИ ВИБОРУ КУРСУ --- */
+        .segment-control { display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px; margin: 0 auto 24px auto; max-width: 320px; transition: background-color 0.3s; }
+        .segment { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: #6b7280; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+        .segment.active { background-color: #ffffff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .course-group { display: none; animation: fadeIn 0.2s ease; }
+        .course-group.active { display: block; }
+
+        button.btn-primary { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; }
+        button.btn-primary:active:not(:disabled) { transform: scale(0.98); }
+        button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
+
         /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНУ РОЗКЛАДУ --- */
-        #scheduleScreen { display: none; flex-direction: column; padding: 0; background-color: #f9fafb; transition: background-color 0.3s; }
+        #scheduleScreen { display: none; flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; }
         #scheduleScreen.active { display: flex; }
 
         .schedule-header {
@@ -73,51 +131,33 @@
             z-index: 10; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
             transition: background-color 0.3s, border-color 0.3s;
         }
-        
-        .header-back-btn {
-            background: transparent !important; border: none; box-shadow: none !important; color: #3b82f6 !important;
-            padding: 0 !important; margin: 0 !important; width: 24px !important; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        
+        .header-back-btn { background: transparent !important; border: none; box-shadow: none !important; color: #3b82f6 !important; padding: 0 !important; margin: 0 !important; width: 24px !important; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; transition: color 0.3s; display: flex; align-items: center; gap: 8px;}
         .schedule-scroll { flex-grow: 1; overflow-y: auto; padding: 16px; }
 
         /* ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ */
         .day-tabs-container {
             background-color: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 10px 16px;
-            display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; transition: background-color 0.3s, border-color 0.3s;
-            flex-shrink: 0;
+            display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; transition: background-color 0.3s, border-color 0.3s; flex-shrink: 0;
         }
         .day-tabs-container::-webkit-scrollbar { display: none; }
         .day-tab {
             border: 2px solid transparent; border-radius: 8px; padding: 8px 16px; 
             font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; 
-            white-space: nowrap; flex: 1; text-align: center;
-            opacity: 0.65; 
+            white-space: nowrap; flex: 1; text-align: center; opacity: 0.65; 
         }
-        .day-tab.active { 
-            opacity: 1; 
-            transform: scale(1.05); 
-            border-color: rgba(17, 24, 39, 0.15); 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
-        }
+        .day-tab.active { opacity: 1; transform: scale(1.05); border-color: rgba(17, 24, 39, 0.15); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 
         /* --- ТАЙМЛАЙН ТА КАРТКИ --- */
         .time-group { margin-bottom: 18px; }
         .time-meta { font-size: 13px; font-weight: 600; color: #9ca3af; margin-bottom: 6px; padding-left: 2px; display: flex; align-items: center; gap: 6px; }
         .time-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #d1d5db; }
         .time-divider { color: #d1d5db; font-weight: 400; }
-        
         .time-clock { color: #ef4444; font-weight: 700; display: flex; align-items: center; gap: 4px; }
         .time-clock-active { color: #10b981; font-weight: 700; display: flex; align-items: center; gap: 4px; } 
 
-        .lesson-card {
-            background-color: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #e5e7eb;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
+        .lesson-card { background-color: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #e5e7eb; transition: background-color 0.3s, border-color 0.3s; }
         .lesson-card:last-child { margin-bottom: 0; }
-
         .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
         .subject-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.25; transition: color 0.3s; }
 
@@ -129,42 +169,22 @@
 
         .lesson-body-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
         .lesson-info-col { display: flex; flex-direction: column; flex-grow: 1; }
-
         .info-line { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
         .info-line:last-child { margin-bottom: 0; }
         .room-line { font-size: 13px; font-weight: 600; color: #4b5563; transition: color 0.3s; }
         .teacher-line { font-size: 12px; font-weight: 500; color: #9ca3af; }
         .group-label { font-size: 11px; font-weight: 700; color: #6366f1; background-color: #e0e7ff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
         
-        .or-divider {
-            text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .or-divider { text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; transition: background-color 0.3s; }
 
-        .online-icon-btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 44px; height: 44px; background-color: #eff6ff; color: #3b82f6;
-            border-radius: 12px; text-decoration: none; flex-shrink: 0;
-            transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15);
-        }
+        .online-icon-btn { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background-color: #eff6ff; color: #3b82f6; border-radius: 12px; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15); }
         .online-icon-btn:active { transform: scale(0.92); background-color: #dbeafe; }
         .online-icon-btn svg { width: 22px; height: 22px; }
 
-        /* --- ІНШІ СТИЛІ (Кнопки, Заголовки) --- */
-        .main-title { display: block; text-align: center; font-size: 24px; font-weight: 700; color: #111827; margin: 15px 0 20px 0; line-height: 1.2; transition: color 0.3s; }
         .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
 
-        .segment-control { display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px; margin: 0 auto 40px auto; max-width: 320px; transition: background-color 0.3s; }
-        .segment { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: #6b7280; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
-        .segment.active { background-color: #ffffff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .course-group { display: none; animation: fadeIn 0.2s ease; }
-        .course-group.active { display: block; }
-
-        button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; }
-        button:active:not(:disabled) { transform: scale(0.98); }
-        button:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
-
-        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) З !important */
+        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) */
         .btn-mon { background-color: #ffadad !important; color: #111827 !important; }
         .btn-tue { background-color: #ffd6a5 !important; color: #111827 !important; }
         .btn-wed { background-color: #fdffb6 !important; color: #111827 !important; }
@@ -175,9 +195,7 @@
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
-        .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
-        
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
         .icon-clock-active { color: #10b981; width: 15px; height: 15px; } 
 
@@ -213,12 +231,10 @@
         .course-options::-webkit-scrollbar { width: 4px; }
         .course-options::-webkit-scrollbar-track { background: transparent; }
         .course-options::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 4px; }
-        
         .course-option { padding: 14px 16px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px; font-weight: 600; color: #374151; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease; }
         .course-option.active { border-color: #3b82f6; background-color: #eff6ff; color: #1d4ed8; }
         .course-option.disabled { opacity: 0.5; pointer-events: none; background-color: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; }
         .check-icon { width: 18px; height: 18px; color: #3b82f6; }
-        
         .course-grid { display: none; grid-template-columns: 1fr 1fr; gap: 8px; animation: fadeIn 0.2s ease; margin-bottom: 8px;}
         .course-grid.active { display: grid; }
 
@@ -227,57 +243,42 @@
            ========================================= */
         body.dark-theme { background-color: #111827; color: #f9fafb; }
         body.dark-theme #scheduleScreen { background-color: #111827; }
-        
-        body.dark-theme .bottom-nav,
-        body.dark-theme .schedule-header,
-        body.dark-theme .day-tabs-container,
-        body.dark-theme .lesson-card,
-        body.dark-theme .profile-card,
-        body.dark-theme .settings-card { background-color: #1f2937; border-color: #374151; }
-        
+        body.dark-theme .bottom-nav, body.dark-theme .schedule-header, body.dark-theme .day-tabs-container,
+        body.dark-theme .lesson-card, body.dark-theme .profile-card, body.dark-theme .settings-card { background-color: #1f2937; border-color: #374151; }
         body.dark-theme .lesson-card { border-left-color: #4b5563; }
-        
-        body.dark-theme .schedule-header h1,
-        body.dark-theme .profile-info h2,
-        body.dark-theme .settings-header h3,
-        body.dark-theme .subject-title,
-        body.dark-theme .main-title { color: #f9fafb; }
-        
+        body.dark-theme .schedule-header h1, body.dark-theme .profile-info h2, body.dark-theme .settings-header h3,
+        body.dark-theme .subject-title, body.dark-theme .main-title { color: #f9fafb; }
+        body.dark-theme .sub-title { color: #d1d5db; }
         body.dark-theme .header-back-btn { color: #60a5fa !important; }
         body.dark-theme .settings-header-left > svg { color: #9ca3af; }
-
-        body.dark-theme .time-meta,
-        body.dark-theme .teacher-line,
-        body.dark-theme .or-divider,
-        body.dark-theme .icon-room { color: #9ca3af; }
-        
+        body.dark-theme .time-meta, body.dark-theme .teacher-line, body.dark-theme .or-divider, body.dark-theme .icon-room { color: #9ca3af; }
         body.dark-theme .room-line { color: #d1d5db; }
-        body.dark-theme .or-divider::before, 
-        body.dark-theme .or-divider::after { background-color: #374151; }
-
+        body.dark-theme .or-divider::before, body.dark-theme .or-divider::after { background-color: #374151; }
         body.dark-theme .segment-control { background-color: #374151; }
         body.dark-theme .segment { color: #9ca3af; }
         body.dark-theme .segment.active { background-color: #4b5563; color: #f9fafb; }
-        
         body.dark-theme .current-day-banner { background-color: #1e3a8a; border-color: #1e3a8a; color: #bfdbfe; }
         body.dark-theme .current-day-banner .icon-calendar { color: #60a5fa; }
-        
         body.dark-theme .group-label { background-color: #3730a3; color: #c7d2fe; }
-        body.dark-theme button:disabled { background-color: #374151 !important; color: #6b7280 !important; }
+        body.dark-theme button.btn-primary:disabled { background-color: #374151 !important; color: #6b7280 !important; }
         body.dark-theme .time-dot { background-color: #4b5563; }
         body.dark-theme .time-divider { color: #4b5563; }
-
         body.dark-theme .course-options::-webkit-scrollbar-thumb { background-color: #4b5563; }
         body.dark-theme .course-option { background-color: #374151; border-color: #4b5563; color: #d1d5db; }
         body.dark-theme .course-option.active { border-color: #3b82f6; background-color: #1e3a8a; color: #bfdbfe; }
         body.dark-theme .course-option.disabled { background-color: #1f2937; color: #6b7280; border-color: #374151; }
         body.dark-theme .check-icon { color: #60a5fa; }
-        
         body.dark-theme .slider { background-color: #4b5563; }
         body.dark-theme input:checked + .slider { background-color: #3b82f6; }
-        
         body.dark-theme .hint-text { background-color: #374151; color: #d1d5db; border-color: #4b5563; }
         body.dark-theme .online-icon-btn { background-color: #1e3a8a; color: #60a5fa; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        body.dark-theme .btn-change-fac { background-color: #374151; color: #9ca3af; }
+        body.dark-theme .btn-change-fac:active { background-color: #4b5563; }
+        
+        body.dark-theme .modal-overlay { background: rgba(0, 0, 0, 0.6); }
+        body.dark-theme .modal-content { background: #1f2937; border: 1px solid #374151; }
+        body.dark-theme .modal-title { color: #f9fafb; }
 
         /* СПЕЦІАЛЬНІ КОЛЬОРИ ДЛЯ ТЕМНОЇ ТЕМИ З !important */
         body.dark-theme .btn-mon { background-color: #c96f6f !important; color: #f9fafb !important; }
@@ -289,10 +290,7 @@
         body.dark-theme .day-tab.active { border-color: rgba(249, 250, 251, 0.4); }
 
         /* ТЕМНА ТЕМА ДЛЯ БАНЕРА НОВИН */
-        body.dark-theme .news-banner {
-            background: linear-gradient(135deg, #1e3a8a, #172554);
-            border-color: #1e3a8a; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+        body.dark-theme .news-banner { background: linear-gradient(135deg, #1e3a8a, #172554); border-color: #1e3a8a; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
         body.dark-theme .news-badge { background-color: #3b82f6; }
         body.dark-theme .news-text { color: #eff6ff; }
 
@@ -311,58 +309,60 @@
             </div>
         </div>
 
-        <!-- Вкладка 2: ГОЛОВНА (Вибір факультету -> курсу -> розклад) -->
+        <!-- Вкладка 2: ГОЛОВНА (KNU Schedule) -->
         <div id="tabSchedule" class="tab-content active">
             
-            <!-- РІВЕНЬ 1: ЕКРАН ВИБОРУ ФАКУЛЬТЕТУ -->
-            <div id="facultyScreen" class="screen active">
+            <div id="mainScreen" class="screen active">
+                <!-- Статичний заголовок -->
                 <h1 class="main-title">KNU Schedule</h1>
                 
-                <p style="color: #6b7280; margin-bottom: 24px;">Обери свій факультет:</p>
-                
-                <button id="btnFacultySoc" class="btn-primary">Факультет соціології</button>
-                <button class="btn-primary" disabled>Факультет психології</button>
-                <button class="btn-primary" disabled>Економічний факультет</button>
+                <!-- Блок вибраного факультету (прихований до вибору) -->
+                <div id="selectedFacultyDisplay" style="display: none;">
+                    <h2 id="facultyNameDisplay" class="sub-title">Факультет соціології</h2>
+                    <button id="btnChangeFaculty" class="btn-change-fac">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                        Змінити факультет
+                    </button>
+                    
+                    <!-- Блок вибору курсу -->
+                    <div id="courseSelectionArea" style="animation: fadeIn 0.2s ease;">
+                        <div class="segment-control">
+                            <div class="segment active" data-spec="soc">Соціологи</div>
+                            <div class="segment" data-spec="man">Менеджери індустрій</div>
+                        </div>
+                        
+                        <div id="groupSoc" class="course-group active">
+                            <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
+                            <button id="btnCourse1" class="btn-primary">1 курс</button>
+                            <button id="btnCourse2" class="btn-primary">2 курс</button>
+                            <button class="btn-primary" disabled>3 курс</button>
+                            <button class="btn-primary" disabled>4 курс</button>
+                        </div>
+                        
+                        <div id="groupMan" class="course-group">
+                            <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
+                            <button id="btnMan1" class="btn-primary">1 курс</button>
+                            <button id="btnMan2" class="btn-primary">2 курс</button>
+                            <button class="btn-primary" disabled>3 курс</button>
+                            <button class="btn-primary" disabled>4 курс</button>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- НОВИНИ ПЕРЕНЕСЕНО СЮДИ -->
-                <div class="news-banner" style="margin-top: 32px;">
+                <!-- Початкова велика кнопка вибору (показується якщо факультет не обрано) -->
+                <button id="btnSelectFacultyLarge" class="btn-search-large">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                    Обери свій факультет
+                </button>
+
+                <!-- НОВИНИ В САМОМУ НИЗУ -->
+                <div class="news-banner">
                     <span class="news-badge">Новина</span>
                     <p class="news-text">-Ішак не той хто йде, а той хто везе-</p>
                 </div>
             </div>
 
-            <!-- РІВЕНЬ 2: ЕКРАН ВИБОРУ КУРСУ (Соціологія) -->
-            <div id="courseScreen" class="screen">
-                <div style="display: flex; align-items: center; justify-content: center; position: relative; margin: 15px 0 24px 0;">
-                    <button id="btnBackToFaculty" class="header-back-btn" style="position: absolute; left: 0;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </button>
-                    <h1 class="main-title" style="margin: 0; font-size: 20px;">Факультет соціології</h1>
-                </div>
-
-                <div class="segment-control">
-                    <div class="segment active" data-spec="soc">Соціологи</div>
-                    <div class="segment" data-spec="man">Менеджери індустрій</div>
-                </div>
-                
-                <div id="groupSoc" class="course-group active">
-                    <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
-                    <button id="btnCourse1" class="btn-primary">1 курс</button>
-                    <button id="btnCourse2" class="btn-primary">2 курс</button>
-                    <button class="btn-primary" disabled>3 курс</button>
-                    <button class="btn-primary" disabled>4 курс</button>
-                </div>
-                
-                <div id="groupMan" class="course-group">
-                    <p style="color: #6b7280; margin-bottom: 24px;">Обери свій курс, щоб дізнатися розклад.</p>
-                    <button id="btnMan1" class="btn-primary">1 курс</button>
-                    <button id="btnMan2" class="btn-primary">2 курс</button>
-                    <button class="btn-primary" disabled>3 курс</button>
-                    <button class="btn-primary" disabled>4 курс</button>
-                </div>
-            </div>
-
-            <!-- РІВЕНЬ 3: ЕКРАН РОЗКЛАДУ -->
+            <!-- ЕКРАН РОЗКЛАДУ -->
             <div id="scheduleScreen" class="screen">
                 
                 <div class="schedule-header">
@@ -401,6 +401,7 @@
                 </div>
             </div>
 
+            <!-- Картка налаштувань Курсу -->
             <div class="settings-card">
                 <div class="settings-header" id="courseAccordionToggle">
                     <div class="settings-header-left">
@@ -411,10 +412,8 @@
                 </div>
                 
                 <div class="accordion-content collapsed" id="courseAccordionContent">
-                    
                     <div class="course-option active" data-val="" style="margin-bottom: 12px;">Не обрано (питати завжди)</div>
                     <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #6b7280; padding-left: 4px;">Або обери свій факультет:</div>
-                    
                     <div class="segment-control" style="margin-bottom: 12px; max-width: 100%;">
                         <div class="segment settings-segment active" data-settings-spec="soc">Соціологи</div>
                         <div class="segment settings-segment" data-settings-spec="man">Менеджери</div>
@@ -426,7 +425,6 @@
                         <div class="course-option disabled">3 курс</div>
                         <div class="course-option disabled">4 курс</div>
                     </div>
-                    
                     <div class="course-grid" id="settingsGridMan">
                         <div class="course-option" data-val="1М">1 курс</div>
                         <div class="course-option" data-val="2М">2 курс</div>
@@ -450,7 +448,7 @@
                         </h3>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="onlineModeToggle">
+                        <input type="checkbox" id="onlineModeToggle" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -476,6 +474,18 @@
 
         </div>
 
+    </div>
+
+    <!-- МОДАЛЬНЕ ВІКНО ВИБОРУ ФАКУЛЬТЕТУ (BLUR) -->
+    <div id="facultyModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">Обери факультет</h3>
+            <button class="btn-primary" id="btnModalSoc" style="margin-bottom: 10px;">Факультет соціології</button>
+            <button class="btn-primary" disabled style="margin-bottom: 10px;">Факультет психології</button>
+            <button class="btn-primary" disabled>Економічний факультет</button>
+            
+            <button id="btnCloseModal" class="btn-modal-close">Скасувати</button>
+        </div>
     </div>
 
     <!-- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ -->
@@ -553,8 +563,7 @@
         }
 
         // --- DOM ЕЛЕМЕНТИ ---
-        const facultyScreen = document.getElementById('facultyScreen');
-        const courseScreen = document.getElementById('courseScreen');
+        const mainScreen = document.getElementById('mainScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
@@ -563,7 +572,57 @@
         const scheduleScrollArea = document.getElementById('scheduleScrollArea');
         const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
 
-        // --- ОНОВЛЕННЯ БАНЕРА ---
+        // Елементи вибору факультету
+        const btnSelectFacultyLarge = document.getElementById('btnSelectFacultyLarge');
+        const selectedFacultyDisplay = document.getElementById('selectedFacultyDisplay');
+        const facultyNameDisplay = document.getElementById('facultyNameDisplay');
+        const btnChangeFaculty = document.getElementById('btnChangeFaculty');
+        const facultyModal = document.getElementById('facultyModal');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        const btnModalSoc = document.getElementById('btnModalSoc');
+
+        // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ТА ФАКУЛЬТЕТУ ---
+        let savedFaculty = localStorage.getItem('selectedFacultyPref') || null;
+
+        function updateFacultyUI() {
+            if (savedFaculty === 'soc') {
+                btnSelectFacultyLarge.style.display = 'none';
+                selectedFacultyDisplay.style.display = 'block';
+                facultyNameDisplay.innerText = 'Факультет соціології';
+            } else {
+                btnSelectFacultyLarge.style.display = 'flex';
+                selectedFacultyDisplay.style.display = 'none';
+            }
+        }
+        updateFacultyUI();
+
+        function openModal() {
+            facultyModal.classList.add('active');
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+        function closeModal() {
+            facultyModal.classList.remove('active');
+        }
+
+        btnSelectFacultyLarge.addEventListener('click', openModal);
+        btnChangeFaculty.addEventListener('click', openModal);
+        btnCloseModal.addEventListener('click', closeModal);
+
+        // Закриття модалки при кліку на темний фон
+        facultyModal.addEventListener('click', (e) => {
+            if (e.target === facultyModal) closeModal();
+        });
+
+        // Вибір факультету соціології в модалці
+        btnModalSoc.addEventListener('click', () => {
+            savedFaculty = 'soc';
+            localStorage.setItem('selectedFacultyPref', 'soc');
+            updateFacultyUI();
+            closeModal();
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        });
+
+        // --- ОНОВЛЕННЯ БАНЕРА РОЗКЛАДУ ---
         function updateCurrentDayBanner() {
             const todayIndex = new Date().getDay();
             const todayName = daysOfWeek[todayIndex];
@@ -609,7 +668,7 @@
             if (user.photo_url) document.getElementById('userAvatar').src = user.photo_url;
         }
 
-        // --- НАЛАШТУВАННЯ КУРСУ ---
+        // --- НАЛАШТУВАННЯ КУРСУ (АКОРДЕОН В ПРОФІЛІ) ---
         const courseAccordionToggle = document.getElementById('courseAccordionToggle');
         const courseAccordionContent = document.getElementById('courseAccordionContent');
         const courseChevron = document.getElementById('courseChevron');
@@ -686,7 +745,7 @@
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
-        // --- НАВІГАЦІЯ ---
+        // --- НАВІГАЦІЯ ТА РОЗКЛАД ---
         function switchDay(newDay) {
             currentActiveDay = newDay;
             document.querySelectorAll('.day-tab').forEach(t => {
@@ -706,8 +765,7 @@
 
         function openScheduleScreen(courseVal) {
             selectedCourse = courseVal;
-            facultyScreen.classList.remove('active');
-            courseScreen.classList.remove('active');
+            mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
             if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
@@ -733,33 +791,19 @@
 
                 if (targetId === 'tabSchedule') {
                     const saved = localStorage.getItem('defaultCoursePref') || "";
-                    if (saved) {
+                    if (saved && savedFaculty === 'soc') {
                         currentActiveDay = getActiveDay(); 
                         openScheduleScreen(saved);
                     } else {
                         scheduleScreen.classList.remove('active');
-                        courseScreen.classList.remove('active');
-                        facultyScreen.classList.add('active');
+                        mainScreen.classList.add('active');
                     }
                 }
             });
         });
 
-        // --- ЕКРАНИ ВИБОРУ (ФАКУЛЬТЕТИ -> КУРСИ) ---
-        const btnFacultySoc = document.getElementById('btnFacultySoc');
-        const btnBackToFaculty = document.getElementById('btnBackToFaculty');
-        
-        btnFacultySoc.addEventListener('click', () => {
-            facultyScreen.classList.remove('active');
-            courseScreen.classList.add('active');
-        });
-
-        btnBackToFaculty.addEventListener('click', () => {
-            courseScreen.classList.remove('active');
-            facultyScreen.classList.add('active');
-        });
-
-        const mainSegments = document.querySelectorAll('#courseScreen .segment-control .segment[data-spec]');
+        // --- ПЕРЕМИКАННЯ СОЦІОЛОГІВ/МЕНЕДЖЕРІВ НА ГОЛОВНІЙ ---
+        const mainSegments = document.querySelectorAll('#courseSelectionArea .segment-control .segment[data-spec]');
         const groupSoc = document.getElementById('groupSoc');
         const groupMan = document.getElementById('groupMan');
 
@@ -775,6 +819,7 @@
             });
         });
 
+        // --- КЛІКИ НА КУРСИ ---
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
@@ -782,7 +827,7 @@
         
         document.getElementById('btnBackToCourse').addEventListener('click', () => { 
             scheduleScreen.classList.remove('active'); 
-            courseScreen.classList.add('active'); 
+            mainScreen.classList.add('active'); 
         });
 
         dayTabs.forEach(tab => {
@@ -817,7 +862,7 @@
             }
         }
 
-        // --- РОЗКЛАД: ФОРМАТУВАННЯ ---
+        // --- ФОРМАТУВАННЯ РОЗКЛАДУ ---
         function formatLessonCard(blockText, groupLabel = "") {
             let onlineLink = "";
             const isOnlineMode = (localStorage.getItem('onlineModePref') === 'true');
@@ -893,7 +938,6 @@
             return { html: html, color: firstColor || "#e5e7eb" };
         }
 
-        // --- РОЗКЛАД: РЕНДЕР ТА ЗАВАНТАЖЕННЯ ---
         async function fetchSchedule(course, day) {
             if (!globalScheduleData) {
                 try {
@@ -943,8 +987,8 @@
             scheduleContent.innerHTML = `<div style="animation: fadeIn 0.2s ease;">${htmlContent}</div>`;
         }
 
-        // АВТОЗАПУСК ЯКЩО ЗБЕРЕЖЕНО КУРС
-        if (savedCourse) {
+        // АВТОЗАПУСК ЯКЩО ЗБЕРЕЖЕНО ФАКУЛЬТЕТ ТА КУРС
+        if (savedFaculty === 'soc' && savedCourse) {
             openScheduleScreen(savedCourse);
         }
 
