@@ -55,18 +55,30 @@
         .nav-item span { font-size: 11px; font-weight: 600; }
 
         /* --- ГОЛОВНИЙ ЕКРАН (KNU Schedule) --- */
-        .main-title { display: block; text-align: center; font-size: 28px; font-weight: 800; color: #111827; margin: 10px 0 25px 0; letter-spacing: -0.5px; transition: color 0.3s; }
-        .sub-title { font-size: 20px; font-weight: 700; color: #374151; margin: 0 0 10px 0; transition: color 0.3s; }
+        /* Зменшено нижній відступ для заголовка */
+        .main-title { display: block; text-align: center; font-size: 28px; font-weight: 800; color: #111827; margin: 10px 0 5px 0; letter-spacing: -0.5px; transition: color 0.3s; }
+        .sub-title { font-size: 20px; font-weight: 700; color: #374151; margin: 0; transition: color 0.3s; }
 
         /* --- ПЛАШКА СЕРІЇ ЗАХОДІВ (STREAK) БЕЗ ФОНУ --- */
         .streak-badge {
-            position: absolute; left: 0; top: -45px;
+            position: absolute; left: 0; top: -35px; /* Трохи піднято для ідеального балансу */
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0px;
             cursor: pointer; transition: transform 0.15s ease;
         }
         .streak-badge:active { transform: scale(0.85); }
         .streak-badge img { width: 44px; height: 44px; object-fit: contain; }
         .streak-badge span { font-size: 16px; font-weight: 800; color: #f97316; line-height: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+        /* СПЛИВАЮЧА ПІДКАЗКА ДЛЯ ВОГНИКА */
+        .streak-tooltip {
+            position: absolute; bottom: 100%; left: -10px; margin-bottom: 8px;
+            background: rgba(75, 85, 99, 0.9); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            color: #ffffff; padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600;
+            white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; z-index: 50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .streak-tooltip.show { opacity: 1; visibility: visible; }
 
         /* Кнопка пошуку факультету (Велика) */
         .btn-search-large {
@@ -80,7 +92,7 @@
 
         /* Кнопка зміни факультету (Маленька) */
         .btn-change-fac {
-            background-color: #e5e7eb; color: #4b5563; border: none; padding: 8px 16px; margin: 0 auto 24px auto; 
+            background-color: #e5e7eb; color: #4b5563; border: none; padding: 8px 16px; margin: 10px auto 24px auto; 
             border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; 
             align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
         }
@@ -147,7 +159,7 @@
             z-index: 10; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
             transition: background-color 0.3s, border-color 0.3s;
         }
-        .header-back-btn { background: transparent !important; border: none; box-shadow: none !important; color: #3b82f6 !important; padding: 0 !important; margin: 0 !important; cursor: pointer; display: flex; align-items: center; }
+        .header-back-btn { background: transparent !important; border: none; box-shadow: none !important; color: #3b82f6 !important; padding: 0 !important; margin: 0 !important; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .schedule-header h1 { margin: 0; font-size: 18px; color: #111827; transition: color 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; flex-grow: 1;}
         .schedule-scroll { flex-grow: 1; overflow-y: auto; padding: 16px; }
 
@@ -351,17 +363,18 @@
                 <h1 class="main-title">KNU Schedule</h1>
                 
                 <!-- Блок вибраного факультету (прихований до вибору) -->
-                <div id="selectedFacultyDisplay" style="display: none; position: relative; margin-top: 5px;">
+                <div id="selectedFacultyDisplay" style="display: none; position: relative;">
                     
-                    <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; min-height: 60px;">
+                    <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; min-height: 50px;">
                         
-                        <!-- ВОГНИК ЗІ СТРІКОМ (ПРОСТО КЛІКАБЕЛЬНИЙ) -->
+                        <!-- ВОГНИК ЗІ СТРІКОМ ТА ПІДКАЗКОЮ -->
                         <div class="streak-badge" id="streakBadge">
+                            <div id="streakTooltip" class="streak-tooltip"></div>
                             <img src="fire_series.webp" alt="🔥">
                             <span id="streakCountText">1</span>
                         </div>
 
-                        <h2 id="facultyNameDisplay" class="sub-title" style="margin: 0;">Факультет соціології</h2>
+                        <h2 id="facultyNameDisplay" class="sub-title">Факультет соціології</h2>
                     </div>
 
                     <button id="btnChangeFaculty" class="btn-change-fac">
@@ -406,7 +419,7 @@
                         <img src="news.webp" alt="Новина" class="news-icon">
                         <span class="news-badge">НОВИНА ТИЖНЯ</span>
                     </div>
-                    <p class="news-text">Кажуть онлайн буде, дітки.</p>
+                    <p class="news-text">-Ішак не той хто йде, а той хто везе-</p>
                 </div>
             </div>
 
@@ -500,7 +513,7 @@
                         </h3>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="onlineModeToggle" checked>
+                        <input type="checkbox" id="onlineModeToggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -568,11 +581,37 @@
         const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
         
         const subjectColors = {
-            "технолог": "#81ecec", "університет": "#a29bfe", "антрополог": "#fab1a0", "англійськ": "#74b9ff",      
-            "спеціальност": "#55efc4", "філософ": "#ffeaa7", "спротив": "#ff7675", "теорія": "#b8c6cb",         
-            "теорiя": "#b8c6cb", "істор": "#b8c6cb", "iстор": "#b8c6cb", "нерівност": "#ff9ff3",      
-            "науков": "#feca57", "образ світ": "#feca57", "гендерн": "#c8d6e5", "кількісн": "#1dd1a1",       
-            "вибірков": "#ff9f43", "еколог": "#b8e994", "статистик": "#f8c291", "демограф": "#f8c291"        
+            "інформаційні технології": "#A9CCE3",
+            "університет": "#FAD7A1",
+            "соціальна антропологія: соціологічні": "#D7BDE2",
+            "англійськ": "#A3E4D7",
+            "спеціальност": "#F9E79F",
+            "філософ": "#CCD1D1",
+            "національного спротиву": "#A0C49D",
+            "теорія та історія соціології": "#EDBB99",
+            "нерівност": "#F1948A",
+            "науковий образ": "#85C1E9",
+            "гендерн": "#F5B7B1",
+            "кількісн": "#D2B4DE",
+            "вибірков": "#AED6F1",
+            "еколог": "#82E0AA",
+            "статистик": "#F5CBA7",
+            "порівняльні та панельні": "#C39BD3",
+            "нововведень": "#F8C471",
+            "організацій та управлін": "#BB8FCE",
+            "публічного простору": "#FADBD8",
+            "географічн": "#73C6B6",
+            "політик": "#F7DC6F",
+            "презентація результатів": "#E5E7E9",
+            "тайм-менеджмент": "#D5DBDB",
+            "самоменеджмент": "#D5DBDB",
+            "історія менеджменту": "#E8DAEF",
+            "економік": "#7DCEA0",
+            "соціальна та культурна антропологія": "#E6B0AA",
+            "бізнес-комунікації": "#F5B041",
+            "планування кар": "#F4D03F",
+            "креативні індустрії": "#A569BD",
+            "іміджмейкінг": "#EB984E"
         };
 
         function getSubjectColor(text) {
@@ -664,9 +703,37 @@
         }
         updateStreak();
 
-        // ІНТЕРАКТИВ ВОГНИКА (КЛІК БЕЗ ПОПАПУ)
+        // ІНТЕРАКТИВ ВОГНИКА (POP-UP)
+        let hasClickedFire = false;
+        let tooltipTimeout;
+
         document.getElementById('streakBadge').addEventListener('click', function() {
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            
+            let streak = parseInt(localStorage.getItem('streakCount') || '1');
+            let msg = "";
+            
+            if (!hasClickedFire) {
+                msg = `Твоя серія - ${streak}`;
+                hasClickedFire = true;
+            } else {
+                let rand = Math.floor(Math.random() * 100) + 1;
+                if (rand <= 20) { msg = `Твоя серія - ${streak}`; } 
+                else if (rand <= 55) { msg = `Привіт!`; } 
+                else if (rand <= 79) { msg = `Подивись розклад`; } 
+                else if (rand <= 89) { msg = `Читав новини?`; } 
+                else if (rand <= 99) { msg = `Я лише вогник`; } 
+                else { msg = `Love story`; }
+            }
+            
+            const tooltip = document.getElementById('streakTooltip');
+            tooltip.innerText = msg;
+            tooltip.classList.add('show');
+            
+            clearTimeout(tooltipTimeout);
+            tooltipTimeout = setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 5000);
         });
 
         // --- DOM ЕЛЕМЕНТИ ---
