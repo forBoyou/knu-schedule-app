@@ -28,8 +28,8 @@
         #mainScreen { padding: 10px 16px; overflow-y: auto; text-align: center; flex-direction: column; min-height: 100%; }
         #mainScreen.active { display: flex; }
         
-        #scheduleScreen, #emailsScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
-        #scheduleScreen.active, #emailsScreen.active { display: flex; }
+        #scheduleScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
+        #scheduleScreen.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -97,13 +97,22 @@
         .modal-overlay.active { opacity: 1; visibility: visible; }
         
         .modal-content {
-            background: #ffffff; width: 85%; max-width: 320px; border-radius: 20px; padding: 24px;
+            background: #ffffff; width: 85%; max-width: 340px; border-radius: 20px; padding: 24px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(20px); transition: transform 0.3s ease;
-            text-align: center; display: flex; flex-direction: column; max-height: 80vh;
+            text-align: center; display: flex; flex-direction: column; max-height: 85vh;
         }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-title { font-size: 18px; font-weight: 700; margin: 0 0 20px 0; color: #111827; }
+        .modal-title { font-size: 18px; font-weight: 700; margin: 0 0 16px 0; color: #111827; }
         .btn-modal-close { background: transparent; color: #ef4444; border: none; font-size: 15px; font-weight: 600; margin-top: 10px; padding: 10px; width: 100%; cursor: pointer; }
+
+        /* ПОШУК У МОДАЛЦІ ПОШТ */
+        #emailSearchInput {
+            width: 100%; box-sizing: border-box; padding: 10px 14px; border-radius: 10px;
+            border: 1px solid #d1d5db; margin-bottom: 12px; font-family: 'Inter', sans-serif;
+            font-size: 14px; outline: none; transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+            background: #f9fafb; color: #111827;
+        }
+        #emailSearchInput:focus { border-color: #3b82f6; }
 
         /* --- НОВИНИ (БАНЕР GLASSMORPHISM) --- */
         .news-banner {
@@ -129,7 +138,7 @@
         button.btn-primary:active:not(:disabled) { transform: scale(0.98); }
         button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
-        /* Кнопка "Пошта викладачів" */
+        /* Кнопка "Пошта викладачів" з оновленим дизайном */
         .btn-emails { 
             background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #1e3a8a; border: 1px solid #bfdbfe; 
             padding: 12px 20px; margin: 16px auto 24px auto; border-radius: 12px; font-size: 15px; font-weight: 700; 
@@ -138,7 +147,7 @@
             box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); 
         }
         .btn-emails:active { transform: scale(0.96); box-shadow: 0 1px 4px rgba(59, 130, 246, 0.1); }
-        .btn-emails svg { width: 20px; height: 20px; color: #3b82f6; transition: color 0.3s; }
+        .btn-emails svg { width: 22px; height: 22px; color: #3b82f6; transition: color 0.3s; }
 
         /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНІВ РОЗКЛАДУ --- */
         .screen-header {
@@ -179,7 +188,7 @@
 
         .lesson-card { background-color: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #e5e7eb; transition: background-color 0.3s, border-color 0.3s; }
         .lesson-card:last-child { margin-bottom: 0; }
-        .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+        .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
         .subject-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.25; transition: color 0.3s; }
 
         .badge { font-size: 10px; font-weight: 700; padding: 3px 6px; border-radius: 5px; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
@@ -188,10 +197,12 @@
         .type-lab { background-color: #ffedd5; color: #c2410c; } 
         .type-s { background-color: #f3e8ff; color: #7e22ce; }  
 
+        /* Оновлено для компактності карток */
         .lesson-body-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-        .lesson-info-col { display: flex; flex-direction: column; flex-grow: 1; }
+        .lesson-info-col { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-height: 24px; }
         .info-line { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
         .info-line:last-child { margin-bottom: 0; }
+        
         .room-line { font-size: 13px; font-weight: 600; color: #4b5563; transition: color 0.3s; }
         .teacher-line { font-size: 12px; font-weight: 500; color: #9ca3af; }
         .group-label { font-size: 11px; font-weight: 700; color: #6366f1; background-color: #e0e7ff; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
@@ -199,16 +210,17 @@
         .or-divider { text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; transition: background-color 0.3s; }
 
-        .online-icon-btn { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background-color: #eff6ff; color: #3b82f6; border-radius: 12px; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15); }
+        /* Зменшено розмір кнопки відео для естетики */
+        .online-icon-btn { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background-color: #eff6ff; color: #3b82f6; border-radius: 10px; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15); }
         .online-icon-btn:active { transform: scale(0.92); background-color: #dbeafe; }
-        .online-icon-btn svg { width: 22px; height: 22px; }
+        .online-icon-btn svg { width: 18px; height: 18px; }
 
         .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
 
         /* --- КАРТКИ ПОШТИ --- */
-        .email-card { background-color: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 10px; }
+        .email-card { background-color: #ffffff; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 8px; }
         .email-teacher { font-size: 15px; font-weight: 700; color: #111827; margin: 0; transition: color 0.3s; display: flex; align-items: center; gap: 8px; }
-        .email-link { font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; align-self: flex-start; }
+        .email-link { font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; padding: 6px 12px; border-radius: 8px; transition: background 0.2s; align-self: flex-start; }
         .email-link:active { background: #dbeafe; }
 
         /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) */
@@ -296,6 +308,10 @@
         body.dark-theme .btn-emails:active { background: linear-gradient(135deg, #172554, #1e3a8a); }
         body.dark-theme .btn-emails svg { color: #60a5fa; }
         
+        /* Темна тема для пошуку */
+        body.dark-theme #emailSearchInput { background: #374151; color: #f9fafb; border-color: #4b5563; }
+        body.dark-theme #emailSearchInput:focus { border-color: #60a5fa; }
+
         body.dark-theme .time-dot { background-color: #4b5563; }
         body.dark-theme .time-divider { color: #4b5563; }
         body.dark-theme .course-options::-webkit-scrollbar-thumb { background-color: #4b5563; }
@@ -363,6 +379,7 @@
                     
                     <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; min-height: 50px;">
                         
+                        <!-- ВОГНИК ЗІ СТРІКОМ (ПРОСТО КЛІКАБЕЛЬНИЙ) -->
                         <div class="streak-badge" id="streakBadge">
                             <img src="fire_series.webp" alt="🔥">
                             <span id="streakCountText">1</span>
@@ -398,7 +415,7 @@
 
                         <!-- ОНОВЛЕНА КНОПКА ПОШТИ ВИКЛАДАЧІВ -->
                         <button id="btnEmails" class="btn-emails">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-at-sign preview-icon"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mailbox preview-icon"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z"/><polyline points="15,9 18,9 18,11"/><path d="M6.5 5C9 5 11 7 11 9.5V17a2 2 0 0 1-2 2"/><line x1="6" x2="7" y1="10" y2="10"/></svg>
                             Пошта викладачів
                         </button>
                     </div>
@@ -462,7 +479,7 @@
             <div class="settings-card">
                 <div class="settings-header" id="courseAccordionToggle">
                     <div class="settings-header-left">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cy="12" cx="12" r="3"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
                         <h3>Налаштування курсу</h3>
                     </div>
                     <svg class="chevron-icon" id="courseChevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -547,8 +564,11 @@
 
     <!-- МОДАЛЬНЕ ВІКНО ПОШТИ ВИКЛАДАЧІВ (BLUR) -->
     <div id="emailsModal" class="modal-overlay">
-        <div class="modal-content" style="max-height: 80vh; display: flex; flex-direction: column;">
-            <h3 class="modal-title" style="margin-bottom: 10px;">Пошта викладачів</h3>
+        <div class="modal-content" style="max-height: 85vh; display: flex; flex-direction: column;">
+            <h3 class="modal-title" style="margin-bottom: 12px;">Пошта викладачів</h3>
+            
+            <!-- РЯДОК ПОШУКУ -->
+            <input type="text" id="emailSearchInput" placeholder="🔍 Пошук викладача...">
             
             <div id="emailsContent" style="overflow-y: auto; text-align: left; padding-right: 5px; flex-grow: 1;">
                 <!-- Тут будуть завантажені пошти -->
@@ -583,6 +603,9 @@
         let globalScheduleData = null;
         let globalEmailsData = null; 
 
+        // Стан активного напрямку (за замовчуванням soc)
+        let activeSpec = 'soc';
+
         // --- ДНІ ТА КОЛЬОРИ ---
         const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
         
@@ -592,6 +615,9 @@
             "соціальна антропологія: соціологічні": "#D7BDE2",
             "соціальна антропологія": "#D7BDE2",
             "англійськ": "#A3E4D7",
+            "іноземна мова": "#A3E4D7",
+            "французьк": "#A3E4D7",
+            "іспанськ": "#A3E4D7",
             "вступ до спеціальності": "#F9E79F",
             "філософі": "#D5D8DC",
             "національного спротиву": "#7D9069",
@@ -621,7 +647,6 @@
             "креативні індустрії": "#AF7AC5",
             "іміджмейкінг": "#F0B27A",
             "pr та": "#F0B27A",
-            // Нові предмети
             "масових комунікацій": "#76D7C4",
             "фокус-групов": "#FCF3CF",
             "візуальна соціолог": "#7FB3D5",
@@ -651,7 +676,6 @@
         const svgClockGreen = `<svg class="icon-clock-active" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
         const svgVideo = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>`;
         const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
-        const checkSvg = `<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
         // --- БАЗОВА ЛОГІКА ЧАСУ ТА ГРУПИ ---
         function getActiveDay() {
@@ -741,7 +765,6 @@
         const currentDayBanner = document.getElementById('currentDayBanner');
         const dayTabs = document.querySelectorAll('.day-tab');
         const scheduleScrollArea = document.getElementById('scheduleScrollArea');
-        const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
 
         const btnSelectFacultyLarge = document.getElementById('btnSelectFacultyLarge');
         const selectedFacultyDisplay = document.getElementById('selectedFacultyDisplay');
@@ -756,16 +779,27 @@
         const emailsModal = document.getElementById('emailsModal');
         const btnCloseEmailsModal = document.getElementById('btnCloseEmailsModal');
         const emailsContent = document.getElementById('emailsContent');
+        const emailSearchInput = document.getElementById('emailSearchInput');
+
+        // --- ПОШУК ПОШТ ---
+        emailSearchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.email-card');
+            cards.forEach(card => {
+                const teacherName = card.querySelector('.email-teacher').innerText.toLowerCase();
+                if (teacherName.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
 
         // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ ---
         async function fetchEmails() {
-            let courseForEmails = localStorage.getItem('defaultCoursePref') || selectedCourse;
+            // Очищуємо поле пошуку при кожному відкритті
+            emailSearchInput.value = '';
             
-            if (!courseForEmails) {
-                emailsContent.innerHTML = `<div style="text-align:center; color: #6b7280; padding-top:20px; font-weight: 600;">Спочатку обери свій курс у налаштуваннях або відкрий розклад!</div>`;
-                return;
-            }
-
             emailsContent.innerHTML = "<div style='text-align:center; padding-top:20px; color: #6b7280;'>⏳ Завантаження пошт...</div>";
 
             if (!globalEmailsData) {
@@ -776,18 +810,18 @@
                     globalEmailsData = await response.json();
                 } catch (error) {
                     console.error(error);
-                    emailsContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.<br><span style='font-size: 12px; color: #9ca3af; display:block; margin-top:10px;'>Переконайся, що твій бекенд вже віддає дані за адресою /api/emails</span></div>";
+                    emailsContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.</div>";
                     return;
                 }
             }
 
             const data = globalEmailsData;
-            if (!data[courseForEmails] || Object.keys(data[courseForEmails]).length === 0) {
-                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти для твого курсу ще не додані! 📭</div>`; 
+            if (!data[activeSpec] || Object.keys(data[activeSpec]).length === 0) {
+                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти для цього напрямку ще не додані! 📭</div>`; 
                 return;
             }
 
-            const courseEmails = data[courseForEmails];
+            const courseEmails = data[activeSpec];
             let htmlContent = '';
             
             for (let teacher in courseEmails) {
@@ -796,7 +830,7 @@
                     <div class="email-card">
                         <h3 class="email-teacher">${teacher}</h3>
                         <a href="mailto:${email}" class="email-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z"/><polyline points="15,9 18,9 18,11"/><path d="M6.5 5C9 5 11 7 11 9.5V17a2 2 0 0 1-2 2"/><line x1="6" x2="7" y1="10" y2="10"/></svg>
                             ${email}
                         </a>
                     </div>`;
@@ -930,21 +964,25 @@
             });
         });
 
+        const savedCourse = localStorage.getItem('defaultCoursePref') || "";
+        if (savedCourse && savedCourse.includes("М")) {
+            document.querySelector('.settings-segment[data-settings-spec="man"]').click();
+            activeSpec = 'man'; // Встановлюємо правильний початковий стан
+        } else {
+            activeSpec = 'soc';
+        }
+
+        const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
         function updateCourseListUI(val) {
             courseOptions.forEach(opt => {
                 const optVal = opt.getAttribute('data-val');
                 let baseText = opt.innerText.replace('✓', '').trim();
                 if (optVal === val) {
-                    opt.classList.add('active'); opt.innerHTML = `${baseText} ${checkSvg}`;
+                    opt.classList.add('active'); opt.innerHTML = `${baseText} <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                 } else {
                     opt.classList.remove('active'); opt.innerHTML = baseText;
                 }
             });
-        }
-
-        const savedCourse = localStorage.getItem('defaultCoursePref') || "";
-        if (savedCourse && savedCourse.includes("М")) {
-            document.querySelector('.settings-segment[data-settings-spec="man"]').click();
         }
         updateCourseListUI(savedCourse);
 
@@ -1003,7 +1041,7 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Показувати вибір групи тільки для 3-го, 4-го курсу та 3-го курсу менеджерів
+            // Показувати вибір групи тільки для 3-го та 4-го курсу (і соціологів, і менеджерів)
             if (courseVal === '3' || courseVal === '4' || courseVal === '3М') {
                 groupToggleWrap.style.display = 'flex';
             } else {
@@ -1056,7 +1094,8 @@
             segment.addEventListener('click', (e) => {
                 mainSegments.forEach(s => s.classList.remove('active'));
                 e.target.classList.add('active');
-                if (e.target.getAttribute('data-spec') === 'soc') {
+                activeSpec = e.target.getAttribute('data-spec'); // Оновлюємо активний напрямок для пошт
+                if (activeSpec === 'soc') {
                     groupSoc.classList.add('active'); groupMan.classList.remove('active');
                 } else {
                     groupMan.classList.add('active'); groupSoc.classList.remove('active');
@@ -1133,8 +1172,13 @@
                 else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) teacher = line;
             }
             
-            let typeBadge = ""; let subjectClean = subject;
-            let typeMatch = subject.match(/\s*\(\s*(л\vert{}Л\vert{}пр\vert{}ПР\vert{}Пр\vert{}с\vert{}С\vert{}лаб\vert{}ЛАБ\vert{}Лаб)\.?\s*\)/);
+            let typeBadge = ""; 
+            let subjectClean = subject;
+            
+            // Виправлення опечатки "Нформаційні" на "Інформаційні"
+            subjectClean = subjectClean.replace(/^[Нн]формаційні/i, "Інформаційні");
+            
+            let typeMatch = subjectClean.match(/\s*\(\s*(л\vert{}Л\vert{}пр\vert{}ПР\vert{}Пр\vert{}с\vert{}С\vert{}лаб\vert{}ЛАБ\vert{}Лаб)\.?\s*\)/);
             if (typeMatch) {
                 let t = typeMatch[1].toLowerCase();
                 let bClass = 'type-l'; let tName = 'Лекція';
@@ -1146,7 +1190,7 @@
             let cardColor = getSubjectColor(subjectClean);
             subjectClean = subjectClean.toLowerCase().trim();
             if (subjectClean.length > 0) subjectClean = subjectClean.charAt(0).toUpperCase() + subjectClean.slice(1);
-            if (subjectClean.startsWith("нформаційні")) subjectClean = "І" + subjectClean;
+            if (subjectClean.startsWith("нформаційні")) subjectClean = "І" + subjectClean; // Резервний фікс
             
             let groupHtml = groupLabel ? `<div class="group-label">${groupLabel}</div>` : "";
             
@@ -1238,7 +1282,7 @@
                 lessonIndex++;
                 let parsedData = parseTimeSlotContent(daySchedule[time]);
                 
-                // Якщо після фільтрації груп HTML порожній, пропускаємо час (щоб не було пустих дірок)
+                // Якщо після фільтрації груп HTML порожній, пропускаємо час
                 if (!parsedData.html) continue;
                 
                 let cardsHtml = parsedData.html; 
