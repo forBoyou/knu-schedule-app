@@ -28,8 +28,8 @@
         #mainScreen { padding: 10px 16px; overflow-y: auto; text-align: center; flex-direction: column; min-height: 100%; }
         #mainScreen.active { display: flex; }
         
-        #scheduleScreen, #emailsScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
-        #scheduleScreen.active, #emailsScreen.active { display: flex; }
+        #scheduleScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
+        #scheduleScreen.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -97,7 +97,7 @@
         .btn-change-fac:active { background-color: #d1d5db; transform: scale(0.96); }
         .btn-change-fac svg { width: 14px; height: 14px; }
 
-        /* --- МОДАЛЬНЕ ВІКНО (BLUR) --- */
+        /* --- МОДАЛЬНІ ВІКНА (BLUR) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -109,7 +109,7 @@
         .modal-content {
             background: #ffffff; width: 85%; max-width: 320px; border-radius: 20px; padding: 24px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(20px); transition: transform 0.3s ease;
-            text-align: center;
+            text-align: center; display: flex; flex-direction: column; max-height: 80vh;
         }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-title { font-size: 18px; font-weight: 700; margin: 0 0 20px 0; color: #111827; }
@@ -139,12 +139,18 @@
         button.btn-primary:active:not(:disabled) { transform: scale(0.98); }
         button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
-        /* Кнопка "Пошта викладачів" */
-        .btn-secondary { background-color: #ffffff; color: #374151; border: 1px solid #d1d5db; padding: 12px 20px; margin: 16px auto 24px auto; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 280px; transition: all 0.2s; font-family: 'Inter', sans-serif; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .btn-secondary:active { transform: scale(0.98); background-color: #f3f4f6; }
-        .btn-secondary svg { width: 18px; height: 18px; color: #6b7280; transition: color 0.3s; }
+        /* Кнопка "Пошта викладачів" з оновленим дизайном */
+        .btn-emails { 
+            background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #1e3a8a; border: 1px solid #bfdbfe; 
+            padding: 12px 20px; margin: 16px auto 24px auto; border-radius: 12px; font-size: 15px; font-weight: 700; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; 
+            width: 100%; max-width: 280px; transition: all 0.2s; font-family: 'Inter', sans-serif; 
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); 
+        }
+        .btn-emails:active { transform: scale(0.96); box-shadow: 0 1px 4px rgba(59, 130, 246, 0.1); }
+        .btn-emails svg { width: 20px; height: 20px; color: #3b82f6; transition: color 0.3s; }
 
-        /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНІВ РОЗКЛАДУ / ПОШТ --- */
+        /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНІВ РОЗКЛАДУ --- */
         .screen-header {
             flex-shrink: 0; background-color: #ffffff; padding: 12px 16px; border-bottom: 1px solid #e5e7eb;
             z-index: 10; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
@@ -210,8 +216,8 @@
         .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
 
         /* --- КАРТКИ ПОШТИ --- */
-        .email-card { background-color: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; text-align: left; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 10px; }
-        .email-teacher { font-size: 15px; font-weight: 700; color: #111827; margin: 0; transition: color 0.3s; display: flex; align-items: center; gap: 8px; }
+        .email-card { background-color: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 10px; }
+        .email-teacher { font-size: 15px; font-weight: 700; color: #111827; margin: 0; transition: color 0.3s; }
         .email-link { font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; align-self: flex-start; }
         .email-link:active { background: #dbeafe; }
 
@@ -274,13 +280,13 @@
            ТЕМНА ТЕМА (DARK MODE) 
            ========================================= */
         body.dark-theme { background-color: #111827; color: #f9fafb; }
-        body.dark-theme #scheduleScreen, body.dark-theme #emailsScreen { background-color: #111827; }
+        body.dark-theme #scheduleScreen { background-color: #111827; }
         body.dark-theme .bottom-nav, body.dark-theme .screen-header, body.dark-theme .day-tabs-container,
         body.dark-theme .lesson-card, body.dark-theme .email-card, body.dark-theme .profile-card, body.dark-theme .settings-card { background-color: #1f2937; border-color: #374151; }
         body.dark-theme .lesson-card { border-left-color: #4b5563; }
         body.dark-theme .email-card { border-left-color: #3b82f6; }
         body.dark-theme .screen-header h1, body.dark-theme .profile-info h2, body.dark-theme .settings-header h3,
-        body.dark-theme .subject-title, body.dark-theme .main-title, body.dark-theme .email-teacher { color: #f9fafb; }
+        body.dark-theme .subject-title, body.dark-theme .main-title, body.dark-theme .email-teacher, body.dark-theme .modal-title { color: #f9fafb; }
         body.dark-theme .sub-title { color: #d1d5db; }
         body.dark-theme .header-back-btn { color: #60a5fa !important; }
         body.dark-theme .settings-header-left > svg { color: #9ca3af; }
@@ -294,9 +300,12 @@
         body.dark-theme .current-day-banner .icon-calendar { color: #60a5fa; }
         body.dark-theme .group-label { background-color: #3730a3; color: #c7d2fe; }
         body.dark-theme button.btn-primary:disabled { background-color: #374151 !important; color: #6b7280 !important; }
-        body.dark-theme .btn-secondary { background-color: #374151; color: #d1d5db; border-color: #4b5563; }
-        body.dark-theme .btn-secondary:active { background-color: #4b5563; }
-        body.dark-theme .btn-secondary svg { color: #9ca3af; }
+        
+        /* Темна тема для кнопки пошти */
+        body.dark-theme .btn-emails { background: linear-gradient(135deg, #1e3a8a, #172554); border-color: #1e3a8a; color: #bfdbfe; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+        body.dark-theme .btn-emails:active { background: linear-gradient(135deg, #172554, #1e3a8a); }
+        body.dark-theme .btn-emails svg { color: #60a5fa; }
+        
         body.dark-theme .time-dot { background-color: #4b5563; }
         body.dark-theme .time-divider { color: #4b5563; }
         body.dark-theme .course-options::-webkit-scrollbar-thumb { background-color: #4b5563; }
@@ -316,7 +325,6 @@
         
         body.dark-theme .modal-overlay { background: rgba(0, 0, 0, 0.6); }
         body.dark-theme .modal-content { background: #1f2937; border: 1px solid #374151; }
-        body.dark-theme .modal-title { color: #f9fafb; }
         
         body.dark-theme .group-toggle-btn { background-color: #3730a3; color: #e0e7ff; border-color: #312e81; }
 
@@ -379,7 +387,6 @@
                         Змінити факультет
                     </button>
                     
-                    <!-- Блок вибору курсу -->
                     <div id="courseSelectionArea" style="animation: fadeIn 0.2s ease;">
                         <div class="segment-control">
                             <div class="segment active" data-spec="soc">Соціологи</div>
@@ -400,9 +407,9 @@
                             <button class="btn-primary" disabled>4 курс</button>
                         </div>
 
-                        <!-- КНОПКА ПОШТИ ВИКЛАДАЧІВ -->
-                        <button id="btnEmails" class="btn-secondary">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <!-- ОНОВЛЕНА КНОПКА ПОШТИ ВИКЛАДАЧІВ -->
+                        <button id="btnEmails" class="btn-emails">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-at-sign preview-icon"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg>
                             Пошта викладачів
                         </button>
                     </div>
@@ -449,26 +456,6 @@
                     <div id="scheduleContent"></div>
                 </div>
             </div>
-
-            <!-- ЕКРАН ПОШТИ ВИКЛАДАЧІВ -->
-            <div id="emailsScreen" class="screen">
-                <div class="screen-header">
-                    <button id="btnBackToMainFromEmails" class="header-back-btn" style="width: 60px; justify-content: flex-start;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </button>
-                    <h1 style="flex-grow: 1; justify-content: center; margin: 0; font-size: 18px; color: #111827;">Пошта викладачів</h1>
-                    <div style="width: 60px;"></div>
-                </div>
-                
-                <div class="screen-scroll" id="emailsContent">
-                    <div style="text-align:center; padding-top:40px;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                        <h3 style="color: #4b5563; margin: 0 0 8px 0;">Трохи почекайте...</h3>
-                        <p style="color: #9ca3af; font-size: 14px; line-height: 1.4; margin: 0;">Цей розділ в розробці. Незабаром тут з'являться всі пошти викладачів!</p>
-                    </div>
-                </div>
-            </div>
-            
         </div>
 
         <!-- Вкладка 3: ЩЕ (Профіль та Налаштування) -->
@@ -569,6 +556,19 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНЕ ВІКНО ПОШТИ ВИКЛАДАЧІВ (BLUR) -->
+    <div id="emailsModal" class="modal-overlay">
+        <div class="modal-content" style="max-height: 80vh; display: flex; flex-direction: column;">
+            <h3 class="modal-title" style="margin-bottom: 10px;">Пошта викладачів</h3>
+            
+            <div id="emailsContent" style="overflow-y: auto; text-align: left; padding-right: 5px; flex-grow: 1;">
+                <!-- Тут будуть завантажені пошти -->
+            </div>
+            
+            <button id="btnCloseEmailsModal" class="btn-modal-close" style="margin-top: 15px;">Закрити</button>
+        </div>
+    </div>
+
     <!-- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ -->
     <nav class="bottom-nav">
         <button class="nav-item" data-target="tabComingSoon">
@@ -592,12 +592,11 @@
         tg.ready();
 
         let globalScheduleData = null;
-        let globalEmailsData = null; // Глобальна змінна для пошт
+        let globalEmailsData = null; 
 
         // --- ДНІ ТА КОЛЬОРИ ---
         const daysOfWeek = ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
         
-        // ОНОВЛЕНА УНІВЕРСАЛЬНА ПАЛІТРА ПРЕДМЕТІВ
         const subjectColors = {
             "інформаційні технології": "#85C1E9",
             "університетських студій": "#FAD7A1",
@@ -762,7 +761,6 @@
         // --- DOM ЕЛЕМЕНТИ ---
         const mainScreen = document.getElementById('mainScreen');
         const scheduleScreen = document.getElementById('scheduleScreen');
-        const emailsScreen = document.getElementById('emailsScreen');
         const scheduleTitle = document.getElementById('scheduleTitle');
         const scheduleContent = document.getElementById('scheduleContent');
         const currentDayBanner = document.getElementById('currentDayBanner');
@@ -778,20 +776,22 @@
         const btnCloseModal = document.getElementById('btnCloseModal');
         const btnModalSoc = document.getElementById('btnModalSoc');
         
+        // DOM для пошти
         const btnEmails = document.getElementById('btnEmails');
-        const btnBackToMainFromEmails = document.getElementById('btnBackToMainFromEmails');
+        const emailsModal = document.getElementById('emailsModal');
+        const btnCloseEmailsModal = document.getElementById('btnCloseEmailsModal');
         const emailsContent = document.getElementById('emailsContent');
 
-        // --- ЛОГІКА ПОШТИ ВИКЛАДАЧІВ ---
+        // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ ---
         async function fetchEmails() {
             let courseForEmails = localStorage.getItem('defaultCoursePref') || selectedCourse;
             
             if (!courseForEmails) {
-                emailsContent.innerHTML = `<div style="text-align:center; color: #6b7280; padding-top:40px; font-weight: 600;">Спочатку обери свій курс у налаштуваннях або відкрий розклад!</div>`;
+                emailsContent.innerHTML = `<div style="text-align:center; color: #6b7280; padding-top:20px; font-weight: 600;">Спочатку обери свій курс у налаштуваннях або відкрий розклад!</div>`;
                 return;
             }
 
-            emailsContent.innerHTML = "<div style='text-align:center; padding-top:40px; color: #6b7280;'>⏳ Завантаження пошт...</div>";
+            emailsContent.innerHTML = "<div style='text-align:center; padding-top:20px; color: #6b7280;'>⏳ Завантаження пошт...</div>";
 
             if (!globalEmailsData) {
                 try {
@@ -801,14 +801,14 @@
                     globalEmailsData = await response.json();
                 } catch (error) {
                     console.error(error);
-                    emailsContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:40px;'>Упс, помилка при з'єднанні з сервером.</div>";
+                    emailsContent.innerHTML = "<div style='text-align:center; color: #ef4444; padding-top:20px;'>Упс, помилка при з'єднанні з сервером.<br><span style='font-size: 12px; color: #9ca3af; display:block; margin-top:10px;'>Переконайся, що твій бекенд вже віддає дані за адресою /api/emails</span></div>";
                     return;
                 }
             }
 
             const data = globalEmailsData;
             if (!data[courseForEmails] || Object.keys(data[courseForEmails]).length === 0) {
-                emailsContent.innerHTML = `<div style="text-align:center; font-size: 15px; color: #6b7280; margin-top: 40px; animation: fadeIn 0.2s ease;">Пошти для твого курсу ще не додані! 📭</div>`; 
+                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти для твого курсу ще не додані! 📭</div>`; 
                 return;
             }
 
@@ -818,10 +818,10 @@
             for (let teacher in courseEmails) {
                 let email = courseEmails[teacher];
                 htmlContent += `
-                    <div class="email-card" style="animation: fadeIn 0.2s ease;">
+                    <div class="email-card">
                         <h3 class="email-teacher">${teacher}</h3>
                         <a href="mailto:${email}" class="email-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg>
                             ${email}
                         </a>
                     </div>`;
@@ -830,18 +830,20 @@
         }
 
         btnEmails.addEventListener('click', () => {
-            mainScreen.classList.remove('active');
-            emailsScreen.classList.add('active');
+            emailsModal.classList.add('active');
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
             fetchEmails();
         });
 
-        btnBackToMainFromEmails.addEventListener('click', () => {
-            emailsScreen.classList.remove('active');
-            mainScreen.classList.add('active');
+        btnCloseEmailsModal.addEventListener('click', () => {
+            emailsModal.classList.remove('active');
         });
 
-        // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ТА ФАКУЛЬТЕТУ ---
+        emailsModal.addEventListener('click', (e) => {
+            if (e.target === emailsModal) emailsModal.classList.remove('active');
+        });
+
+        // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ФАКУЛЬТЕТУ ---
         let savedFaculty = localStorage.getItem('selectedFacultyPref') || null;
 
         function updateFacultyUI() {
@@ -1063,7 +1065,6 @@
                         openScheduleScreen(saved);
                     } else {
                         scheduleScreen.classList.remove('active');
-                        emailsScreen.classList.remove('active');
                         mainScreen.classList.add('active');
                     }
                 }
