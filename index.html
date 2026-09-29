@@ -217,7 +217,7 @@
 
         /* --- КАРТКИ ПОШТИ --- */
         .email-card { background-color: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 10px; }
-        .email-teacher { font-size: 15px; font-weight: 700; color: #111827; margin: 0; transition: color 0.3s; }
+        .email-teacher { font-size: 15px; font-weight: 700; color: #111827; margin: 0; transition: color 0.3s; display: flex; align-items: center; gap: 8px; }
         .email-link { font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; align-self: flex-start; }
         .email-link:active { background: #dbeafe; }
 
@@ -374,7 +374,6 @@
                     <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; min-height: 50px;">
                         
                         <div class="streak-badge" id="streakBadge">
-                            <div id="streakTooltip" class="streak-tooltip"></div>
                             <img src="fire_series.webp" alt="🔥">
                             <span id="streakCountText">1</span>
                         </div>
@@ -396,7 +395,7 @@
                         <div id="groupSoc" class="course-group active">
                             <button id="btnCourse1" class="btn-primary">1 курс</button>
                             <button id="btnCourse2" class="btn-primary">2 курс</button>
-                            <button class="btn-primary" disabled>3 курс</button>
+                            <button id="btnCourse3" class="btn-primary">3 курс</button>
                             <button id="btnCourse4" class="btn-primary">4 курс</button>
                         </div>
                         
@@ -490,7 +489,7 @@
                     <div class="course-grid active" id="settingsGridSoc">
                         <div class="course-option" data-val="1">1 курс</div>
                         <div class="course-option" data-val="2">2 курс</div>
-                        <div class="course-option disabled">3 курс</div>
+                        <div class="course-option" data-val="3">3 курс</div>
                         <div class="course-option" data-val="4">4 курс</div>
                     </div>
                     <div class="course-grid" id="settingsGridMan">
@@ -725,37 +724,9 @@
         }
         updateStreak();
 
-        // ІНТЕРАКТИВ ВОГНИКА (POP-UP)
-        let hasClickedFire = false;
-        let tooltipTimeout;
-
+        // ІНТЕРАКТИВ ВОГНИКА
         document.getElementById('streakBadge').addEventListener('click', function() {
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-            
-            let streak = parseInt(localStorage.getItem('streakCount') || '1');
-            let msg = "";
-            
-            if (!hasClickedFire) {
-                msg = `Твоя серія - ${streak}`;
-                hasClickedFire = true;
-            } else {
-                let rand = Math.floor(Math.random() * 100) + 1;
-                if (rand <= 20) { msg = `Твоя серія - ${streak}`; } 
-                else if (rand <= 55) { msg = `Привіт!`; } 
-                else if (rand <= 79) { msg = `Подивись розклад`; } 
-                else if (rand <= 89) { msg = `Читав новини?`; } 
-                else if (rand <= 99) { msg = `Я лише вогник`; } 
-                else { msg = `Love story`; }
-            }
-            
-            const tooltip = document.getElementById('streakTooltip');
-            tooltip.innerText = msg;
-            tooltip.classList.add('show');
-            
-            clearTimeout(tooltipTimeout);
-            tooltipTimeout = setTimeout(() => {
-                tooltip.classList.remove('show');
-            }, 5000);
         });
 
         // --- DOM ЕЛЕМЕНТИ ---
@@ -1028,8 +999,8 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Показувати вибір групи тільки для 2-го та 4-го курсу
-            if (courseVal === '2' || courseVal === '4') {
+            // Показувати вибір групи тільки для 2-го, 3-го та 4-го курсу
+            if (courseVal === '2' || courseVal === '3' || courseVal === '4') {
                 groupToggleWrap.style.display = 'flex';
             } else {
                 groupToggleWrap.style.display = 'none';
@@ -1091,6 +1062,7 @@
         // --- КЛІКИ НА КУРСИ ---
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
+        document.getElementById('btnCourse3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3"); });
         document.getElementById('btnCourse4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4"); });
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
