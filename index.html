@@ -28,8 +28,8 @@
         #mainScreen { padding: 10px 16px; overflow-y: auto; text-align: center; flex-direction: column; min-height: 100%; }
         #mainScreen.active { display: flex; }
         
-        #scheduleScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
-        #scheduleScreen.active { display: flex; }
+        #scheduleScreen, #emailsScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
+        #scheduleScreen.active, #emailsScreen.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -67,16 +67,6 @@
         .streak-badge:active { transform: scale(0.85); }
         .streak-badge img { width: 44px; height: 44px; object-fit: contain; }
         .streak-badge span { font-size: 16px; font-weight: 800; color: #f97316; line-height: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-
-        .streak-tooltip {
-            position: absolute; bottom: 100%; left: -10px; margin-bottom: 8px;
-            background: rgba(75, 85, 99, 0.9); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-            color: #ffffff; padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600;
-            white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease; z-index: 50;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .streak-tooltip.show { opacity: 1; visibility: visible; }
 
         /* Кнопка пошуку факультету (Велика) */
         .btn-search-large {
@@ -139,7 +129,7 @@
         button.btn-primary:active:not(:disabled) { transform: scale(0.98); }
         button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; }
 
-        /* Кнопка "Пошта викладачів" з оновленим дизайном */
+        /* Кнопка "Пошта викладачів" */
         .btn-emails { 
             background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #1e3a8a; border: 1px solid #bfdbfe; 
             padding: 12px 20px; margin: 16px auto 24px auto; border-radius: 12px; font-size: 15px; font-weight: 700; 
@@ -402,7 +392,7 @@
                         <div id="groupMan" class="course-group">
                             <button id="btnMan1" class="btn-primary">1 курс</button>
                             <button id="btnMan2" class="btn-primary">2 курс</button>
-                            <button class="btn-primary" disabled>3 курс</button>
+                            <button id="btnMan3" class="btn-primary">3 курс</button>
                             <button class="btn-primary" disabled>4 курс</button>
                         </div>
 
@@ -472,7 +462,7 @@
             <div class="settings-card">
                 <div class="settings-header" id="courseAccordionToggle">
                     <div class="settings-header-left">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cy="12" cx="12" r="3"/></svg>
                         <h3>Налаштування курсу</h3>
                     </div>
                     <svg class="chevron-icon" id="courseChevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -495,7 +485,7 @@
                     <div class="course-grid" id="settingsGridMan">
                         <div class="course-option" data-val="1М">1 курс</div>
                         <div class="course-option" data-val="2М">2 курс</div>
-                        <div class="course-option disabled">3 курс</div>
+                        <div class="course-option" data-val="3М">3 курс</div>
                         <div class="course-option disabled">4 курс</div>
                     </div>
 
@@ -630,7 +620,21 @@
             "планування кар": "#F4D03F",
             "креативні індустрії": "#AF7AC5",
             "іміджмейкінг": "#F0B27A",
-            "pr та": "#F0B27A"
+            "pr та": "#F0B27A",
+            // Нові предмети
+            "масових комунікацій": "#76D7C4",
+            "фокус-групов": "#FCF3CF",
+            "візуальна соціолог": "#7FB3D5",
+            "даних в r": "#C39BD3",
+            "статистичного аналіз": "#C39BD3",
+            "зв'язків з громадськістю": "#58D68D",
+            "аналіз документів": "#E59866",
+            "організацій культури": "#FDEBD0",
+            "управління репутацією": "#D98880",
+            "моніторингу та управління": "#D98880",
+            "мистецтво та ідеолог": "#A9DFBF",
+            "візуальні комунікації": "#D6EAF8",
+            "регіональні та міські": "#D1F2EB"
         };
 
         function getSubjectColor(text) {
@@ -999,8 +1003,8 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Показувати вибір групи тільки для 2-го, 3-го та 4-го курсу
-            if (courseVal === '2' || courseVal === '3' || courseVal === '4') {
+            // Показувати вибір групи тільки для 3-го, 4-го курсу та 3-го курсу менеджерів
+            if (courseVal === '3' || courseVal === '4' || courseVal === '3М') {
                 groupToggleWrap.style.display = 'flex';
             } else {
                 groupToggleWrap.style.display = 'none';
@@ -1012,6 +1016,7 @@
             else if(courseVal === '4') scheduleTitle.innerHTML = `${svgCap} 4 курс (Соц.)`;
             else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
             else if(courseVal === '2М') scheduleTitle.innerHTML = `${svgCap} 2 курс (Мен.)`;
+            else if(courseVal === '3М') scheduleTitle.innerHTML = `${svgCap} 3 курс (Мен.)`;
 
             updateCurrentDayBanner();
             switchDay(currentActiveDay);
@@ -1066,6 +1071,7 @@
         document.getElementById('btnCourse4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4"); });
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
+        document.getElementById('btnMan3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3М"); });
         
         document.getElementById('btnBackToCourse').addEventListener('click', () => { 
             scheduleScreen.classList.remove('active'); 
