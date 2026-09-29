@@ -28,8 +28,8 @@
         #mainScreen { padding: 10px 16px; overflow-y: auto; text-align: center; flex-direction: column; min-height: 100%; }
         #mainScreen.active { display: flex; }
         
-        #scheduleScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
-        #scheduleScreen.active { display: flex; }
+        #scheduleScreen, #emailsScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
+        #scheduleScreen.active, #emailsScreen.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -106,9 +106,11 @@
         .btn-modal-close { background: transparent; color: #ef4444; border: none; font-size: 15px; font-weight: 600; margin-top: 10px; padding: 10px; width: 100%; cursor: pointer; }
 
         /* ПОШУК У МОДАЛЦІ ПОШТ */
+        .search-container { position: relative; margin-bottom: 12px; }
+        .search-icon-wrapper { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none; display: flex; align-items: center; }
         #emailSearchInput {
-            width: 100%; box-sizing: border-box; padding: 10px 14px; border-radius: 10px;
-            border: 1px solid #d1d5db; margin-bottom: 12px; font-family: 'Inter', sans-serif;
+            width: 100%; box-sizing: border-box; padding: 12px 14px 12px 42px; border-radius: 12px;
+            border: 1px solid #d1d5db; font-family: 'Inter', sans-serif;
             font-size: 14px; outline: none; transition: border-color 0.2s, background-color 0.3s, color 0.3s;
             background: #f9fafb; color: #111827;
         }
@@ -147,7 +149,7 @@
             box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15); 
         }
         .btn-emails:active { transform: scale(0.96); box-shadow: 0 1px 4px rgba(59, 130, 246, 0.1); }
-        .btn-emails svg { width: 22px; height: 22px; color: #3b82f6; transition: color 0.3s; }
+        .btn-emails svg { width: 20px; height: 20px; color: #3b82f6; transition: color 0.3s; }
 
         /* --- ЖОРСТКИЙ КАРКАС ДЛЯ ЕКРАНІВ РОЗКЛАДУ --- */
         .screen-header {
@@ -217,11 +219,14 @@
 
         .current-day-banner { background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; border-radius: 10px; font-size: 15px; margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(186, 230, 253, 0.4); transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
 
-        /* --- КАРТКИ ПОШТИ --- */
-        .email-card { background-color: #ffffff; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 8px; }
+        /* --- КАРТКИ ПОШТИ ТА КНОПКА КОПІЮВАННЯ --- */
+        .email-card { background-color: #ffffff; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #3b82f6; text-align: left; transition: background-color 0.3s, border-color 0.3s; display: flex; flex-direction: column; gap: 8px; }
         .email-teacher { font-size: 15px; font-weight: 700; color: #111827; margin: 0; transition: color 0.3s; display: flex; align-items: center; gap: 8px; }
-        .email-link { font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; padding: 6px 12px; border-radius: 8px; transition: background 0.2s; align-self: flex-start; }
+        .email-link { font-size: 14px; font-weight: 600; color: #3b82f6; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-grow: 1; }
         .email-link:active { background: #dbeafe; }
+        
+        .copy-email-btn { background: #f3f4f6; border: 1px solid #e5e7eb; color: #6b7280; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+        .copy-email-btn:active { transform: scale(0.92); background: #e5e7eb; }
 
         /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) */
         .btn-mon { background-color: #ffadad !important; color: #111827 !important; }
@@ -282,7 +287,7 @@
            ТЕМНА ТЕМА (DARK MODE) 
            ========================================= */
         body.dark-theme { background-color: #111827; color: #f9fafb; }
-        body.dark-theme #scheduleScreen { background-color: #111827; }
+        body.dark-theme #scheduleScreen, body.dark-theme #emailsScreen { background-color: #111827; }
         body.dark-theme .bottom-nav, body.dark-theme .screen-header, body.dark-theme .day-tabs-container,
         body.dark-theme .lesson-card, body.dark-theme .email-card, body.dark-theme .profile-card, body.dark-theme .settings-card { background-color: #1f2937; border-color: #374151; }
         body.dark-theme .lesson-card { border-left-color: #4b5563; }
@@ -311,6 +316,10 @@
         /* Темна тема для пошуку */
         body.dark-theme #emailSearchInput { background: #374151; color: #f9fafb; border-color: #4b5563; }
         body.dark-theme #emailSearchInput:focus { border-color: #60a5fa; }
+        
+        /* Темна тема для копіювання */
+        body.dark-theme .copy-email-btn { background: #374151; border-color: #4b5563; color: #9ca3af; }
+        body.dark-theme .copy-email-btn:active { background: #4b5563; }
 
         body.dark-theme .time-dot { background-color: #4b5563; }
         body.dark-theme .time-divider { color: #4b5563; }
@@ -567,8 +576,13 @@
         <div class="modal-content" style="max-height: 85vh; display: flex; flex-direction: column;">
             <h3 class="modal-title" style="margin-bottom: 12px;">Пошта викладачів</h3>
             
-            <!-- РЯДОК ПОШУКУ -->
-            <input type="text" id="emailSearchInput" placeholder="🔍 Пошук викладача...">
+            <!-- РЯДОК ПОШУКУ З ІКОНКОЮ -->
+            <div class="search-container">
+                <div class="search-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                </div>
+                <input type="text" id="emailSearchInput" placeholder="Пошук викладача...">
+            </div>
             
             <div id="emailsContent" style="overflow-y: auto; text-align: left; padding-right: 5px; flex-grow: 1;">
                 <!-- Тут будуть завантажені пошти -->
@@ -795,9 +809,33 @@
             });
         });
 
+        // --- ЛОГІКА КОПІЮВАННЯ ПОШТИ ---
+        emailsContent.addEventListener('click', function(e) {
+            const btn = e.target.closest('.copy-email-btn');
+            if (btn) {
+                const email = btn.getAttribute('data-email');
+                
+                // Тимчасовий інпут для надійного копіювання в WebView Telegram
+                const tempInput = document.createElement("input");
+                tempInput.value = email;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand("copy");
+                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                    
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    setTimeout(() => { btn.innerHTML = originalHtml; }, 1500);
+                } catch (err) {
+                    console.error("Помилка копіювання: ", err);
+                }
+                document.body.removeChild(tempInput);
+            }
+        });
+
         // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ ---
         async function fetchEmails() {
-            // Очищуємо поле пошуку при кожному відкритті
             emailSearchInput.value = '';
             
             emailsContent.innerHTML = "<div style='text-align:center; padding-top:20px; color: #6b7280;'>⏳ Завантаження пошт...</div>";
@@ -829,10 +867,15 @@
                 htmlContent += `
                     <div class="email-card">
                         <h3 class="email-teacher">${teacher}</h3>
-                        <a href="mailto:${email}" class="email-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z"/><polyline points="15,9 18,9 18,11"/><path d="M6.5 5C9 5 11 7 11 9.5V17a2 2 0 0 1-2 2"/><line x1="6" x2="7" y1="10" y2="10"/></svg>
-                            ${email}
-                        </a>
+                        <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-start;">
+                            <a href="mailto:${email}" class="email-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z"/><polyline points="15,9 18,9 18,11"/><path d="M6.5 5C9 5 11 7 11 9.5V17a2 2 0 0 1-2 2"/><line x1="6" x2="7" y1="10" y2="10"/></svg>
+                                ${email}
+                            </a>
+                            <button class="copy-email-btn" data-email="${email}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                            </button>
+                        </div>
                     </div>`;
             }
             emailsContent.innerHTML = htmlContent;
@@ -842,6 +885,10 @@
             emailsModal.classList.add('active');
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
             fetchEmails();
+            
+            setTimeout(() => {
+                emailSearchInput.focus();
+            }, 100);
         });
 
         btnCloseEmailsModal.addEventListener('click', () => {
@@ -967,7 +1014,7 @@
         const savedCourse = localStorage.getItem('defaultCoursePref') || "";
         if (savedCourse && savedCourse.includes("М")) {
             document.querySelector('.settings-segment[data-settings-spec="man"]').click();
-            activeSpec = 'man'; // Встановлюємо правильний початковий стан
+            activeSpec = 'man'; 
         } else {
             activeSpec = 'soc';
         }
@@ -1041,7 +1088,6 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Показувати вибір групи тільки для 3-го та 4-го курсу (і соціологів, і менеджерів)
             if (courseVal === '3' || courseVal === '4' || courseVal === '3М') {
                 groupToggleWrap.style.display = 'flex';
             } else {
@@ -1094,7 +1140,7 @@
             segment.addEventListener('click', (e) => {
                 mainSegments.forEach(s => s.classList.remove('active'));
                 e.target.classList.add('active');
-                activeSpec = e.target.getAttribute('data-spec'); // Оновлюємо активний напрямок для пошт
+                activeSpec = e.target.getAttribute('data-spec'); 
                 if (activeSpec === 'soc') {
                     groupSoc.classList.add('active'); groupMan.classList.remove('active');
                 } else {
@@ -1175,7 +1221,6 @@
             let typeBadge = ""; 
             let subjectClean = subject;
             
-            // Виправлення опечатки "Нформаційні" на "Інформаційні"
             subjectClean = subjectClean.replace(/^[Нн]формаційні/i, "Інформаційні");
             
             let typeMatch = subjectClean.match(/\s*\(\s*(л\vert{}Л\vert{}пр\vert{}ПР\vert{}Пр\vert{}с\vert{}С\vert{}лаб\vert{}ЛАБ\vert{}Лаб)\.?\s*\)/);
@@ -1190,7 +1235,7 @@
             let cardColor = getSubjectColor(subjectClean);
             subjectClean = subjectClean.toLowerCase().trim();
             if (subjectClean.length > 0) subjectClean = subjectClean.charAt(0).toUpperCase() + subjectClean.slice(1);
-            if (subjectClean.startsWith("нформаційні")) subjectClean = "І" + subjectClean; // Резервний фікс
+            if (subjectClean.startsWith("нформаційні")) subjectClean = "І" + subjectClean; 
             
             let groupHtml = groupLabel ? `<div class="group-label">${groupLabel}</div>` : "";
             
