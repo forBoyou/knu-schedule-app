@@ -70,13 +70,14 @@
         .bg-glow { 
             position: absolute; top: 0; left: 50%; transform: translateX(-50%); 
             width: 220px; height: 120px; 
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(249, 115, 22, 0.4)); 
+            background: rgba(255, 0, 0, 0.4); 
             filter: blur(45px); z-index: -1; pointer-events: none; border-radius: 50%; 
         }
 
         .main-title { display: block; text-align: center; font-size: 32px; margin: 15px 0 12px 0; letter-spacing: -0.03em; transition: color 0.3s; }
-        .main-title .knu { font-weight: 800; background: linear-gradient(135deg, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .main-title .schedule { font-weight: 500; color: #6b7280; }
+        /* Яскраво червоний градієнт для тексту */
+        .main-title .knu { font-weight: 800; background: linear-gradient(135deg, #ff0000, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-title .schedule { font-weight: 600; background: linear-gradient(135deg, #ef4444, #991b1b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* Пігулка факультету */
         .faculty-pill { 
@@ -108,7 +109,7 @@
 
         /* Кнопка зміни факультету (Маленька) */
         .btn-change-fac {
-            background-color: #e5e7eb; color: #4b5563; border: none; padding: 8px 16px; margin: 16px auto 16px auto; 
+            background-color: #e5e7eb; color: #4b5563; border: none; padding: 8px 16px; margin: 12px auto 16px auto; 
             border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; 
             align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
         }
@@ -157,14 +158,13 @@
         .news-badge { color: #0284c7; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .news-text { font-size: 15px; font-weight: 600; color: #1f2937; margin: 0; text-align: left; line-height: 1.4; }
 
-        /* --- ЕЛЕМЕНТИ ВИБОРУ КУРСУ --- */
+        /* --- ЕЛЕМЕНТИ ВИБОРУ КУРСУ ТА ПОШТИ --- */
         .segment-control { display: flex; background-color: #e5e7eb; border-radius: 12px; padding: 4px; margin: 0 auto 16px auto; max-width: 320px; transition: background-color 0.3s; }
         .segment { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: #6b7280; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
         .segment.active { background-color: #ffffff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .course-group { display: none; animation: fadeIn 0.2s ease; }
         .course-group.active { display: block; }
 
-        /* СТАРІ ПЛОСКІ КНОПКИ КУРСІВ + HOVER ДЛЯ ПК */
         button.btn-primary { 
             background-color: #3b82f6; color: white; border: none; padding: 10px 20px; margin: 6px auto; 
             border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; 
@@ -172,11 +172,38 @@
             box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; 
         }
         button.btn-primary:active:not(:disabled) { transform: scale(0.98); }
-        button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; cursor: default; }
+        button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; cursor: default;}
 
+        /* --- НОВІ КНОПКИ КУРСІВ (ГРАДІЄНТИ ТА ОБ'ЄМ) --- */
+        .btn-course {
+            border: none; padding: 12px 20px; margin: 8px auto; border-radius: 12px; 
+            font-size: 16px; font-weight: 700; color: #ffffff; cursor: pointer; 
+            font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; 
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+        .btn-course:active:not(:disabled) { transform: translateY(2px) scale(0.96); }
+        .btn-course:disabled { 
+            background: #e5e7eb !important; color: #9ca3af !important; 
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8) !important; 
+            border-top: 1px solid transparent !important; text-shadow: none; opacity: 0.7; cursor: not-allowed; 
+        }
+
+        .btn-course-1 { background: linear-gradient(135deg, #38bdf8, #2563eb); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(37, 99, 235, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
+        .btn-course-2 { background: linear-gradient(135deg, #818cf8, #4f46e5); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(79, 70, 229, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
+        .btn-course-3 { background: linear-gradient(135deg, #c084fc, #9333ea); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(147, 51, 234, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
+        .btn-course-4 { background: linear-gradient(135deg, #fb923c, #e11d48); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(225, 29, 72, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
+
+        /* Збільшення кнопок при наведенні мишкою (тільки на ПК) */
         @media (hover: hover) and (pointer: fine) {
+            .btn-course:hover:not(:disabled) {
+                transform: scale(1.06);
+            }
             button.btn-primary:hover:not(:disabled) {
-                transform: scale(1.02);
+                transform: scale(1.04);
+            }
+            .btn-emails-new:hover {
+                transform: scale(1.04);
             }
         }
 
@@ -186,7 +213,7 @@
             border: 1px solid rgba(255, 255, 255, 0.8);
             padding: 10px 14px; margin: 16px auto 24px auto; border-radius: 16px;
             display: flex; align-items: center; justify-content: space-between; gap: 12px;
-            width: 100%; max-width: 280px; transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%; max-width: 280px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); cursor: pointer; text-align: left;
             text-decoration: none; outline: none;
         }
@@ -287,7 +314,6 @@
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
-        .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
         .icon-clock-active { color: #10b981; width: 15px; height: 15px; } 
@@ -345,7 +371,9 @@
         
         /* Темна тема для заголовка */
         body.dark-theme .bg-glow { opacity: 0.6; }
-        body.dark-theme .main-title .schedule { color: #9ca3af; }
+        body.dark-theme .main-title .knu { background: linear-gradient(135deg, #ff4444, #ff0000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body.dark-theme .main-title .schedule { background: linear-gradient(135deg, #ff6666, #cc0000); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         body.dark-theme .faculty-pill { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.2); }
         
         body.dark-theme .sub-title { color: #d1d5db; }
@@ -361,6 +389,7 @@
         body.dark-theme .current-day-banner .icon-calendar { color: #60a5fa; }
         body.dark-theme .group-label { background-color: #3730a3; color: #c7d2fe; }
         
+        body.dark-theme .btn-course:disabled { background: #374151 !important; color: #6b7280 !important; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05) !important; border-top: none !important;}
         body.dark-theme button.btn-primary:disabled { background-color: #374151 !important; color: #6b7280 !important; box-shadow: none !important; opacity: 0.8; }
         
         /* Темна тема для нової кнопки пошти */
@@ -462,17 +491,17 @@
                         </div>
                         
                         <div id="groupSoc" class="course-group active">
-                            <button id="btnCourse1" class="btn-primary">1 курс</button>
-                            <button id="btnCourse2" class="btn-primary">2 курс</button>
-                            <button id="btnCourse3" class="btn-primary">3 курс</button>
-                            <button id="btnCourse4" class="btn-primary">4 курс</button>
+                            <button id="btnCourse1" class="btn-course btn-course-1">1 курс</button>
+                            <button id="btnCourse2" class="btn-course btn-course-2">2 курс</button>
+                            <button id="btnCourse3" class="btn-course btn-course-3">3 курс</button>
+                            <button id="btnCourse4" class="btn-course btn-course-4">4 курс</button>
                         </div>
                         
                         <div id="groupMan" class="course-group">
-                            <button id="btnMan1" class="btn-primary">1 курс</button>
-                            <button id="btnMan2" class="btn-primary">2 курс</button>
-                            <button id="btnMan3" class="btn-primary">3 курс</button>
-                            <button class="btn-primary" disabled>4 курс</button>
+                            <button id="btnMan1" class="btn-course btn-course-1">1 курс</button>
+                            <button id="btnMan2" class="btn-course btn-course-2">2 курс</button>
+                            <button id="btnMan3" class="btn-course btn-course-3">3 курс</button>
+                            <button class="btn-course btn-course-4" disabled>4 курс</button>
                         </div>
 
                         <!-- ОНОВЛЕНА КНОПКА ПОШТИ ВИКЛАДАЧІВ (GLASSMORPHISM) -->
