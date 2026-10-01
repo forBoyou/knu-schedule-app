@@ -56,17 +56,17 @@
         .nav-item span { font-size: 11px; font-weight: 600; }
 
         /* --- ГОЛОВНИЙ ЕКРАН (KNU Schedule) --- */
-        /* Приглушене світіння */
+        /* Дуже слабкий неон на фоні */
         .bg-glow { 
             position: absolute; top: 0; left: 50%; transform: translateX(-50%); 
             width: 250px; height: 140px; 
-            background: rgba(239, 68, 68, 0.15); 
-            filter: blur(55px); z-index: -1; pointer-events: none; border-radius: 50%; 
+            background: rgba(239, 68, 68, 0.1); 
+            filter: blur(50px); z-index: -1; pointer-events: none; border-radius: 50%; 
         }
 
         .main-title { display: block; text-align: center; font-size: 32px; margin: 15px 0 12px 0; letter-spacing: -0.03em; transition: color 0.3s; }
-        .main-title .knu { font-weight: 800; color: #EF4444; background: none; -webkit-text-fill-color: initial; }
-        .main-title .schedule { font-weight: 600; color: #6b7280; background: none; -webkit-text-fill-color: initial; }
+        .main-title .knu { font-weight: 800; color: #EF4444; }
+        .main-title .schedule { font-weight: 600; color: #6b7280; text-shadow: 0 0 12px rgba(107, 114, 128, 0.35); }
 
         .faculty-pill { 
             display: inline-block; background: rgba(59, 130, 246, 0.1); color: #3b82f6; 
@@ -151,26 +151,29 @@
         .course-group { display: none; animation: fadeIn 0.2s ease; }
         .course-group.active { display: block; }
 
-        /* КНОПКИ КУРСІВ */
-        .btn-course {
-            background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 12px; 
-            font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; 
-            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+        /* ПОВЕРНУТІ СТАРІ КНОПКИ КУРСІВ */
+        button.btn-primary { 
+            background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 6px auto; 
+            border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; 
+            font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; 
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.1s, background-color 0.3s; 
         }
-        .btn-course:active:not(:disabled) { transform: translateY(2px) scale(0.96); }
-        .btn-course:disabled { 
-            background: #e5e7eb !important; color: #9ca3af !important; 
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8) !important; 
-            border-top: 1px solid transparent !important; text-shadow: none; opacity: 0.7; cursor: not-allowed; 
-        }
+        button.btn-primary:active:not(:disabled) { transform: scale(0.96); }
+        button.btn-primary:disabled { background-color: #e5e7eb !important; color: #9ca3af !important; box-shadow: none !important; opacity: 0.8; cursor: default; }
 
         @media (hover: hover) and (pointer: fine) {
-            .btn-course:hover:not(:disabled) { transform: scale(1.06); }
-            .btn-emails-new:hover { transform: scale(1.04); }
-            .btn-practice:hover { transform: scale(1.05); }
+            button.btn-primary:hover:not(:disabled) {
+                transform: scale(1.06); /* Трохи більше збільшення */
+            }
+            .btn-emails-new:hover {
+                transform: scale(1.04);
+            }
+            .btn-practice:hover {
+                transform: scale(1.05);
+            }
         }
 
-        /* Кнопка "Пошта викладачів" */
+        /* Кнопка "Пошта викладачів" з оновленим дизайном */
         .btn-emails-new {
             background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.8);
@@ -203,7 +206,7 @@
         
         .btn-practice {
             background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;
-            padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; display: none; /* Схована за замовчуванням */
+            padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; display: none; 
             cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05); align-items: center; justify-content: center;
         }
@@ -242,7 +245,7 @@
 
         .lesson-card { background-color: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #e5e7eb; transition: background-color 0.3s, border-color 0.3s; }
         .lesson-card:last-child { margin-bottom: 0; }
-        .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+        .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
         .subject-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.25; transition: color 0.3s; }
 
         .lesson-body-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
@@ -257,17 +260,18 @@
         .or-divider { text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; transition: background-color 0.3s; }
 
-        /* Квадратні бейджі дій (Л, ПР, С) та Відео */
+        /* КВАДРАТНІ БЕЙДЖІ ДІЙ (Л, ПР, С) ТА ВІДЕО */
         .actions-wrap { display: flex; gap: 8px; align-items: center; }
         .action-sq {
             display: flex; align-items: center; justify-content: center;
             width: 36px; height: 36px; border-radius: 10px;
-            font-size: 15px; font-weight: 800; text-transform: uppercase;
+            font-size: 14px; font-weight: 800; text-transform: uppercase;
             flex-shrink: 0; transition: all 0.2s ease;
         }
-        .type-sq-l { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-        .type-sq-pr { background-color: rgba(244, 114, 182, 0.15); color: #f472b6; }
-        .type-sq-s { background-color: rgba(251, 146, 60, 0.15); color: #fb923c; }
+        /* Кольори за запитом користувача */
+        .type-sq-l { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; } /* Синій */
+        .type-sq-pr { background-color: rgba(244, 114, 182, 0.15); color: #f472b6; } /* Рожевий */
+        .type-sq-s { background-color: rgba(251, 146, 60, 0.15); color: #fb923c; } /* Персиковий */
         .type-sq-lab { background-color: rgba(194, 65, 12, 0.15); color: #c2410c; }
 
         .online-icon-btn { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background-color: #eff6ff; color: #3b82f6; border-radius: 10px; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease; }
@@ -354,7 +358,7 @@
         /* Темна тема для заголовка */
         body.dark-theme .bg-glow { opacity: 0.3; }
         body.dark-theme .main-title .knu { color: #EF4444; }
-        body.dark-theme .main-title .schedule { color: #9ca3af; background: none; -webkit-text-fill-color: initial;}
+        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 12px rgba(156, 163, 175, 0.3); }
         
         body.dark-theme .faculty-pill { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.2); }
         
@@ -367,7 +371,7 @@
         body.dark-theme .type-sq-l { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
         body.dark-theme .type-sq-pr { background-color: rgba(244, 114, 182, 0.2); color: #f472b6; }
         body.dark-theme .type-sq-s { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; }
-        body.dark-theme .type-sq-lab { background-color: rgba(194, 65, 12, 0.2); color: #fb923c; }
+        body.dark-theme .type-sq-lab { background-color: rgba(194, 65, 12, 0.2); color: #ea580c; }
         
         body.dark-theme .settings-header-left > svg { color: #9ca3af; }
         body.dark-theme .time-meta, body.dark-theme .teacher-line, body.dark-theme .or-divider, body.dark-theme .icon-room { color: #9ca3af; }
@@ -1190,7 +1194,7 @@
             scheduleScreen.classList.add('active');
             
             // Кнопки показуються тільки для 3 та 4 курсів
-            if (courseVal === '3' || courseVal === '4' || courseVal === '3М') {
+            if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
             } else {
@@ -1336,7 +1340,7 @@
                 
                 if (t.startsWith('пр')) { bClass = 'type-sq-pr'; tLetter = 'ПР'; } 
                 else if (t.startsWith('лаб')) { bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; } 
-                else if (t.startsWith('с') || t.startsWith('c')) { bClass = 'type-sq-s'; tLetter = 'С'; }
+                else if (t.startsWith('с') || t.startsWith('c') || t.startsWith('сем')) { bClass = 'type-sq-s'; tLetter = 'С'; }
                 
                 typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
                 subjectClean = subjectClean.replace(typeMatch[0], '').trim();
