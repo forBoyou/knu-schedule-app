@@ -359,9 +359,9 @@
         body.dark-theme .subject-title, body.dark-theme .modal-title, body.dark-theme .email-teacher { color: #f9fafb; }
         
         /* Темна тема для заголовка */
-        body.dark-theme .bg-glow { opacity: 0.5; }
-        body.dark-theme .main-title .knu { color: #EF4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
-        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 12px rgba(239, 68, 68, 0.3); } 
+        body.dark-theme .bg-glow { opacity: 0.4; }
+        body.dark-theme .main-title .knu { color: #EF4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 12px rgba(239, 68, 68, 0.2); } 
         
         body.dark-theme .faculty-pill { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.2); }
         
@@ -387,7 +387,7 @@
         body.dark-theme .current-day-banner .icon-calendar { color: #60a5fa; }
         body.dark-theme .group-label { background-color: #3730a3; color: #c7d2fe; }
         
-        /* Темна тема для кнопок курсів (М'які градієнти) */
+        /* Темна тема для кнопок курсів (Градієнти) */
         body.dark-theme .btn-course-1 { background: linear-gradient(135deg, #0284c7, #1d4ed8); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
         body.dark-theme .btn-course-2 { background: linear-gradient(135deg, #4338ca, #3730a3); box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3); }
         body.dark-theme .btn-course-3 { background: linear-gradient(135deg, #7e22ce, #6b21a8); box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3); }
@@ -1221,6 +1221,7 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
+            // Кнопки показуються тільки для 3 та 4 курсів
             if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
@@ -1343,29 +1344,6 @@
                 }
             }
 
-            let typeBadgeSquare = ""; 
-            
-            // Надійний пошук та витягування типу пари в окремий квадрат З БУДЬ-ЯКОГО МІСЦЯ КАРТКИ
-            let typeMatch = blockText.match(/\s*\(\s*(л\vert{}пр\vert{}с\vert{}c\vert{}лаб\vert{}лек\vert{}прак\vert{}сем)\.?\s*\)/i);
-            
-            if (typeMatch) {
-                let t = typeMatch[1].toLowerCase();
-                let bClass = 'type-sq-l'; let tLetter = 'Л';
-                
-                if (t.startsWith('пр') || t.startsWith('прак')) { 
-                    bClass = 'type-sq-pr'; tLetter = 'ПР'; 
-                } else if (t.startsWith('лаб')) { 
-                    bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; 
-                } else if (t.startsWith('с') || t.startsWith('c') || t.startsWith('сем')) { 
-                    bClass = 'type-sq-s'; tLetter = 'С'; 
-                }
-                
-                typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
-                
-                // Видаляємо знайдену дужку з загального тексту
-                blockText = blockText.replace(typeMatch[0], ' ');
-            }
-
             let lines = blockText ? blockText.split('<br>').map(l => l.trim()).filter(l => l) : [];
             if (lines.length === 0) return { html: "", color: "#e5e7eb" };
             
@@ -1373,11 +1351,35 @@
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
                 if (line.toLowerCase().includes('ауд')) room = line;
-                else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍‍🏫') || line.includes('викладач')) teacher = line;
+                else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) teacher = line;
             }
             
+            let typeBadgeSquare = ""; 
             let subjectClean = subject;
+            
             subjectClean = subjectClean.replace(/^[Нн]формаційні/i, "Інформаційні");
+            
+            // Надійний пошук та витягування типу пари в окремий квадрат 
+            // РАБОТАЕТ СО СКОБКАМИ ТИПА (л), (пр), (с), (лаб)
+            let typeMatch = subjectClean.match(/\s*\(\s*(л\vert{}Л\vert{}пр\vert{}ПР\vert{}Пр\vert{}с\vert{}С\vert{}c\vert{}C\vert{}лаб\vert{}ЛАБ\vert{}Лаб)\.?\s*\)/);
+            
+            if (typeMatch) {
+                let t = typeMatch[1].toLowerCase();
+                let bClass = 'type-sq-l'; let tLetter = 'Л';
+                
+                if (t === 'пр') { 
+                    bClass = 'type-sq-pr'; tLetter = 'ПР'; 
+                } else if (t === 'лаб') { 
+                    bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; 
+                } else if (t === 'с' || t === 'c') { 
+                    bClass = 'type-sq-s'; tLetter = 'С'; 
+                }
+                
+                typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
+                
+                // Видаляємо знайдену дужку з заголовка
+                subjectClean = subjectClean.replace(typeMatch[0], '').trim();
+            }
 
             let cardColor = getSubjectColor(subjectClean);
             subjectClean = subjectClean.toLowerCase().trim();
