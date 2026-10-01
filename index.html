@@ -65,14 +65,18 @@
 
         .main-title { display: block; text-align: center; font-size: 32px; margin: 15px 0 12px 0; letter-spacing: -0.03em; transition: color 0.3s; }
         .main-title .knu { font-weight: 800; color: #EF4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.35); }
-        .main-title .schedule { font-weight: 600; color: #6b7280; text-shadow: 0 0 10px rgba(239, 68, 68, 0.2); } /* Легке червоне світіння */
+        .main-title .schedule { font-weight: 600; color: #6b7280; text-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
 
+        /* ОНОВЛЕНА ПІГУЛКА-КНОПКА ФАКУЛЬТЕТУ */
         .faculty-pill { 
-            display: inline-block; background: rgba(59, 130, 246, 0.1); color: #3b82f6; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            background: rgba(59, 130, 246, 0.1); color: #3b82f6; 
             font-size: 15px; font-weight: 700; padding: 6px 18px; border-radius: 20px; 
             border: 1px solid rgba(59, 130, 246, 0.15); margin: 0 auto; 
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05); transition: all 0.3s; 
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05); transition: all 0.2s; 
+            cursor: pointer; outline: none;
         }
+        .faculty-pill:active { transform: scale(0.96); }
 
         /* --- ПЛАШКА СЕРІЇ ЗАХОДІВ (STREAK) --- */
         .streak-badge {
@@ -92,14 +96,6 @@
         }
         .btn-search-large:active { transform: scale(0.96); box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2); }
         .btn-search-large svg { width: 20px; height: 20px; }
-
-        .btn-change-fac {
-            background-color: #e5e7eb; color: #4b5563; border: none; padding: 8px 16px; margin: 12px auto 16px auto; 
-            border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; 
-            align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;
-        }
-        .btn-change-fac:active { background-color: #d1d5db; transform: scale(0.96); }
-        .btn-change-fac svg { width: 14px; height: 14px; }
 
         /* --- МОДАЛЬНІ ВІКНА (BLUR) --- */
         .modal-overlay {
@@ -151,7 +147,7 @@
         .course-group { display: none; animation: fadeIn 0.2s ease; }
         .course-group.active { display: block; }
 
-        /* М'ЯКІ ГРАДІЄНТНІ КНОПКИ КУРСІВ */
+        /* КНОПКИ КУРСІВ (М'ЯКІ ГРАДІЄНТИ) */
         .btn-course {
             border: none; padding: 12px 20px; margin: 8px auto; border-radius: 12px; 
             font-size: 16px; font-weight: 700; color: #ffffff; cursor: pointer; 
@@ -161,20 +157,21 @@
         .btn-course:active:not(:disabled) { transform: translateY(2px) scale(0.96); }
         .btn-course:disabled { 
             background: #e5e7eb !important; color: #9ca3af !important; 
-            box-shadow: none !important; opacity: 0.8; cursor: not-allowed; 
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5) !important; 
+            border-top: 1px solid transparent !important; text-shadow: none; opacity: 0.7; cursor: not-allowed; 
         }
 
-        .btn-course-1 { background: linear-gradient(135deg, #60a5fa, #3b82f6); box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
-        .btn-course-2 { background: linear-gradient(135deg, #818cf8, #6366f1); box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); }
-        .btn-course-3 { background: linear-gradient(135deg, #c084fc, #a855f7); box-shadow: 0 4px 14px rgba(168, 85, 247, 0.3); }
-        .btn-course-4 { background: linear-gradient(135deg, #fb923c, #f43f5e); box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3); }
+        .btn-course-1 { background: linear-gradient(135deg, #38bdf8, #2563eb); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(37, 99, 235, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-course-2 { background: linear-gradient(135deg, #818cf8, #4f46e5); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(79, 70, 229, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-course-3 { background: linear-gradient(135deg, #c084fc, #9333ea); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(147, 51, 234, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-course-4 { background: linear-gradient(135deg, #fb923c, #e11d48); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(225, 29, 72, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.2); }
 
         @media (hover: hover) and (pointer: fine) {
-            .btn-course:hover:not(:disabled) { transform: scale(1.06); }
-            .btn-course-1:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4); }
-            .btn-course-2:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4); }
-            .btn-course-3:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(168, 85, 247, 0.4); }
-            .btn-course-4:hover:not(:disabled) { box-shadow: 0 6px 18px rgba(244, 63, 94, 0.4); }
+            .btn-course:hover:not(:disabled) { transform: scale(1.04); }
+            .btn-course-1:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(37, 99, 235, 0.3); }
+            .btn-course-2:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(79, 70, 229, 0.3); }
+            .btn-course-3:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(147, 51, 234, 0.3); }
+            .btn-course-4:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(225, 29, 72, 0.3); }
             .btn-emails-new:hover { transform: scale(1.04); }
             .btn-practice:hover { transform: scale(1.05); }
         }
@@ -363,8 +360,8 @@
         
         /* Темна тема для заголовка */
         body.dark-theme .bg-glow { opacity: 0.5; }
-        body.dark-theme .main-title .knu { color: #EF4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
-        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 10px rgba(239, 68, 68, 0.3); } 
+        body.dark-theme .main-title .knu { color: #EF4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 12px rgba(239, 68, 68, 0.3); } 
         
         body.dark-theme .faculty-pill { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.2); }
         
@@ -486,7 +483,10 @@
                             <span id="streakCountText">1</span>
                         </div>
 
-                        <div class="faculty-pill" id="facultyNameDisplay">Факультет соціології</div>
+                        <button class="faculty-pill" id="btnChangeFacultyPill">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            <span id="facultyNameDisplay">Факультет соціології</span>
+                        </button>
                     </div>
                     
                     <div id="courseSelectionArea" style="animation: fadeIn 0.2s ease;">
@@ -531,7 +531,7 @@
                 </button>
 
                 <!-- НОВИНИ (GLASSMORPHISM) -->
-                <div class="news-banner" id="newsBannerBlock" style="display: none;">
+                <div class="news-banner" id="newsBannerBlock">
                     <div class="news-header">
                         <img src="news.webp" alt="Новина" class="news-icon">
                         <span class="news-badge">НОВИНА ТИЖНЯ</span>
@@ -539,10 +539,6 @@
                     <p class="news-text" id="newsBannerText">Кажуть онлайн буде, дітки.</p>
                 </div>
                 
-                <button id="btnChangeFaculty" class="btn-change-fac">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-                    Змінити факультет
-                </button>
             </div>
 
             <!-- ЕКРАН РОЗКЛАДУ -->
@@ -920,7 +916,7 @@
         const btnSelectFacultyLarge = document.getElementById('btnSelectFacultyLarge');
         const selectedFacultyDisplay = document.getElementById('selectedFacultyDisplay');
         const facultyNameDisplay = document.getElementById('facultyNameDisplay');
-        const btnChangeFaculty = document.getElementById('btnChangeFaculty');
+        const btnChangeFaculty = document.getElementById('btnChangeFacultyPill');
         const facultyModal = document.getElementById('facultyModal');
         const btnCloseModal = document.getElementById('btnCloseModal');
         const btnModalSoc = document.getElementById('btnModalSoc');
@@ -1044,11 +1040,9 @@
             if (savedFaculty === 'soc') {
                 btnSelectFacultyLarge.style.display = 'none';
                 selectedFacultyDisplay.style.display = 'block';
-                document.getElementById('btnChangeFaculty').style.display = 'flex';
             } else {
                 btnSelectFacultyLarge.style.display = 'flex';
                 selectedFacultyDisplay.style.display = 'none';
-                document.getElementById('btnChangeFaculty').style.display = 'none';
             }
         }
         updateFacultyUI();
@@ -1227,7 +1221,6 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Кнопки показуються тільки для 3 та 4 курсів
             if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
@@ -1353,7 +1346,7 @@
             let typeBadgeSquare = ""; 
             
             // Надійний пошук та витягування типу пари в окремий квадрат З БУДЬ-ЯКОГО МІСЦЯ КАРТКИ
-            let typeMatch = blockText.match(/\s*\(\s*(л\vert{}пр\vert{}с\vert{}c\vert{}лаб\vert{}лек\vert{}прак\vert{}сем)[^)\]]*[\)\]]/i);
+            let typeMatch = blockText.match(/\s*\(\s*(л\vert{}пр\vert{}с\vert{}c\vert{}лаб\vert{}лек\vert{}прак\vert{}сем)\.?\s*\)/i);
             
             if (typeMatch) {
                 let t = typeMatch[1].toLowerCase();
@@ -1380,7 +1373,7 @@
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
                 if (line.toLowerCase().includes('ауд')) room = line;
-                else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) teacher = line;
+                else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍‍🏫') || line.includes('викладач')) teacher = line;
             }
             
             let subjectClean = subject;
