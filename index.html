@@ -18,15 +18,10 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* ЗАБОРОНА ВЗАЄМОДІЇ З КАРТИНКАМИ (щоб не можна було зберегти) */
+        /* ЗАБОРОНА ВЗАЄМОДІЇ З КАРТИНКАМИ */
         img, svg {
-            -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
+            -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -o-user-drag: none;
+            user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
         }
 
         .main-container { flex-grow: 1; overflow: hidden; position: relative; }
@@ -42,10 +37,7 @@
         #scheduleScreen, #emailsScreen { flex-direction: column; background-color: #f9fafb; transition: background-color 0.3s; padding: 0; }
         #scheduleScreen.active, #emailsScreen.active { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- НИЖНЯ НАВІГАЦІЯ --- */
         .bottom-nav {
@@ -53,31 +45,29 @@
             display: flex; justify-content: center; gap: 50px; padding: 8px 0 12px 0; 
             box-shadow: 0 -2px 10px rgba(0,0,0,0.03); z-index: 100; transition: background-color 0.3s, border-color 0.3s;
         }
-
         .nav-item {
             background: transparent !important; border: none; box-shadow: none !important;
             margin: 0 !important; padding: 4px 12px !important; width: auto !important;
             color: #9ca3af !important; display: flex; flex-direction: column; align-items: center;
             gap: 4px; cursor: pointer; transition: color 0.2s;
         }
-        
         .nav-item.active { color: #3b82f6 !important; }
         .nav-item svg { width: 24px; height: 24px; }
         .nav-item span { font-size: 11px; font-weight: 600; }
 
         /* --- ГОЛОВНИЙ ЕКРАН (KNU Schedule) --- */
+        /* Приглушене світіння */
         .bg-glow { 
             position: absolute; top: 0; left: 50%; transform: translateX(-50%); 
-            width: 220px; height: 120px; 
-            background: rgba(255, 0, 0, 0.4); 
-            filter: blur(45px); z-index: -1; pointer-events: none; border-radius: 50%; 
+            width: 250px; height: 140px; 
+            background: rgba(239, 68, 68, 0.15); 
+            filter: blur(55px); z-index: -1; pointer-events: none; border-radius: 50%; 
         }
 
         .main-title { display: block; text-align: center; font-size: 32px; margin: 15px 0 12px 0; letter-spacing: -0.03em; transition: color 0.3s; }
-        .main-title .knu { font-weight: 800; color: #ba1e1e; background: none; -webkit-text-fill-color: initial; }
-        .main-title .schedule { font-weight: 600; background: linear-gradient(135deg, #ef4444, #991b1b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-title .knu { font-weight: 800; color: #EF4444; background: none; -webkit-text-fill-color: initial; }
+        .main-title .schedule { font-weight: 600; color: #6b7280; background: none; -webkit-text-fill-color: initial; }
 
-        /* Пігулка факультету */
         .faculty-pill { 
             display: inline-block; background: rgba(59, 130, 246, 0.1); color: #3b82f6; 
             font-size: 15px; font-weight: 700; padding: 6px 18px; border-radius: 20px; 
@@ -163,11 +153,9 @@
 
         /* КНОПКИ КУРСІВ */
         .btn-course {
-            border: none; padding: 12px 20px; margin: 8px auto; border-radius: 12px; 
-            font-size: 16px; font-weight: 700; color: #ffffff; cursor: pointer; 
-            font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; 
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            background-color: #3b82f6; color: white; border: none; padding: 12px 20px; margin: 8px auto; border-radius: 12px; 
+            font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; 
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
         }
         .btn-course:active:not(:disabled) { transform: translateY(2px) scale(0.96); }
         .btn-course:disabled { 
@@ -176,18 +164,10 @@
             border-top: 1px solid transparent !important; text-shadow: none; opacity: 0.7; cursor: not-allowed; 
         }
 
-        .btn-course-1 { background: linear-gradient(135deg, #38bdf8, #2563eb); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(37, 99, 235, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
-        .btn-course-2 { background: linear-gradient(135deg, #818cf8, #4f46e5); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(79, 70, 229, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
-        .btn-course-3 { background: linear-gradient(135deg, #c084fc, #9333ea); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(147, 51, 234, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
-        .btn-course-4 { background: linear-gradient(135deg, #fb923c, #e11d48); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 16px rgba(225, 29, 72, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.3); }
-
         @media (hover: hover) and (pointer: fine) {
-            .btn-course:hover:not(:disabled) {
-                transform: scale(1.06);
-            }
-            .btn-emails-new:hover {
-                transform: scale(1.04);
-            }
+            .btn-course:hover:not(:disabled) { transform: scale(1.06); }
+            .btn-emails-new:hover { transform: scale(1.04); }
+            .btn-practice:hover { transform: scale(1.05); }
         }
 
         /* Кнопка "Пошта викладачів" */
@@ -223,9 +203,9 @@
         
         .btn-practice {
             background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;
-            padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 700;
+            padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; display: none; /* Схована за замовчуванням */
             cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); align-items: center; justify-content: center;
         }
         .btn-practice:active { transform: scale(0.95); }
 
@@ -262,14 +242,8 @@
 
         .lesson-card { background-color: #ffffff; border-radius: 10px; padding: 12px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border: 1px solid #f3f4f6; border-left: 5px solid #e5e7eb; transition: background-color 0.3s, border-color 0.3s; }
         .lesson-card:last-child { margin-bottom: 0; }
-        .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
+        .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
         .subject-title { font-size: 15px; font-weight: 700; color: #111827; line-height: 1.25; transition: color 0.3s; }
-
-        .badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .type-l { background-color: #e0f2fe; color: #0369a1; }
-        .type-pr { background-color: #dcfce7; color: #15803d; } 
-        .type-lab { background-color: #ffedd5; color: #c2410c; } 
-        .type-s { background-color: #f3e8ff; color: #7e22ce; }  
 
         .lesson-body-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
         .lesson-info-col { display: flex; flex-direction: column; flex-grow: 1; justify-content: center; min-height: 24px; }
@@ -283,7 +257,20 @@
         .or-divider { text-align: center; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 12px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .or-divider::before, .or-divider::after { content: ""; flex-grow: 1; height: 1px; background-color: #e5e7eb; transition: background-color 0.3s; }
 
-        .online-icon-btn { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background-color: #eff6ff; color: #3b82f6; border-radius: 10px; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.15); }
+        /* Квадратні бейджі дій (Л, ПР, С) та Відео */
+        .actions-wrap { display: flex; gap: 8px; align-items: center; }
+        .action-sq {
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 10px;
+            font-size: 15px; font-weight: 800; text-transform: uppercase;
+            flex-shrink: 0; transition: all 0.2s ease;
+        }
+        .type-sq-l { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .type-sq-pr { background-color: rgba(244, 114, 182, 0.15); color: #f472b6; }
+        .type-sq-s { background-color: rgba(251, 146, 60, 0.15); color: #fb923c; }
+        .type-sq-lab { background-color: rgba(194, 65, 12, 0.15); color: #c2410c; }
+
+        .online-icon-btn { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background-color: #eff6ff; color: #3b82f6; border-radius: 10px; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease; }
         .online-icon-btn:active { transform: scale(0.92); background-color: #dbeafe; }
         .online-icon-btn svg { width: 18px; height: 18px; }
 
@@ -309,7 +296,6 @@
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
         .icon-teacher { color: #d1d5db; }
-        .icon-title { width: 26px; height: 26px; color: #3b82f6; }
         .icon-calendar { width: 18px; height: 18px; color: #0284c7; }
         .icon-clock-red { color: #ef4444; width: 15px; height: 15px; } 
         .icon-clock-active { color: #10b981; width: 15px; height: 15px; } 
@@ -366,8 +352,8 @@
         body.dark-theme .subject-title, body.dark-theme .modal-title, body.dark-theme .email-teacher { color: #f9fafb; }
         
         /* Темна тема для заголовка */
-        body.dark-theme .bg-glow { opacity: 0.6; }
-        body.dark-theme .main-title .knu { color: #ba1e1e; background: none; -webkit-text-fill-color: initial; }
+        body.dark-theme .bg-glow { opacity: 0.3; }
+        body.dark-theme .main-title .knu { color: #EF4444; }
         body.dark-theme .main-title .schedule { color: #9ca3af; background: none; -webkit-text-fill-color: initial;}
         
         body.dark-theme .faculty-pill { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.2); }
@@ -376,6 +362,12 @@
         body.dark-theme .header-back-btn { color: #60a5fa !important; }
         
         body.dark-theme .btn-practice { background-color: #14532d; color: #4ade80; border-color: #166534; }
+        
+        /* Темна тема для квадратних бейджів */
+        body.dark-theme .type-sq-l { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        body.dark-theme .type-sq-pr { background-color: rgba(244, 114, 182, 0.2); color: #f472b6; }
+        body.dark-theme .type-sq-s { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; }
+        body.dark-theme .type-sq-lab { background-color: rgba(194, 65, 12, 0.2); color: #fb923c; }
         
         body.dark-theme .settings-header-left > svg { color: #9ca3af; }
         body.dark-theme .time-meta, body.dark-theme .teacher-line, body.dark-theme .or-divider, body.dark-theme .icon-room { color: #9ca3af; }
@@ -388,7 +380,6 @@
         body.dark-theme .current-day-banner .icon-calendar { color: #60a5fa; }
         body.dark-theme .group-label { background-color: #3730a3; color: #c7d2fe; }
         
-        body.dark-theme .btn-course:disabled { background: #374151 !important; color: #6b7280 !important; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05) !important; border-top: none !important;}
         body.dark-theme button.btn-primary:disabled { background-color: #374151 !important; color: #6b7280 !important; box-shadow: none !important; opacity: 0.8; }
         
         /* Темна тема для нової кнопки пошти */
@@ -490,17 +481,17 @@
                         </div>
                         
                         <div id="groupSoc" class="course-group active">
-                            <button id="btnCourse1" class="btn-course btn-course-1">1 курс</button>
-                            <button id="btnCourse2" class="btn-course btn-course-2">2 курс</button>
-                            <button id="btnCourse3" class="btn-course btn-course-3">3 курс</button>
-                            <button id="btnCourse4" class="btn-course btn-course-4">4 курс</button>
+                            <button id="btnCourse1" class="btn-primary">1 курс</button>
+                            <button id="btnCourse2" class="btn-primary">2 курс</button>
+                            <button id="btnCourse3" class="btn-primary">3 курс</button>
+                            <button id="btnCourse4" class="btn-primary">4 курс</button>
                         </div>
                         
                         <div id="groupMan" class="course-group">
-                            <button id="btnMan1" class="btn-course btn-course-1">1 курс</button>
-                            <button id="btnMan2" class="btn-course btn-course-2">2 курс</button>
-                            <button id="btnMan3" class="btn-course btn-course-3">3 курс</button>
-                            <button class="btn-course btn-course-4" disabled>4 курс</button>
+                            <button id="btnMan1" class="btn-primary">1 курс</button>
+                            <button id="btnMan2" class="btn-primary">2 курс</button>
+                            <button id="btnMan3" class="btn-primary">3 курс</button>
+                            <button class="btn-primary" disabled>4 курс</button>
                         </div>
 
                         <!-- ОНОВЛЕНА КНОПКА ПОШТИ ВИКЛАДАЧІВ (GLASSMORPHISM) -->
@@ -992,6 +983,7 @@
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
             fetchEmails();
             
+            // Фокус тільки на десктопі, щоб клавіатура не стрибала на телефоні
             if (!['android', 'ios'].includes(tg.platform)) {
                 setTimeout(() => {
                     emailSearchInput.focus();
@@ -1197,11 +1189,13 @@
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Показуємо кнопку груп тільки для 3 та 4 курсів
-            if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
+            // Кнопки показуються тільки для 3 та 4 курсів
+            if (courseVal === '3' || courseVal === '4' || courseVal === '3М') {
                 groupToggleWrap.style.display = 'flex';
+                document.getElementById('btnPracticeMode').style.display = 'flex';
             } else {
                 groupToggleWrap.style.display = 'none';
+                document.getElementById('btnPracticeMode').style.display = 'none';
             }
 
             if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
@@ -1305,7 +1299,7 @@
             }
         }
 
-        // --- ФОРМАТУВАННЯ РОЗКЛАДУ З ПІДТРИМКОЮ ГРУП ТА РОЗУМНИМИ БЕЙДЖАМИ ---
+        // --- ФОРМАТУВАННЯ РОЗКЛАДУ З ПІДТРИМКОЮ ГРУП ТА РОЗУМНИХ БЕЙДЖІВ ---
         function formatLessonCard(blockText, groupLabel = "") {
             let onlineLink = "";
             const isOnlineMode = (localStorage.getItem('onlineModePref') === 'true');
@@ -1328,26 +1322,23 @@
                 else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) teacher = line;
             }
             
-            let typeBadge = ""; 
+            let typeBadgeSquare = ""; 
             let subjectClean = subject;
             
-            // Виправлення опечатки "Нформаційні" на "Інформаційні"
             subjectClean = subjectClean.replace(/^[Нн]формаційні/i, "Інформаційні");
             
-            // Розумний пошук бейджів типу (л), (пр) і т.д.
-            let typeMatch = subjectClean.match(/[\(\[]\s*(лекція\vert{}практика\vert{}семінар\vert{}лабораторна\vert{}лек\vert{}прак\vert{}сем\vert{}лаб\vert{}л\vert{}пр\vert{}с\vert{}c)\.?\s*[\)\]]/i);
+            // Розумний пошук та витягування типу пари в окремий квадрат
+            let typeMatch = subjectClean.match(/\s*[\(\[]\s*(лекція\vert{}практика\vert{}семінар\vert{}лабораторна\vert{}лек\vert{}прак\vert{}сем\vert{}лаб\vert{}л\vert{}пр\vert{}с\vert{}c)\.?\s*[\)\]]/i);
             
             if (typeMatch) {
                 let t = typeMatch[1].toLowerCase();
-                let bClass = 'type-l'; let tName = 'Лекція';
+                let bClass = 'type-sq-l'; let tLetter = 'Л';
                 
-                if (t.startsWith('пр')) { bClass = 'type-pr'; tName = 'Практика'; } 
-                else if (t.startsWith('лаб')) { bClass = 'type-lab'; tName = 'Лабораторна'; } 
-                else if (t.startsWith('с') || t.startsWith('c')) { bClass = 'type-s'; tName = 'Семінар'; }
+                if (t.startsWith('пр')) { bClass = 'type-sq-pr'; tLetter = 'ПР'; } 
+                else if (t.startsWith('лаб')) { bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; } 
+                else if (t.startsWith('с') || t.startsWith('c')) { bClass = 'type-sq-s'; tLetter = 'С'; }
                 
-                typeBadge = `<div class="badge ${bClass}">${tName}</div>`;
-                
-                // Видаляємо знайдену дужку з тексту заголовка
+                typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
                 subjectClean = subjectClean.replace(typeMatch[0], '').trim();
             }
 
@@ -1360,16 +1351,20 @@
             
             let html = `<div class="lesson-card" style="border-left-color: ${cardColor}; border-left-width: 5px;">
                             ${groupHtml}
-                            <div class="lesson-header"><div class="subject-title">${subjectClean}</div>${typeBadge}</div>
+                            <div class="lesson-header"><div class="subject-title">${subjectClean}</div></div>
                             <div class="lesson-body-row">
                                 <div class="lesson-info-col">`;
             
             if (room) { let cleanRoom = room.replace('🚪', '').replace('ауд.', 'ауд. ').replace(/\s+/g, ' ').trim(); html += `<div class="info-line room-line">${svgRoom} <span>${cleanRoom}</span></div>`; }
             if (teacher) { let cleanTeacher = teacher.replace('👨‍🏫', '').trim(); html += `<div class="info-line teacher-line">${svgTeacher} <span>${cleanTeacher}</span></div>`; }
             
-            html += `</div>`;
+            html += `</div>
+                     <div class="actions-wrap">
+                        ${typeBadgeSquare}`;
             if (onlineLink) html += `<a href="${onlineLink}" target="_blank" class="online-icon-btn">${svgVideo}</a>`;
-            html += `</div></div>`; return { html: html, color: cardColor };
+            html += `    </div>
+                     </div></div>`; 
+            return { html: html, color: cardColor };
         }
 
         function parseTimeSlotContent(rawText) {
