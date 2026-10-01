@@ -72,7 +72,7 @@
             background: rgba(59, 130, 246, 0.1); color: #3b82f6; 
             font-size: 15px; font-weight: 700; padding: 6px 18px; border-radius: 20px; 
             border: 1px solid rgba(59, 130, 246, 0.15); margin: 0 auto; 
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05); transition: all 0.2s; 
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05); transition: all 0.3s; 
             cursor: pointer; outline: none;
         }
         .faculty-pill:active { transform: scale(0.96); }
@@ -146,13 +146,12 @@
         .course-group { display: none; animation: fadeIn 0.2s ease; }
         .course-group.active { display: block; }
 
-        /* КНОПКИ КУРСІВ (М'ЯКІ ГРАДІЄНТИ) */
+        /* --- КНОПКИ КУРСІВ (М'ЯКІ ГРАДІЄНТИ) --- */
         .btn-course {
             border: none; padding: 12px 20px; margin: 8px auto; border-radius: 12px; 
             font-size: 16px; font-weight: 700; color: #ffffff; cursor: pointer; 
             font-family: 'Inter', sans-serif; width: 100%; max-width: 280px; display: block; 
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
         .btn-course:active:not(:disabled) { transform: translateY(2px) scale(0.96); }
         .btn-course:disabled { 
@@ -361,7 +360,7 @@
         /* Темна тема для заголовка */
         body.dark-theme .bg-glow { opacity: 0.5; }
         body.dark-theme .main-title .knu { color: #EF4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
-        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 12px rgba(239, 68, 68, 0.3); } 
+        body.dark-theme .main-title .schedule { color: #9ca3af; text-shadow: 0 0 12px rgba(156, 163, 175, 0.3); } 
         
         body.dark-theme .faculty-pill { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border-color: rgba(96, 165, 250, 0.2); }
         
@@ -1007,7 +1006,7 @@
             let htmlContent = '';
             
             // Сортуємо викладачів за алфавітом
-            let sortedTeachers = Object.keys(allTeachers).sort();
+            let sortedTeachers = Object.keys(allTeachers).sort((a, b) => a.localeCompare(b, 'uk'));
 
             for (let teacher of sortedTeachers) {
                 let email = allTeachers[teacher];
