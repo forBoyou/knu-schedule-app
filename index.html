@@ -964,7 +964,7 @@
             }
         });
 
-       // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ ---
+       // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ (ВИПРАВЛЕНА!) ---
         async function fetchEmails() {
             emailSearchInput.value = '';
             
@@ -984,16 +984,34 @@
             }
 
             const data = globalEmailsData;
-            if (!data[activeSpec] || Object.keys(data[activeSpec]).length === 0) {
-                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти для цього напрямку ще не додані! 📭</div>`; 
+            let allTeachers = {};
+
+            // Збираємо пошти залежно від активної вкладки (soc або man)
+            for (let key in data) {
+                if (key === "_news_") continue;
+                
+                // Якщо обрано соціологів, беремо всі їхні курси
+                if (activeSpec === 'soc' && (key === '1' || key === '2' || key === '3' || key === '4' || key.toLowerCase() === 'soc')) {
+                    Object.assign(allTeachers, data[key]);
+                }
+                // Якщо обрано менеджерів, беремо всі їхні курси
+                else if (activeSpec === 'man' && (key === '1М' || key === '2М' || key === '3М' || key === '4М' || key.toLowerCase() === 'man')) {
+                    Object.assign(allTeachers, data[key]);
+                }
+            }
+
+            if (Object.keys(allTeachers).length === 0) {
+                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти ще не додані в Google Таблицю! 📭</div>`; 
                 return;
             }
 
-            const courseEmails = data[activeSpec];
             let htmlContent = '';
             
-            for (let teacher in courseEmails) {
-                let email = courseEmails[teacher];
+            // Сортуємо викладачів за алфавітом, щоб було зручно шукати
+            let sortedTeachers = Object.keys(allTeachers).sort();
+
+            for (let teacher of sortedTeachers) {
+                let email = allTeachers[teacher];
                 htmlContent += `
                     <div class="email-card">
                         <h3 class="email-teacher">${teacher}</h3>
@@ -1010,6 +1028,27 @@
             }
             emailsContent.innerHTML = htmlContent;
         }
+
+        btnEmails.addEventListener('click', () => {
+            emailsModal.classList.add('active');
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            fetchEmails();
+            
+            // Фокус тільки на десктопі, щоб клавіатура не стрибала на телефоні
+            if (!['android', 'ios'].includes(tg.platform)) {
+                setTimeout(() => {
+                    emailSearchInput.focus();
+                }, 100);
+            }
+        });
+
+        btnCloseEmailsModal.addEventListener('click', () => {
+            emailsModal.classList.remove('active');
+        });
+
+        emailsModal.addEventListener('click', (e) => {
+            if (e.target === emailsModal) emailsModal.classList.remove('active');
+        });
 
         btnEmails.addEventListener('click', () => {
             emailsModal.classList.add('active');
