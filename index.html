@@ -964,7 +964,7 @@
             }
         });
 
-        // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ ---
+       // --- ЛОГІКА МОДАЛЬНОГО ВІКНА ПОШТИ ВИКЛАДАЧІВ ---
         async function fetchEmails() {
             emailSearchInput.value = '';
             
@@ -984,32 +984,16 @@
             }
 
             const data = globalEmailsData;
-            let allTeachers = {};
-
-            // Збираємо пошти залежно від активної вкладки (soc або man)
-            for (let key in data) {
-                if (key === "_news_") continue;
-                
-                if (activeSpec === 'soc' && (key === '1' || key === '2' || key === '3' || key === '4' || key.toLowerCase() === 'soc')) {
-                    Object.assign(allTeachers, data[key]);
-                }
-                else if (activeSpec === 'man' && (key === '1М' || key === '2М' || key === '3М' || key === '4М' || key.toLowerCase() === 'man')) {
-                    Object.assign(allTeachers, data[key]);
-                }
-            }
-
-            if (Object.keys(allTeachers).length === 0) {
-                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти ще не додані в Google Таблицю! 📭</div>`; 
+            if (!data[activeSpec] || Object.keys(data[activeSpec]).length === 0) {
+                emailsContent.innerHTML = `<div style="text-align:center; font-size: 14px; color: #6b7280; margin-top: 20px;">Пошти для цього напрямку ще не додані! 📭</div>`; 
                 return;
             }
 
+            const courseEmails = data[activeSpec];
             let htmlContent = '';
             
-            // Сортуємо викладачів за алфавітом
-            let sortedTeachers = Object.keys(allTeachers).sort((a, b) => a.localeCompare(b, 'uk'));
-
-            for (let teacher of sortedTeachers) {
-                let email = allTeachers[teacher];
+            for (let teacher in courseEmails) {
+                let email = courseEmails[teacher];
                 htmlContent += `
                     <div class="email-card">
                         <h3 class="email-teacher">${teacher}</h3>
