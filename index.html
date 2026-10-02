@@ -1146,12 +1146,25 @@
             });
         });
 
-        // --- ПРОФІЛЬ ---
+     // --- ПРОФІЛЬ ТА ЗБІР СТАТИСТИКИ ---
         const user = tg.initDataUnsafe?.user;
         if (user) {
+            // Відображення в інтерфейсі
             document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             document.getElementById('userUsername').innerText = user.username ? '@' + user.username : 'ID: ' + user.id;
             if (user.photo_url) document.getElementById('userAvatar').src = user.photo_url;
+
+            // Відправка даних на сервер (тихо, у фоні)
+            fetch('https://Bohdanyof.pythonanywhere.com/api/track_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    first_name: user.first_name || '',
+                    last_name: user.last_name || '',
+                    username: user.username || ''
+                })
+            }).catch(err => console.log("Помилка статистики:", err));
         }
 
         // --- НАЛАШТУВАННЯ КУРСУ (АКОРДЕОН В ПРОФІЛІ) ---
