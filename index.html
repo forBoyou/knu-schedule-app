@@ -1360,39 +1360,57 @@
 
             let typeBadgeSquare = ""; 
             
-            // Надійний пошук та витягування типу пари в окремий квадрат З БУДЬ-ЯКОГО МІСЦЯ КАРТКИ
-            let typeMatch = blockText.match(/\s*\(\s*(л\vert{}пр\vert{}с\vert{}c\vert{}лаб\vert{}лек\vert{}прак\vert{}сем)\.?\s*\)/i);
+         // --- ФОРМАТУВАННЯ РОЗКЛАДУ З ПІДТРИМКОЮ ГРУП ТА РОЗУМНИХ БЕЙДЖІВ ---
+        function formatLessonCard(blockText, groupLabel = "") {
+            let onlineLink = "";
+            const isOnlineMode = (localStorage.getItem('onlineModePref') === 'true');
             
-            if (typeMatch) {
-                let t = typeMatch[1].toLowerCase();
-                let bClass = 'type-sq-l'; let tLetter = 'Л';
-                
-                if (t.startsWith('пр') || t.startsWith('прак')) { 
-                    bClass = 'type-sq-pr'; tLetter = 'ПР'; 
-                } else if (t.startsWith('лаб')) { 
-                    bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; 
-                } else if (t.startsWith('с') || t.startsWith('c') || t.startsWith('сем')) { 
-                    bClass = 'type-sq-s'; tLetter = 'С'; 
+            if (isOnlineMode && blockText) {
+                let urlMatch = blockText.match(/(https?:\/\/[^\s<]+)/);
+                if (urlMatch) {
+                    onlineLink = urlMatch[0];
+                    blockText = blockText.replace(urlMatch[0], '');
                 }
-                
-                typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
-                
-                // Видаляємо знайдену дужку з загального тексту
-                blockText = blockText.replace(typeMatch[0], ' ');
             }
 
             let lines = blockText ? blockText.split('<br>').map(l => l.trim()).filter(l => l) : [];
             if (lines.length === 0) return { html: "", color: "#e5e7eb" };
             
-            let subject = lines[0]; let teacher = ""; let room = "";
+            let subject = lines[0]; 
+            let teacher = ""; 
+            let room = "";
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
                 if (line.toLowerCase().includes('ауд')) room = line;
                 else if (line.match(/(доц\.|проф\.|асп\.|викл\.|ас\.)/i) || line.includes('👨‍🏫') || line.includes('викладач')) teacher = line;
             }
             
+            let typeBadgeSquare = ""; 
             let subjectClean = subject;
+            
             subjectClean = subjectClean.replace(/^[Нн]формаційні/i, "Інформаційні");
+            
+            // Надійний пошук типу пари саме в назві предмету
+            let typeMatch = subjectClean.match(/\s*[\(\[]\s*(л\vert{}пр\vert{}с\vert{}c\vert{}лаб\vert{}лек\vert{}прак\vert{}сем)\.?\s*[\)\]]/i);
+            
+            if (typeMatch) {
+                let t = typeMatch[1].toLowerCase();
+                let bClass = 'type-sq-l'; 
+                let tLetter = 'Л';
+                
+                if (t.startsWith('пр') || t.startsWith('прак')) { 
+                    bClass = 'type-sq-pr'; tLetter = 'ПР'; 
+                } else if (t.startsWith('лаб')) { 
+                    bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; 
+                } else if (t === 'с' || t === 'c' || t.startsWith('сем')) { 
+                    bClass = 'type-sq-s'; tLetter = 'С'; 
+                }
+                
+                typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
+                
+                // Видаляємо дужку з назви предмету
+                subjectClean = subjectClean.replace(typeMatch[0], '').trim();
+            }
 
             let cardColor = getSubjectColor(subjectClean);
             subjectClean = subjectClean.toLowerCase().trim();
