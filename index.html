@@ -1361,9 +1361,7 @@
             let lines = blockText ? blockText.split('<br>').map(l => l.trim()).filter(l => l) : [];
             if (lines.length === 0) return { html: "", color: "#e5e7eb" };
             
-            let subject = lines[0]; 
-            let teacher = ""; 
-            let room = "";
+            let subject = lines[0]; let teacher = ""; let room = "";
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i];
                 if (line.toLowerCase().includes('ауд')) room = line;
@@ -1375,25 +1373,24 @@
             
             subjectClean = subjectClean.replace(/^[Нн]формаційні/i, "Інформаційні");
             
-            // Надійний пошук типу пари саме в назві предмету
-            let typeMatch = subjectClean.match(/\s*[\(\[]\s*(л\vert{}пр\vert{}с\vert{}c\vert{}лаб\vert{}лек\vert{}прак\vert{}сем)\.?\s*[\)\]]/i);
+            // Надійний пошук та витягування типу пари в окремий квадрат
+            let typeMatch = subjectClean.match(/\s*\(\s*(л|пр|с|c|лаб|лек|прак|сем)[^)]*\)/i);
             
             if (typeMatch) {
                 let t = typeMatch[1].toLowerCase();
-                let bClass = 'type-sq-l'; 
-                let tLetter = 'Л';
+                let bClass = 'type-sq-l'; let tLetter = 'Л';
                 
                 if (t.startsWith('пр') || t.startsWith('прак')) { 
                     bClass = 'type-sq-pr'; tLetter = 'ПР'; 
                 } else if (t.startsWith('лаб')) { 
                     bClass = 'type-sq-lab'; tLetter = 'ЛАБ'; 
-                } else if (t === 'с' || t === 'c' || t.startsWith('сем')) { 
+                } else if (t.startsWith('с') || t.startsWith('c') || t.startsWith('сем')) { 
                     bClass = 'type-sq-s'; tLetter = 'С'; 
                 }
                 
                 typeBadgeSquare = `<div class="action-sq ${bClass}">${tLetter}</div>`;
                 
-                // Видаляємо дужку з назви предмету
+                // Видаляємо знайдену дужку з тексту заголовка
                 subjectClean = subjectClean.replace(typeMatch[0], '').trim();
             }
 
@@ -1421,6 +1418,7 @@
                      </div></div>`; 
             return { html: html, color: cardColor };
         }
+
         
         function parseTimeSlotContent(rawText) {
             if (!rawText) return { html: "", color: "#e5e7eb" };
