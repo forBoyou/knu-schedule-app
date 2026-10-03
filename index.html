@@ -1154,7 +1154,7 @@
             document.getElementById('userUsername').innerText = user.username ? '@' + user.username : 'ID: ' + user.id;
             if (user.photo_url) document.getElementById('userAvatar').src = user.photo_url;
 
-            // Відправка даних на сервер (тихо, у фоні)
+            // Відправка даних на сервер (тихо, у фоні) + ПЕРЕВІРКА НА БАН
             fetch('https://Bohdanyof.pythonanywhere.com/api/track_user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1164,7 +1164,21 @@
                     last_name: user.last_name || '',
                     username: user.username || ''
                 })
-            }).catch(err => console.log("Помилка статистики:", err));
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'banned') {
+                    // Якщо користувач забанений - повністю стираємо весь інтерфейс
+                    document.body.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #fef2f2; font-family: sans-serif; text-align: center; padding: 20px; box-sizing: border-box;">
+                            <span style="font-size: 64px; margin-bottom: 16px;">🚫</span>
+                            <h1 style="color: #b91c1c; font-size: 24px; margin: 0 0 12px 0;">Доступ заборонено</h1>
+                            <p style="color: #7f1d1d; margin: 0; line-height: 1.5;">Ваш акаунт заблоковано адміністратором. <br>Ви більше не можете користуватися розкладом.</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(err => console.log("Помилка статистики:", err));
         }
 
         // --- НАЛАШТУВАННЯ КУРСУ (АКОРДЕОН В ПРОФІЛІ) ---
