@@ -1154,24 +1154,16 @@
             document.getElementById('userUsername').innerText = user.username ? '@' + user.username : 'ID: ' + user.id;
             if (user.photo_url) document.getElementById('userAvatar').src = user.photo_url;
 
-           // Це приклад коду для твого ОСНОВНОГО бота
-fetch('https://Bohdanyof.pythonanywhere.com/api/track_user', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userData)
-})
-.then(response => response.json())
-.then(data => {
-    if (data.status === 'banned') {
-        // Якщо сервер відповів, що юзер в бані:
-        document.body.innerHTML = `
-            <div style="text-align: center; padding: 40px; font-family: sans-serif; color: #b91c1c;">
-                <h1>🚫 Доступ заборонено</h1>
-                <p>Ваш акаунт заблоковано адміністратором.</p>
-            </div>
-        `;
-    }
-});
+            // Відправка даних на сервер (тихо, у фоні)
+            fetch('https://Bohdanyof.pythonanywhere.com/api/track_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    first_name: user.first_name || '',
+                    last_name: user.last_name || '',
+                    username: user.username || ''
+                })
             }).catch(err => console.log("Помилка статистики:", err));
         }
 
