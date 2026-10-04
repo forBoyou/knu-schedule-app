@@ -229,7 +229,7 @@
 
         .screen-scroll { flex-grow: 1; overflow-y: auto; padding: 16px; }
 
-        /* ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ */
+        /* ГОРИЗОНТАЛЬНІ ТАБИ ДНІВ ТИЖНЯ (ТУТ ДОДАНА СУБОТА) */
         .day-tabs-container {
             background-color: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 10px 16px;
             display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; transition: background-color 0.3s, border-color 0.3s; flex-shrink: 0;
@@ -292,13 +292,13 @@
         .copy-email-btn { background: #f3f4f6; border: 1px solid #e5e7eb; color: #6b7280; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
         .copy-email-btn:active { transform: scale(0.92); background: #e5e7eb; }
 
-        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) */
+        /* КОЛЬОРИ КНОПОК ДНІВ ТИЖНЯ (СВІТЛА ТЕМА) + ОНОВЛЕНИЙ КОЛІР СУБОТИ */
         .btn-mon { background-color: #ffadad !important; color: #111827 !important; }
         .btn-tue { background-color: #ffd6a5 !important; color: #111827 !important; }
         .btn-wed { background-color: #fdffb6 !important; color: #111827 !important; }
         .btn-thu { background-color: #caffbf !important; color: #111827 !important; }
         .btn-fri { background-color: #9bf6ff !important; color: #111827 !important; }
-        .btn-sat { background-color: #a0c4ff !important; color: #111827 !important; }
+        .btn-sat { background-color: #DDD9FB !important; color: #111827 !important; }
 
         .icon-svg { width: 14px; height: 14px; flex-shrink: 0; }
         .icon-room { color: #6b7280; transition: color 0.3s;}
@@ -437,7 +437,7 @@
         body.dark-theme .btn-wed { background-color: #c7b767 !important; color: #111827 !important; } 
         body.dark-theme .btn-thu { background-color: #78ad82 !important; color: #f9fafb !important; }
         body.dark-theme .btn-fri { background-color: #68a6b3 !important; color: #f9fafb !important; }
-        body.dark-theme .btn-sat { background-color: #7188c9 !important; color: #f9fafb !important; }
+        body.dark-theme .btn-sat { background-color: #6e64a8 !important; color: #f9fafb !important; } /* Темно-фіолетовий для темної теми */
         body.dark-theme .day-tab.active { border-color: rgba(249, 250, 251, 0.4); }
 
         /* ТЕМНА ТЕМА ДЛЯ БАНЕРА НОВИН (GLASSMORPHISM) */
@@ -567,6 +567,7 @@
                     <button class="day-tab btn-wed" data-day="Середа">Ср</button>
                     <button class="day-tab btn-thu" data-day="Четвер">Чт</button>
                     <button class="day-tab btn-fri" data-day="П'ятниця">Пт</button>
+                    <button class="day-tab btn-sat" data-day="Субота">Сб</button>
                 </div>
                 
                 <div class="schedule-scroll" id="scheduleScrollArea">
@@ -821,7 +822,8 @@
         // --- БАЗОВА ЛОГІКА ЧАСУ ТА ГРУПИ ---
         function getActiveDay() {
             let todayIndex = new Date().getDay();
-            if (todayIndex === 0 || todayIndex === 6) return "Понеділок";
+            if (todayIndex === 0) return "Понеділок"; // У неділю показуємо розклад на понеділок
+            if (todayIndex === 6) return "Субота";
             return daysOfWeek[todayIndex];
         }
         let currentActiveDay = getActiveDay();
