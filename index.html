@@ -1380,7 +1380,7 @@
 
         // --- ЛОГІКА СВАЙПІВ ---
         let touchStartX = 0; let touchStartY = 0; let touchEndX = 0; let touchEndY = 0;
-        const swipeDays = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"];
+        const swipeDays = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
 
         scheduleScrollArea.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
@@ -1522,15 +1522,23 @@
             return { html: html, color: firstColor || "#e5e7eb" };
         }
 
-        // --- КАЛЕНДАР РОБОЧИХ СУБОТ ---
-        // Формат: "РРРР-ММ-ДД": "За який день"
+   // --- КАЛЕНДАР РОБОЧИХ СУБОТ ---
+        // Формат: "РРРР-ММ-ДД": "День, розклад якого беремо з бази"
         const workingSaturdays = {
             "2026-10-03": "Четвер",
             "2026-10-10": "П'ятниця",
             "2026-10-17": "Понеділок",
             "2026-10-24": "Вівторок",
             "2026-10-31": "Середа"
-            // Сюди можна додати дати на весь семестр!
+        };
+
+        // Правильні відмінки для красивого тексту в плашці
+        const makeupText = {
+            "Понеділок": "понеділок",
+            "Вівторок": "вівторок",
+            "Середа": "середу",
+            "Четвер": "четвер",
+            "П'ятниця": "п'ятницю"
         };
 
         // Функція, яка шукає дату суботи поточного тижня
@@ -1570,7 +1578,7 @@
                 const satDate = getSaturdayDate();
                 if (workingSaturdays[satDate]) {
                     makeupTarget = workingSaturdays[satDate];
-                    // Підміняємо день на той, що відпрацьовуємо (наприклад, ЧЕТВЕР)
+                    // Підміняємо день на той, що відпрацьовуємо (для пошуку в базі)
                     dayKey = makeupTarget.toUpperCase(); 
                 } else {
                     // Якщо цієї дати немає в календарі - значить вихідний
@@ -1589,7 +1597,7 @@
             
             // Якщо це субота, додаємо гарну фіолетову плашку відпрацювання зверху
             if (makeupTarget) {
-                htmlContent += `<div style="background-color: #DDD9FB; color: #3730a3; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-align: center; margin-bottom: 16px; border: 1px solid #c4bbf0;">Відпрацювання за ${makeupTarget.toLowerCase()}</div>`;
+                htmlContent += `<div style="background-color: #DDD9FB; color: #3730a3; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-align: center; margin-bottom: 16px; border: 1px solid #c4bbf0;">Відпрацювання (за ${makeupText[makeupTarget]})</div>`;
             }
 
             const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
