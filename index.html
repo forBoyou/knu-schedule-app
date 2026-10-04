@@ -1522,6 +1522,30 @@
             return { html: html, color: firstColor || "#e5e7eb" };
         }
 
+        // --- КАЛЕНДАР РОБОЧИХ СУБОТ ---
+        // Формат: "РРРР-ММ-ДД": "За який день"
+        const workingSaturdays = {
+            "2026-10-03": "Четвер",
+            "2026-10-10": "П'ятниця",
+            "2026-10-17": "Понеділок",
+            "2026-10-24": "Вівторок",
+            "2026-10-31": "Середа"
+            // Сюди можна додати дати на весь семестр!
+        };
+
+        // Функція, яка шукає дату суботи поточного тижня
+        function getSaturdayDate() {
+            let d = new Date();
+            let day = d.getDay();
+            // Якщо неділя (0), дивимось на наступну суботу (+6 днів), інакше рахуємо до поточної суботи
+            let diff = day === 0 ? 6 : 6 - day; 
+            d.setDate(d.getDate() + diff);
+            let yyyy = d.getFullYear();
+            let mm = String(d.getMonth() + 1).padStart(2, '0');
+            let dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
         // --- РОЗКЛАД: РЕНДЕР ТА ЗАВАНТАЖЕННЯ ---
         async function fetchSchedule(course, day) {
             if (!globalScheduleData) {
@@ -1538,14 +1562,36 @@
             }
 
             const data = globalScheduleData;
-            const dayKey = day.toUpperCase(); 
+            let dayKey = day.toUpperCase(); 
+            let makeupTarget = ""; 
+
+            // === ЛОГІКА СУБОТИ ===
+            if (day === "Субота") {
+                const satDate = getSaturdayDate();
+                if (workingSaturdays[satDate]) {
+                    makeupTarget = workingSaturdays[satDate];
+                    // Підміняємо день на той, що відпрацьовуємо (наприклад, ЧЕТВЕР)
+                    dayKey = makeupTarget.toUpperCase(); 
+                } else {
+                    // Якщо цієї дати немає в календарі - значить вихідний
+                    scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px; animation: fadeIn 0.2s ease;">Цієї суботи (${satDate}) пар немає! Вихідний 🎉</div>`; 
+                    return;
+                }
+            }
+            // =====================
 
             if (!data[course] || !data[course][dayKey] || Object.keys(data[course][dayKey]).length === 0) {
-                scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px; animation: fadeIn 0.2s ease;">У ${day} пар немає! 🎉</div>`; return;
+                scheduleContent.innerHTML = `<div style="text-align:center; font-size: 16px; color: #6b7280; margin-top: 40px; animation: fadeIn 0.2s ease;">У ${day.toLowerCase()} пар немає! 🎉</div>`; return;
             }
 
             const daySchedule = data[course][dayKey];
             let htmlContent = '';
+            
+            // Якщо це субота, додаємо гарну фіолетову плашку відпрацювання зверху
+            if (makeupTarget) {
+                htmlContent += `<div style="background-color: #DDD9FB; color: #3730a3; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-align: center; margin-bottom: 16px; border: 1px solid #c4bbf0;">Відпрацювання за ${makeupTarget.toLowerCase()}</div>`;
+            }
+
             const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
             let lessonIndex = 0;
             const realTodayName = daysOfWeek[new Date().getDay()];
@@ -1585,7 +1631,6 @@
         if (savedFaculty === 'soc' && savedCourse) {
             openScheduleScreen(savedCourse);
         }
-
     </script>
 </body>
 </html>
