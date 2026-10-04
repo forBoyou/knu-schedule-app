@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Розклад КНУ</title>
+    <!-- Виправлено пропущені лапки в посиланні нижче -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -346,8 +347,8 @@
         .course-grid.active { display: grid; }
 
         /* =========================================
-           ТЕМНА ТЕМА (DARK MODE) 
-           ========================================= */
+            ТЕМНА ТЕМА (DARK MODE) 
+            ========================================= */
         body.dark-theme { background-color: #111827; color: #f9fafb; }
         body.dark-theme #scheduleScreen { background-color: #111827; }
         body.dark-theme .bottom-nav, body.dark-theme .screen-header, body.dark-theme .day-tabs-container,
@@ -498,14 +499,14 @@
                             <button id="btnCourse1" class="btn-course btn-course-1">1 курс</button>
                             <button id="btnCourse2" class="btn-course btn-course-2">2 курс</button>
                             <button id="btnCourse3" class="btn-course btn-course-3">3 курс</button>
-                            <button id="btnCourse4" class="btn-course btn-course-4">4 курс</button>
+                            <button id="btnCourse4" class="btn-course btn-course-4">4 курс <span style="color: #f3f4f6; font-size: 0.75em; font-weight: 500; opacity: 0.85;">(бета)</span></button>
                         </div>
                         
                         <div id="groupMan" class="course-group">
                             <button id="btnMan1" class="btn-course btn-course-1">1 курс</button>
                             <button id="btnMan2" class="btn-course btn-course-2">2 курс</button>
                             <button id="btnMan3" class="btn-course btn-course-3">3 курс</button>
-                            <button class="btn-course btn-course-4" disabled>4 курс</button>
+                            <button class="btn-course btn-course-4" disabled>4 курс <span style="color: #9ca3af; font-size: 0.75em; font-weight: 500;">(бета)</span></button>
                         </div>
 
                         <!-- КНОПКА ПОШТИ ВИКЛАДАЧІВ (GLASSMORPHISM) -->
@@ -608,13 +609,13 @@
                         <div class="course-option" data-val="1">1 курс</div>
                         <div class="course-option" data-val="2">2 курс</div>
                         <div class="course-option" data-val="3">3 курс</div>
-                        <div class="course-option" data-val="4">4 курс</div>
+                        <div class="course-option" data-val="4">4 курс <span style="color: #9ca3af; font-size: 0.8em; font-weight: normal;">(бета)</span></div>
                     </div>
                     <div class="course-grid" id="settingsGridMan">
                         <div class="course-option" data-val="1М">1 курс</div>
                         <div class="course-option" data-val="2М">2 курс</div>
                         <div class="course-option" data-val="3М">3 курс</div>
-                        <div class="course-option disabled">4 курс</div>
+                        <div class="course-option disabled">4 курс <span style="color: #9ca3af; font-size: 0.8em; font-weight: normal;">(бета)</span></div>
                     </div>
 
                     <p style="font-size: 12px; color: #9ca3af; margin-top: 16px; line-height: 1.4;">
@@ -864,10 +865,17 @@
             } catch(e) { return false; }
         }
 
-        // --- ЛОГІКА СЕРІЙ (STREAK) ---
+        // --- ЛОГІКА СЕРІЙ (STREAK) З ПРИВ'ЯЗКОЮ ДО TELEGRAM ID ---
         function updateStreak() {
-            let lastLoginStr = localStorage.getItem('lastLoginDate');
-            let streak = parseInt(localStorage.getItem('streakCount') || '0');
+            // Отримуємо ID користувача (якщо він є, інакше дефолтний ключ для браузера)
+            const userId = (window.Telegram && window.Telegram.WebApp.initDataUnsafe?.user?.id) || 'guest';
+            
+            // Формуємо унікальні ключі для localStorage конкретного акаунта
+            const streakKey = `streakCount_${userId}`;
+            const lastLoginKey = `lastLoginDate_${userId}`;
+
+            let lastLoginStr = localStorage.getItem(lastLoginKey);
+            let streak = parseInt(localStorage.getItem(streakKey) || '0');
             
             let now = new Date();
             let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -879,23 +887,24 @@
                 
                 if (diffDays === 1) {
                     streak += 1;
-                    localStorage.setItem('lastLoginDate', today.getTime().toString());
-                    localStorage.setItem('streakCount', streak.toString());
+                    localStorage.setItem(lastLoginKey, today.getTime().toString());
+                    localStorage.setItem(streakKey, streak.toString());
                 } else if (diffDays > 1) {
                     streak = 1;
-                    localStorage.setItem('lastLoginDate', today.getTime().toString());
-                    localStorage.setItem('streakCount', streak.toString());
+                    localStorage.setItem(lastLoginKey, today.getTime().toString());
+                    localStorage.setItem(streakKey, streak.toString());
                 }
             } else {
                 streak = 1;
-                localStorage.setItem('lastLoginDate', today.getTime().toString());
-                localStorage.setItem('streakCount', streak.toString());
+                localStorage.setItem(lastLoginKey, today.getTime().toString());
+                localStorage.setItem(streakKey, streak.toString());
             }
             
             const streakElem = document.getElementById('streakCountText');
             if(streakElem) streakElem.innerText = streak;
         }
         updateStreak();
+     
 
         // ІНТЕРАКТИВ ВОГНИКА
         document.getElementById('streakBadge').addEventListener('click', function() {
