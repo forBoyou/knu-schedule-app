@@ -461,9 +461,9 @@
 /* Віджет Магістра */
 .magistr-widget {
     position: absolute;
-    right: 5px; /* Відступ від правого краю */
-    top: 50%; /* Центруємо по вертикалі відносно контейнера */
-    transform: translateY(-50%); 
+    right: -10px; /* Посунули правіше */
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -474,30 +474,39 @@
 }
 
 .magistr-widget:active {
-    transform: translateY(-50%) scale(0.9); /* Анімація кліку зі збереженням центрування */
+    transform: translateY(-50%) scale(0.9);
 }
 
 .magistr-icon {
-    width: 44px; /* Збільшений розмір */
-    height: 44px;
+    width: 60px; /* Зробили іконку значно більшою */
+    height: 60px;
     object-fit: contain;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+    z-index: 2; /* Картинка поверх тексту, якщо вони торкаються */
 }
 
-.magistr-text {
+/* Налаштування SVG для тексту дугою */
+.magistr-text-svg {
+    width: 80px; /* Ширина дуги */
+    height: 30px; /* Висота дуги */
+    margin-top: -10px; /* Підтягуємо текст ближче під іконку */
+    overflow: visible;
+}
+
+.magistr-text-svg text {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 16px; /* Внутрішній розмір тексту */
     font-weight: 800;
-    color: #FACC15; /* Золотистий колір */
-    margin-top: 2px; /* Зменшений відступ */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-    letter-spacing: 0.5px;
-    white-space: nowrap; /* Щоб текст не переносився на новий рядок */
+    fill: #FACC15; /* Основний колір тексту */
+    /* Неонове світіння */
+    filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.8)) drop-shadow(0 0 8px rgba(234, 179, 8, 0.9));
+    letter-spacing: 1px;
 }
 
-/* Колір тексту для темної теми */
-body.dark-theme .magistr-text {
-    color: #FDE047; 
+/* Яскравіше світіння для темної теми */
+body.dark-theme .magistr-text-svg text {
+    fill: #FDE047;
+    filter: drop-shadow(0 0 4px rgba(253, 224, 71, 0.9)) drop-shadow(0 0 10px rgba(250, 204, 21, 1));
 }
         
     </style>
@@ -538,11 +547,18 @@ body.dark-theme .magistr-text {
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                             <span id="facultyNameDisplay">Факультет соціології</span>
                         </button>
-                                 <!-- Віджет Магістра (справа) -->
+                                <!-- Віджет Магістра з текстом дугою та неоном -->
           <div class="magistr-widget" id="btnMagistr">
-           <img src="magistr.webp" class="magistr-icon" alt="Магістр">
-         <span class="magistr-text">Я МАГІСТР!</span>
-           </div>
+            <img src="magistr.webp" class="magistr-icon" alt="Магістр">
+            <svg class="magistr-text-svg" viewBox="0 0 120 40">
+                <path id="curveTextPath" d="M 10,5 Q 60,38 110,5" fill="transparent" />
+                <text>
+                    <textPath href="#curveTextPath" startOffset="50%" text-anchor="middle">
+                        Я МАГІСТР!
+                    </textPath>
+                </text>
+            </svg>
+        </div>
                     </div>
                     
                     <div id="courseSelectionArea" style="animation: fadeIn 0.2s ease;">
