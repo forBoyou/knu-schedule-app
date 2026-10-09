@@ -461,58 +461,43 @@
 /* Віджет Магістра */
 .magistr-widget {
     position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 5px; /* Відступ від правого краю */
+    top: 50%; /* Центруємо по вертикалі відносно контейнера */
+    transform: translateY(-50%); 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 84px;
     z-index: 50;
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
 .magistr-widget:active {
-    transform: translateY(-50%) scale(0.9);
+    transform: translateY(-50%) scale(0.9); /* Анімація кліку зі збереженням центрування */
 }
 
 .magistr-icon {
-    width: 64px;   /* было 44px, подгони под размер огонька */
-    height: 64px;
+    width: 44px; /* Збільшений розмір */
+    height: 44px;
     object-fit: contain;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
-    position: relative;
-    z-index: 1;
 }
 
-/* Текст по дуге под иконкой */
-.magistr-arc {
-    width: 84px;
-    height: auto;
-    margin-top: -10px;   /* подтягивает дугу к иконке */
-    overflow: visible;
-}
-
-.magistr-arc path {
-    fill: none;
-}
-
-.magistr-arc text {
+.magistr-text {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
+    color: #FACC15; /* Золотистий колір */
+    margin-top: 2px; /* Зменшений відступ */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     letter-spacing: 0.5px;
-    fill: #FACC15;
-    stroke: rgba(0, 0, 0, 0.12);
-    stroke-width: 0.4px;
-    paint-order: stroke;
+    white-space: nowrap; /* Щоб текст не переносився на новий рядок */
 }
 
 /* Колір тексту для темної теми */
-body.dark-theme .magistr-arc text {
-    fill: #FDE047;
+body.dark-theme .magistr-text {
+    color: #FDE047; 
 }
         
     </style>
