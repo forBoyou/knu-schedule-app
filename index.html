@@ -458,7 +458,46 @@
         }
         body.dark-theme .news-badge { color: #38bdf8; }
         body.dark-theme .news-text { color: #f3f4f6; }
+/* Віджет Магістра */
+.magistr-widget {
+    position: absolute;
+    right: 16px; /* Відступ справа, симетрично лівому огоньку */
+    top: 72px; /* Висота: якщо не збігається з огоньком, зміни цю цифру (наприклад, 65px або 80px) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
 
+.magistr-widget:active {
+    transform: scale(0.9); /* Анімація натискання */
+}
+
+.magistr-icon {
+    width: 32px; /* Розмір як у огонька, якщо він більший - постав 36px або 40px */
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+}
+
+.magistr-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: #FACC15; /* Гарний золотистий колір */
+    margin-top: 4px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); /* Легка тінь, щоб текст читався і на світлій, і на темній темі */
+    letter-spacing: 0.5px;
+}
+
+/* Колір тексту для темної теми (трохи яскравіший золотий) */
+body.dark-theme .magistr-text {
+    color: #FDE047; 
+}
+        
     </style>
 </head>
 <body>
@@ -497,6 +536,11 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                             <span id="facultyNameDisplay">Факультет соціології</span>
                         </button>
+                                 <!-- Віджет Магістра (справа) -->
+          <div class="magistr-widget" id="btnMagistr">
+           <img src="magistr.webp" class="magistr-icon" alt="Магістр">
+         <span class="magistr-text">Я МАГІСТР</span>
+           </div>
                     </div>
                     
                     <div id="courseSelectionArea" style="animation: fadeIn 0.2s ease;">
