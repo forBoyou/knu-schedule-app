@@ -475,16 +475,10 @@
     justify-content: center;
     z-index: 50;
     cursor: pointer;
-    transition: transform 0.2s ease;
-    opacity: 0.6;
-} 
-
-.magistr-widget.active-mode {
-    opacity: 1;
-    transform: translateY(-50%) scale(1.05);
-    filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6));
-}
-    /* Прибирає клякса при натисканні */
+    transition: transform 0.2s ease, filter 0.2s ease;
+    opacity: 1; /* Тепер він завжди яскравий */
+    
+    /* Прибирає кляксу при натисканні */
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -495,8 +489,18 @@
     backface-visibility: hidden;
 }
 
+.magistr-widget.active-mode {
+    transform: translateY(-50%) scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.7));
+}
+
 /* Клік ловить лише сам віджет, а не картинка чи SVG всередині */
 .magistr-widget * {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
     pointer-events: none;
     -webkit-user-drag: none;
     -webkit-tap-highlight-color: transparent;
@@ -1462,17 +1466,17 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
         let isMasterMode = localStorage.getItem('isMasterModePref') === 'true';
 
         function updateMasterModeUI() {
-            if (activeSpec !== 'soc') {
-                btnMagistr.style.display = 'none'; // Ховаємо віджет у менеджерів
-                return;
-            }
-            btnMagistr.style.display = 'flex';
-            if (isMasterMode) {
+            btnMagistr.style.display = 'flex'; // Віджет тепер видно ЗАВЖДИ
+
+            // Активним (світиться і показує кнопки) він стає ТІЛЬКИ якщо ми на соціологах і включений режим магістра
+            if (activeSpec === 'soc' && isMasterMode) {
                 groupSoc.classList.remove('active');
                 groupSocMagistr.classList.add('active');
                 btnMagistr.classList.add('active-mode');
             } else {
-                groupSoc.classList.add('active');
+                if (activeSpec === 'soc') {
+                    groupSoc.classList.add('active');
+                }
                 groupSocMagistr.classList.remove('active');
                 btnMagistr.classList.remove('active-mode');
             }
@@ -1480,10 +1484,16 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
         updateMasterModeUI(); // Викликаємо при старті
 
         btnMagistr.addEventListener('click', () => {
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); // Вібрує завжди при натисканні
+            
+            if (activeSpec !== 'soc') {
+                return; // Якщо ми на вкладці менеджерів — далі код не йде, нічого не перемикається
+            }
+
+            // Перемикання для соціологів
             isMasterMode = !isMasterMode;
             localStorage.setItem('isMasterModePref', isMasterMode);
             updateMasterModeUI();
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
         mainSegments.forEach(segment => {
@@ -1491,14 +1501,15 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 mainSegments.forEach(s => s.classList.remove('active'));
                 e.target.classList.add('active');
                 activeSpec = e.target.getAttribute('data-spec'); 
+                
                 if (activeSpec === 'soc') {
                     groupMan.classList.remove('active');
-                    updateMasterModeUI();
+                    updateMasterModeUI(); 
                 } else {
                     groupMan.classList.add('active'); 
                     groupSoc.classList.remove('active');
                     groupSocMagistr.classList.remove('active');
-                    updateMasterModeUI();
+                    updateMasterModeUI(); // Вимикаємо світіння магістра для менеджерів
                 }
             });
         });
