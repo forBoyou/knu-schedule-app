@@ -1402,13 +1402,13 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
-        function openScheduleScreen(courseVal) {
+       function openScheduleScreen(courseVal) {
             selectedCourse = courseVal;
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Кнопки показуються тільки для 3 та 4 курсів
-            if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
+            // Вмикаємо перемикач груп для 3, 4 курсу та магістрів
+            if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М' || courseVal === '1см' || courseVal === '2см') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
             } else {
@@ -1416,6 +1416,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 document.getElementById('btnPracticeMode').style.display = 'none';
             }
 
+            // Назви в шапці розкладу
             if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
             else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
             else if(courseVal === '3') scheduleTitle.innerHTML = `${svgCap} 3 курс (Соц.)`;
@@ -1455,20 +1456,13 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             });
         });
 
-       // --- ПЕРЕМИКАННЯ СОЦІОЛОГІВ/МЕНЕДЖЕРІВ НА ГОЛОВНІЙ ---
-        const mainSegments = document.querySelectorAll('#courseSelectionArea .segment-control .segment[data-spec]');
-        const groupSoc = document.getElementById('groupSoc');
-        const groupSocMagistr = document.getElementById('groupSocMagistr');
-        const groupMan = document.getElementById('groupMan');
-        const btnMagistr = document.getElementById('btnMagistr');
-
         // Логіка магістрів
         let isMasterMode = localStorage.getItem('isMasterModePref') === 'true';
 
         function updateMasterModeUI() {
             btnMagistr.style.display = 'flex'; // Віджет тепер видно ЗАВЖДИ
 
-            // Активним (світиться і показує кнопки) він стає ТІЛЬКИ якщо ми на соціологах і включений режим магістра
+            // Активним (світиться) він стає ТІЛЬКИ якщо ми на соціологах і включений режим магістра
             if (activeSpec === 'soc' && isMasterMode) {
                 groupSoc.classList.remove('active');
                 groupSocMagistr.classList.add('active');
@@ -1484,17 +1478,19 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
         updateMasterModeUI(); // Викликаємо при старті
 
         btnMagistr.addEventListener('click', () => {
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); // Вібрує завжди при натисканні
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); // Вібрує завжди
             
-            if (activeSpec !== 'soc') {
-                return; // Якщо ми на вкладці менеджерів — далі код не йде, нічого не перемикається
-            }
+            if (activeSpec !== 'soc') return; // У менеджерів кнопка просто вібрує
 
-            // Перемикання для соціологів
             isMasterMode = !isMasterMode;
             localStorage.setItem('isMasterModePref', isMasterMode);
             updateMasterModeUI();
         });
+
+        const mainSegments = document.querySelectorAll('#courseSelectionArea .segment-control .segment[data-spec]');
+        const groupSoc = document.getElementById('groupSoc');
+        const groupSocMagistr = document.getElementById('groupSocMagistr');
+        const groupMan = document.getElementById('groupMan');
 
         mainSegments.forEach(segment => {
             segment.addEventListener('click', (e) => {
@@ -1509,10 +1505,24 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                     groupMan.classList.add('active'); 
                     groupSoc.classList.remove('active');
                     groupSocMagistr.classList.remove('active');
-                    updateMasterModeUI(); // Вимикаємо світіння магістра для менеджерів
+                    updateMasterModeUI(); 
                 }
             });
         });
+
+        // --- КЛІКИ НА КУРСИ ---
+        document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
+        document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
+        document.getElementById('btnCourse3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3"); });
+        document.getElementById('btnCourse4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4"); });
+        
+        // Кліки для магістрів
+        document.getElementById('btnCourse1Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1см"); });
+        document.getElementById('btnCourse2Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2см"); });
+
+        document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
+        document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
+        document.getElementById('btnMan3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3М"); });
         // --- КЛІКИ НА КУРСИ ---
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
