@@ -165,13 +165,16 @@
         .btn-course-2 { background: linear-gradient(135deg, #818cf8, #4f46e5); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(79, 70, 229, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.2); }
         .btn-course-3 { background: linear-gradient(135deg, #c084fc, #9333ea); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(147, 51, 234, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.2); }
         .btn-course-4 { background: #FF3D6E; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(255, 61, 110, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.2); }
-        
+        .btn-course-1m { background: #0369A1; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(3, 105, 161, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-course-2m { background: #BE185D; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(190, 24, 93, 0.3); border-top: 1px solid rgba(255, 255, 255, 0.2); }
         @media (hover: hover) and (pointer: fine) {
             .btn-course:hover:not(:disabled) { transform: scale(1.04); }
             .btn-course-1:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(37, 99, 235, 0.3); }
             .btn-course-2:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(79, 70, 229, 0.3); }
             .btn-course-3:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(147, 51, 234, 0.3); }
             .btn-course-4:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(255, 61, 110, 0.4); }
+            .btn-course-1m:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(3, 105, 161, 0.4); }
+            .btn-course-2m:hover:not(:disabled) { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 14px rgba(190, 24, 93, 0.4); }
             .btn-emails-new:hover { transform: scale(1.04); }
             .btn-practice:hover { transform: scale(1.05); }
         }
@@ -402,6 +405,8 @@
         body.dark-theme .btn-course-2 { background: #4A4AFF; box-shadow: 0 4px 12px rgba(91, 91, 255, 0.3); color: #ffffff !important; }
         body.dark-theme .btn-course-3 { background: #8E2DE2; box-shadow: 0 4px 12px rgba(142, 45, 226, 0.3); color: #ffffff !important; }
         body.dark-theme .btn-course-4 { background: #FF3D6E; box-shadow: 0 4px 12px rgba(255, 61, 110, 0.3); color: #ffffff !important; }
+        body.dark-theme .btn-course-1m { background: #0369A1; box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3); color: #ffffff !important; }
+        body.dark-theme .btn-course-2m { background: #BE185D; box-shadow: 0 4px 12px rgba(190, 24, 93, 0.3); color: #ffffff !important; }
         body.dark-theme .btn-course:disabled { background: #374151 !important; color: #6b7280 !important; box-shadow: none !important; opacity: 0.8; }
         
         /* Темна тема для нової кнопки пошти */
@@ -471,7 +476,14 @@
     z-index: 50;
     cursor: pointer;
     transition: transform 0.2s ease;
+    opacity: 0.6;
+} 
 
+.magistr-widget.active-mode {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6));
+}
     /* Прибирає клякса при натисканні */
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -590,6 +602,11 @@ body.dark-theme .magistr-text-svg text {
                             <button id="btnCourse2" class="btn-course btn-course-2">2 курс</button>
                             <button id="btnCourse3" class="btn-course btn-course-3">3 курс</button>
                             <button id="btnCourse4" class="btn-course btn-course-4">4 курс <span style="color: #f3f4f6; font-size: 0.75em; font-weight: 500; opacity: 0.85;">(бета)</span></button>
+                        </div>
+                        <!-- Група для магістрів -->
+                        <div id="groupSocMagistr" class="course-group">
+                            <button id="btnCourse1Mag" class="btn-course btn-course-1m">1 магістрат</button>
+                            <button id="btnCourse2Mag" class="btn-course btn-course-2m">2 магістрат</button>
                         </div>
                         
                         <div id="groupMan" class="course-group">
@@ -1092,7 +1109,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 if (key === "_news_") continue;
                 
                 // Якщо обрано соціологів, беремо всі їхні курси
-                if (activeSpec === 'soc' && (key === '1' || key === '2' || key === '3' || key === '4' || key.toLowerCase() === 'soc')) {
+                if (activeSpec === 'soc' && (key === '1' || key === '2' || key === '3' || key === '4' || key === '1см' || key === '2см' || key.toLowerCase() === 'soc')) {
                     Object.assign(allTeachers, data[key]);
                 }
                 // Якщо обрано менеджерів, беремо всі їхні курси
@@ -1402,6 +1419,8 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
             else if(courseVal === '2М') scheduleTitle.innerHTML = `${svgCap} 2 курс (Мен.)`;
             else if(courseVal === '3М') scheduleTitle.innerHTML = `${svgCap} 3 курс (Мен.)`;
+            else if(courseVal === '1см') scheduleTitle.innerHTML = `${svgCap} 1 магістрат (Соц.)`;
+            else if(courseVal === '2см') scheduleTitle.innerHTML = `${svgCap} 2 магістрат (Соц.)`;
 
             updateCurrentDayBanner();
             switchDay(currentActiveDay);
@@ -1432,10 +1451,40 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             });
         });
 
-        // --- ПЕРЕМИКАННЯ СОЦІОЛОГІВ/МЕНЕДЖЕРІВ НА ГОЛОВНІЙ ---
+       // --- ПЕРЕМИКАННЯ СОЦІОЛОГІВ/МЕНЕДЖЕРІВ НА ГОЛОВНІЙ ---
         const mainSegments = document.querySelectorAll('#courseSelectionArea .segment-control .segment[data-spec]');
         const groupSoc = document.getElementById('groupSoc');
+        const groupSocMagistr = document.getElementById('groupSocMagistr');
         const groupMan = document.getElementById('groupMan');
+        const btnMagistr = document.getElementById('btnMagistr');
+
+        // Логіка магістрів
+        let isMasterMode = localStorage.getItem('isMasterModePref') === 'true';
+
+        function updateMasterModeUI() {
+            if (activeSpec !== 'soc') {
+                btnMagistr.style.display = 'none'; // Ховаємо віджет у менеджерів
+                return;
+            }
+            btnMagistr.style.display = 'flex';
+            if (isMasterMode) {
+                groupSoc.classList.remove('active');
+                groupSocMagistr.classList.add('active');
+                btnMagistr.classList.add('active-mode');
+            } else {
+                groupSoc.classList.add('active');
+                groupSocMagistr.classList.remove('active');
+                btnMagistr.classList.remove('active-mode');
+            }
+        }
+        updateMasterModeUI(); // Викликаємо при старті
+
+        btnMagistr.addEventListener('click', () => {
+            isMasterMode = !isMasterMode;
+            localStorage.setItem('isMasterModePref', isMasterMode);
+            updateMasterModeUI();
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        });
 
         mainSegments.forEach(segment => {
             segment.addEventListener('click', (e) => {
@@ -1443,18 +1492,23 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 e.target.classList.add('active');
                 activeSpec = e.target.getAttribute('data-spec'); 
                 if (activeSpec === 'soc') {
-                    groupSoc.classList.add('active'); groupMan.classList.remove('active');
+                    groupMan.classList.remove('active');
+                    updateMasterModeUI();
                 } else {
-                    groupMan.classList.add('active'); groupSoc.classList.remove('active');
+                    groupMan.classList.add('active'); 
+                    groupSoc.classList.remove('active');
+                    groupSocMagistr.classList.remove('active');
+                    updateMasterModeUI();
                 }
             });
         });
-
         // --- КЛІКИ НА КУРСИ ---
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
         document.getElementById('btnCourse3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3"); });
         document.getElementById('btnCourse4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4"); });
+        document.getElementById('btnCourse1Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1см"); });
+        document.getElementById('btnCourse2Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2см"); });
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
         document.getElementById('btnMan3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3М"); });
