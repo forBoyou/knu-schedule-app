@@ -1409,6 +1409,18 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 document.getElementById('btnPracticeMode').style.display = 'none';
             }
 
+            // --- ХОВАЄМО СУБОТУ ДЛЯ МАГІСТРІВ ---
+            const satTab = document.querySelector('.btn-sat');
+            if (courseVal === '1СМ' || courseVal === '2СМ') {
+                satTab.style.display = 'none';
+                // Якщо зараз обрана субота, перекидаємо на понеділок, щоб не було пустого екрана
+                if (currentActiveDay === 'Субота') {
+                    currentActiveDay = 'Понеділок';
+                }
+            } else {
+                satTab.style.display = ''; // Повертаємо субботу для бакалаврів
+            }
+
             // Назви в шапці розкладу
             if(courseVal === '1') scheduleTitle.innerHTML = `${svgCap} 1 курс (Соц.)`;
             else if(courseVal === '2') scheduleTitle.innerHTML = `${svgCap} 2 курс (Соц.)`;
@@ -1541,7 +1553,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             touchEndX = e.changedTouches[0].screenX;
             touchEndY = e.changedTouches[0].screenY;
             handleSwipe();
-        }, {passive: true});
+       }, {passive: true});
 
         function handleSwipe() {
             const deltaX = touchEndX - touchStartX;
@@ -1552,6 +1564,12 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                 if (currentIndex === -1) return;
                 
                 let newIndex = deltaX < 0 ? currentIndex + 1 : currentIndex - 1;
+                
+                // Забороняємо свайп на суботу (індекс 5) для магістрів
+                if ((selectedCourse === '1СМ' || selectedCourse === '2СМ') && newIndex === 5) {
+                    return; 
+                }
+
                 if (newIndex >= 0 && newIndex < swipeDays.length) switchDay(swipeDays[newIndex]);
             }
         }
