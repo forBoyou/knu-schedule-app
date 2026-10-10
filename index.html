@@ -1395,13 +1395,13 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
-       function openScheduleScreen(courseVal) {
+   function openScheduleScreen(courseVal) {
             selectedCourse = courseVal;
             mainScreen.classList.remove('active');
             scheduleScreen.classList.add('active');
             
-            // Вмикаємо перемикач груп для 3, 4 курсу та магістрів
-             if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М' || courseVal === '1СМ' || courseVal === '2СМ') {
+            // Вмикаємо перемикач груп ТІЛЬКИ для 3 та 4 курсу бакалаврів
+             if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
             } else {
