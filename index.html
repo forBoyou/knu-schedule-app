@@ -522,20 +522,18 @@
     overflow: visible;
 }
 
+/* Налаштування SVG для тексту дугою */
 .magistr-text-svg text {
     font-family: 'Inter', sans-serif;
-    font-size: 16px; /* Внутрішній розмір тексту */
+    font-size: 16px;
     font-weight: 800;
-    fill: #FACC15; /* Основний колір тексту */
-    /* Неонове світіння */
-    filter: drop-shadow(0 0 3px rgba(250, 204, 21, 0.8)) drop-shadow(0 0 8px rgba(234, 179, 8, 0.9));
+    fill: #FACC15;
     letter-spacing: 1px;
 }
 
-/* Яскравіше світіння для темної теми */
+/* Колір для темної теми */
 body.dark-theme .magistr-text-svg text {
     fill: #FDE047;
-    filter: drop-shadow(0 0 4px rgba(253, 224, 71, 0.9)) drop-shadow(0 0 10px rgba(250, 204, 21, 1));
 }
         
     </style>
