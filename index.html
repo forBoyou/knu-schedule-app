@@ -501,11 +501,6 @@
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
-    pointer-events: none;
-    -webkit-user-drag: none;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-}
 
 .magistr-widget:active {
     transform: translateY(-50%) scale(0.9);
@@ -1113,7 +1108,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 if (key === "_news_") continue;
                 
                 // Якщо обрано соціологів, беремо всі їхні курси
-                if (activeSpec === 'soc' && (key === '1' || key === '2' || key === '3' || key === '4' || key === '1см' || key === '2см' || key.toLowerCase() === 'soc')) {
+                if (activeSpec === 'soc' && (key === '1' || key === '2' || key === '3' || key === '4' || key === '1СМ' || key === '2СМ' || key.toLowerCase() === 'soc')) {
                     Object.assign(allTeachers, data[key]);
                 }
                 // Якщо обрано менеджерів, беремо всі їхні курси
@@ -1408,7 +1403,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             scheduleScreen.classList.add('active');
             
             // Вмикаємо перемикач груп для 3, 4 курсу та магістрів
-            if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М' || courseVal === '1см' || courseVal === '2см') {
+             if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М' || courseVal === '1СМ' || courseVal === '2СМ') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
             } else {
@@ -1424,8 +1419,8 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
             else if(courseVal === '2М') scheduleTitle.innerHTML = `${svgCap} 2 курс (Мен.)`;
             else if(courseVal === '3М') scheduleTitle.innerHTML = `${svgCap} 3 курс (Мен.)`;
-            else if(courseVal === '1см') scheduleTitle.innerHTML = `${svgCap} 1 магістрат (Соц.)`;
-            else if(courseVal === '2см') scheduleTitle.innerHTML = `${svgCap} 2 магістрат (Соц.)`;
+            else if(courseVal === '1СМ') scheduleTitle.innerHTML = `${svgCap} 1 магістрат (Соц.)`;
+            else if(courseVal === '2СМ') scheduleTitle.innerHTML = `${svgCap} 2 магістрат (Соц.)`;
 
             updateCurrentDayBanner();
             switchDay(currentActiveDay);
@@ -1510,35 +1505,27 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             });
         });
 
-        // --- КЛІКИ НА КУРСИ ---
+      // --- КЛІКИ НА КУРСИ ---
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
         document.getElementById('btnCourse3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3"); });
         document.getElementById('btnCourse4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4"); });
         
-        // Кліки для магістрів
-        document.getElementById('btnCourse1Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1см"); });
-        document.getElementById('btnCourse2Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2см"); });
-
-        document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
-        document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
-        document.getElementById('btnMan3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3М"); });
-        // --- КЛІКИ НА КУРСИ ---
-        document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
-        document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
-        document.getElementById('btnCourse3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3"); });
-        document.getElementById('btnCourse4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4"); });
-        document.getElementById('btnCourse1Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1см"); });
-        document.getElementById('btnCourse2Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2см"); });
+       // Кліки для магістрів
+document.getElementById('btnCourse1Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1СМ"); });
+document.getElementById('btnCourse2Mag').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2СМ"); });
+        // Кліки для менеджерів
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
         document.getElementById('btnMan3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3М"); });
         
+        // --- ПОВЕРНЕННЯ НА ГОЛОВНИЙ ЕКРАН ---
         document.getElementById('btnBackToCourse').addEventListener('click', () => { 
             scheduleScreen.classList.remove('active'); 
             mainScreen.classList.add('active'); 
         });
 
+        // --- КЛІКИ ПО ДНЯХ ТИЖНЯ ---
         dayTabs.forEach(tab => {
             tab.addEventListener('click', (e) => { switchDay(e.target.getAttribute('data-day')); });
         });
@@ -1546,7 +1533,6 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
         // --- ЛОГІКА СВАЙПІВ ---
         let touchStartX = 0; let touchStartY = 0; let touchEndX = 0; let touchEndY = 0;
         const swipeDays = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"];
-
         scheduleScrollArea.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
             touchStartY = e.changedTouches[0].screenY;
