@@ -1451,6 +1451,13 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             });
         });
 
+        // Оголошення елементів (ОБОВ'ЯЗКОВО до виклику функцій)
+        const btnMagistr = document.getElementById('btnMagistr');
+        const mainSegments = document.querySelectorAll('#courseSelectionArea .segment-control .segment[data-spec]');
+        const groupSoc = document.getElementById('groupSoc');
+        const groupSocMagistr = document.getElementById('groupSocMagistr');
+        const groupMan = document.getElementById('groupMan');
+
         // Логіка магістрів
         let isMasterMode = localStorage.getItem('isMasterModePref') === 'true';
 
@@ -1470,7 +1477,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 btnMagistr.classList.remove('active-mode');
             }
         }
-        updateMasterModeUI(); // Викликаємо при старті
+        updateMasterModeUI(); // Тепер безпечно викликати!
 
         btnMagistr.addEventListener('click', () => {
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged(); // Вібрує завжди
@@ -1481,11 +1488,6 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             localStorage.setItem('isMasterModePref', isMasterMode);
             updateMasterModeUI();
         });
-
-        const mainSegments = document.querySelectorAll('#courseSelectionArea .segment-control .segment[data-spec]');
-        const groupSoc = document.getElementById('groupSoc');
-        const groupSocMagistr = document.getElementById('groupSocMagistr');
-        const groupMan = document.getElementById('groupMan');
 
         mainSegments.forEach(segment => {
             segment.addEventListener('click', (e) => {
@@ -1504,7 +1506,6 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
                 }
             });
         });
-
       // --- КЛІКИ НА КУРСИ ---
         document.getElementById('btnCourse1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1"); });
         document.getElementById('btnCourse2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2"); });
