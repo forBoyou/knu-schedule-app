@@ -610,7 +610,7 @@ body.dark-theme .magistr-text-svg text {
                             <button id="btnMan1" class="btn-course btn-course-1">1 курс</button>
                             <button id="btnMan2" class="btn-course btn-course-2">2 курс</button>
                             <button id="btnMan3" class="btn-course btn-course-3">3 курс</button>
-                            <button class="btn-course btn-course-4" disabled>4 курс <span style="color: #9ca3af; font-size: 0.75em; font-weight: 500;">(бета)</span></button>
+                           <button id="btnMan4" class="btn-course btn-course-4">4 курс <span style="color: #f3f4f6; font-size: 0.75em; font-weight: 500; opacity: 0.85;">(бета)</span></button>
                         </div>
 
                         <!-- КНОПКА ПОШТИ ВИКЛАДАЧІВ (GLASSMORPHISM) -->
@@ -720,7 +720,7 @@ body.dark-theme .magistr-text-svg text {
                         <div class="course-option" data-val="1М">1 курс</div>
                         <div class="course-option" data-val="2М">2 курс</div>
                         <div class="course-option" data-val="3М">3 курс</div>
-                        <div class="course-option disabled">4 курс <span style="color: #9ca3af; font-size: 0.8em; font-weight: normal;">(бета)</span></div>
+                       <div class="course-option" data-val="4М">4 курс <span style="color: #9ca3af; font-size: 0.8em; font-weight: normal;">(бета)</span></div>
                     </div>
 
                     <p style="font-size: 12px; color: #9ca3af; margin-top: 16px; line-height: 1.4;">
@@ -1429,6 +1429,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             else if(courseVal === '1М') scheduleTitle.innerHTML = `${svgCap} 1 курс (Мен.)`;
             else if(courseVal === '2М') scheduleTitle.innerHTML = `${svgCap} 2 курс (Мен.)`;
             else if(courseVal === '3М') scheduleTitle.innerHTML = `${svgCap} 3 курс (Мен.)`;
+            else if(courseVal === '4М') scheduleTitle.innerHTML = `${svgCap} 4 курс (Мен.)`;
             else if(courseVal === '1СМ') scheduleTitle.innerHTML = `${svgCap} 1 магістрат (Соц.)`;
             else if(courseVal === '2СМ') scheduleTitle.innerHTML = `${svgCap} 2 магістрат (Соц.)`;
 
@@ -1529,6 +1530,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
         document.getElementById('btnMan1').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("1М"); });
         document.getElementById('btnMan2').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("2М"); });
         document.getElementById('btnMan3').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("3М"); });
+        document.getElementById('btnMan4').addEventListener('click', () => { currentActiveDay = getActiveDay(); openScheduleScreen("4М"); });
         
         // --- ПОВЕРНЕННЯ НА ГОЛОВНИЙ ЕКРАН ---
         document.getElementById('btnBackToCourse').addEventListener('click', () => { 
