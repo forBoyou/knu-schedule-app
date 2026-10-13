@@ -1724,7 +1724,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             return `${yyyy}-${mm}-${dd}`;
         }
 
-        // --- РОЗКЛАД: РЕНДЕР ТА ЗАВАНТАЖЕННЯ ---
+  // --- РОЗКЛАД: РЕНДЕР ТА ЗАВАНТАЖЕННЯ ---
         async function fetchSchedule(course, day) {
             if (!globalScheduleData) {
                 try {
@@ -1771,11 +1771,22 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             }
 
             const numberWords = ["1-а пара", "2-а пара", "3-я пара", "4-а пара", "5-а пара", "6-а пара", "7-а пара", "8-а пара"];
+            
+            // Масив правильного часу для суботи (з двокрапками для зеленої підсвітки)
+            const satTimes = ["08:30-09:50", "10:00-11:20", "11:40-13:00", "13:10-14:30", "14:40-16:00", "16:10-17:30"];
+            
             let lessonIndex = 0;
             const realTodayName = daysOfWeek[new Date().getDay()];
             
             for (let time in daySchedule) {
                 let lessonNumText = numberWords[lessonIndex] || `${lessonIndex + 1}-а пара`;
+                
+                // Підміна часу, якщо сьогодні субота
+                let displayTime = time;
+                if (day === "Субота" && satTimes[lessonIndex]) {
+                    displayTime = satTimes[lessonIndex];
+                }
+                
                 lessonIndex++;
                 let parsedData = parseTimeSlotContent(daySchedule[time]);
                 
@@ -1785,7 +1796,8 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                 let cardsHtml = parsedData.html; 
                 let dotColor = parsedData.color; 
                 
-                let isNow = (currentActiveDay === realTodayName && isTimeNow(time));
+                // Перевіряємо зелену підсвітку за новим часом
+                let isNow = (currentActiveDay === realTodayName && isTimeNow(displayTime));
                 let currentSvgClock = isNow ? svgClockGreen : svgClockRed;
                 let clockClass = isNow ? "time-clock-active" : "time-clock";
                 
@@ -1793,7 +1805,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                     <div class="time-group">
                         <div class="time-meta">
                             <div class="time-dot" style="background-color: ${dotColor};"></div><span>${lessonNumText}</span><span class="time-divider">|</span>
-                            <span class="${clockClass}">${currentSvgClock} ${time}</span>
+                            <span class="${clockClass}">${currentSvgClock} ${displayTime}</span>
                         </div>${cardsHtml}
                     </div>`;
             }
