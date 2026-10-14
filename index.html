@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
         /* --- БАЗОВІ СТИЛІ ТА КАРКАС ДОДАТКУ --- */
-        * { -webkit-tap-highlight-color: transparent; }
+        * { -webkit-tap-highlight-color: transparent; }ч
 
         html, body {
             margin: 0; padding: 0; height: 100vh; height: 100dvh; 
@@ -1401,7 +1401,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             scheduleScreen.classList.add('active');
             
             // Вмикаємо перемикач груп ТІЛЬКИ для 3 та 4 курсу бакалаврів
-             if (courseVal === '3' || courseVal === '4' || courseVal === '3М' || courseVal === '4М') {
+            if (courseVal === '3' || courseVal === '4' || courseVal === '2М' || courseVal === '3М' || courseVal === '4М') {
                 groupToggleWrap.style.display = 'flex';
                 document.getElementById('btnPracticeMode').style.display = 'flex';
             } else {
