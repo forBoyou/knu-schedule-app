@@ -1872,6 +1872,98 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
         if (savedFaculty === 'soc' && savedCourse) {
             openScheduleScreen(savedCourse);
         }
+
+        // --- ЛОГІКА СПОВІЩЕНЬ ---
+        const notifToggle = document.getElementById('notifToggle');
+        const notifAccordionContent = document.getElementById('notifAccordionContent');
+        const notifSegments = document.querySelectorAll('.notif-segment');
+        const notifGridSoc = document.getElementById('notifGridSoc');
+        const notifGridMan = document.getElementById('notifGridMan');
+        const notifOptions = document.querySelectorAll('.notif-option');
+
+        // Перевіряємо збережені налаштування
+        let isNotifEnabled = localStorage.getItem('notifEnabled') === 'true';
+        let savedNotifCourse = localStorage.getItem('notifCoursePref') || "";
+        notifToggle.checked = isNotifEnabled;
+        if (isNotifEnabled) notifAccordionContent.classList.remove('collapsed');
+
+        // Відкриваємо потрібну вкладку, якщо курс збережено
+        if (savedNotifCourse.includes("М")) {
+            document.querySelector('.notif-segment[data-notif-spec="man"]').click();
+        }
+
+        // Функція для відправки налаштувань на PythonAnywhere
+        function sendNotifSettingsToServer(enabled, course) {
+            const user = tg.initDataUnsafe?.user;
+            if (!user) return;
+            
+            fetch('https://Bohdanyof.pythonanywhere.com/api/notifications/setup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    enabled: enabled,
+                    course: course,
+                    group: localStorage.getItem('selectedGroupPref') || '1'
+                })
+            }).catch(err => console.log("Помилка відправки сповіщень:", err));
+        }
+
+        // Обробка тумблера
+        notifToggle.addEventListener('change', (e) => {
+            isNotifEnabled = e.target.checked;
+            localStorage.setItem('notifEnabled', isNotifEnabled);
+            
+            if (isNotifEnabled) {
+                notifAccordionContent.classList.remove('collapsed');
+            } else {
+                notifAccordionContent.classList.add('collapsed');
+                sendNotifSettingsToServer(false, ""); // Вимикаємо на сервері
+            }
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        });
+
+        // Перемикання вкладок Соціологи/Менеджери в сповіщеннях
+        notifSegments.forEach(segment => {
+            segment.addEventListener('click', (e) => {
+                notifSegments.forEach(s => s.classList.remove('active'));
+                e.target.classList.add('active');
+                if (e.target.getAttribute('data-notif-spec') === 'soc') {
+                    notifGridSoc.classList.add('active'); notifGridMan.classList.remove('active');
+                } else {
+                    notifGridMan.classList.add('active'); notifGridSoc.classList.remove('active');
+                }
+            });
+        });
+
+        // Вибір курсу для сповіщень
+        function updateNotifCourseUI(val) {
+            notifOptions.forEach(opt => {
+                const optVal = opt.getAttribute('data-val');
+                let baseText = opt.innerText.replace('✓', '').trim();
+                if (optVal === val) {
+                    opt.classList.add('active'); 
+                    opt.innerHTML = `${baseText} <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                } else {
+                    opt.classList.remove('active'); opt.innerHTML = baseText;
+                }
+            });
+        }
+        updateNotifCourseUI(savedNotifCourse);
+
+        notifOptions.forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const val = e.currentTarget.getAttribute('data-val');
+                savedNotifCourse = val;
+                localStorage.setItem('notifCoursePref', val);
+                updateNotifCourseUI(val);
+                
+                // Зберегли курс — відразу передаємо на сервер
+                sendNotifSettingsToServer(true, val);
+                
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            });
+        });
     </script>
 </body>
 </html>
