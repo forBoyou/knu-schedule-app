@@ -1382,7 +1382,7 @@ const svgCap = `<svg class="icon-title" xmlns="http://www.w3.org/2000/svg" width
             activeSpec = 'soc';
         }
 
-        const courseOptions = document.querySelectorAll('.course-option:not(.disabled)');
+        const courseOptions = document.querySelectorAll('#courseAccordionContent .course-option:not(.disabled)');
         function updateCourseListUI(val) {
             courseOptions.forEach(opt => {
                 const optVal = opt.getAttribute('data-val');
