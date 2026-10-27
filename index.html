@@ -747,7 +747,47 @@ body.dark-theme .magistr-text-svg text {
                     Коли цей режим увімкнено, поруч із парами з'являтиметься кнопка-камера з посиланням на Zoom або Google Meet (якщо воно є у розкладі).
                 </div>
             </div>
+<!-- Картка Налаштування Сповіщень -->
+            <div class="settings-card">
+                <div class="settings-header" id="notifAccordionToggle">
+                    <div class="settings-header-left">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell preview-icon"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <h3>Сповіщення про пари</h3>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="notifToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="accordion-content collapsed" id="notifAccordionContent">
+                    <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #6b7280; padding-left: 4px;">Для якого курсу надсилати розклад?</div>
+                    
+                    <div class="segment-control" style="margin-bottom: 12px; max-width: 100%;">
+                        <div class="segment notif-segment active" data-notif-spec="soc">Соціологи</div>
+                        <div class="segment notif-segment" data-notif-spec="man">Менеджери</div>
+                    </div>
+                    
+                    <div class="course-grid active" id="notifGridSoc">
+                        <div class="course-option notif-option" data-val="1">1 курс</div>
+                        <div class="course-option notif-option" data-val="2">2 курс</div>
+                        <div class="course-option notif-option" data-val="3">3 курс</div>
+                        <div class="course-option notif-option" data-val="4">4 курс</div>
+                        <div class="course-option notif-option" data-val="1СМ" style="font-size: 12px;">1 магістрат</div>
+                        <div class="course-option notif-option" data-val="2СМ" style="font-size: 12px;">2 магістрат</div>
+                    </div>
+                    <div class="course-grid" id="notifGridMan">
+                        <div class="course-option notif-option" data-val="1М">1 курс</div>
+                        <div class="course-option notif-option" data-val="2М">2 курс</div>
+                        <div class="course-option notif-option" data-val="3М">3 курс</div>
+                        <div class="course-option notif-option" data-val="4М">4 курс</div>
+                    </div>
 
+                    <p style="font-size: 12px; color: #9ca3af; margin-top: 16px; line-height: 1.4;">
+                        Бот буде надсилати сповіщення в чат перед початком пар твоєї групи.
+                    </p>
+                </div>
+            </div>
             <div class="settings-card">
                 <div class="settings-header" style="margin-bottom: 16px;">
                     <div class="settings-header-left">
