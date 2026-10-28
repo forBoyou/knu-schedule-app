@@ -1868,7 +1868,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             }
         }
 
-        // АВТОЗАПУСК ЯКЩО ЗБЕРЕЖЕНО ФАКУЛЬТЕТ ТА КУРС
+     // АВТОЗАПУСК ЯКЩО ЗБЕРЕЖЕНО ФАКУЛЬТЕТ ТА КУРС
         if (savedFaculty === 'soc' && savedCourse) {
             openScheduleScreen(savedCourse);
         }
@@ -1879,17 +1879,23 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
         const notifSegments = document.querySelectorAll('.notif-segment');
         const notifGridSoc = document.getElementById('notifGridSoc');
         const notifGridMan = document.getElementById('notifGridMan');
+        
+        // ВАЖЛИВО: .notif-option не конфліктує з розкладом
         const notifOptions = document.querySelectorAll('.notif-option');
 
         // Перевіряємо збережені налаштування
         let isNotifEnabled = localStorage.getItem('notifEnabled') === 'true';
         let savedNotifCourse = localStorage.getItem('notifCoursePref') || "";
+        
         notifToggle.checked = isNotifEnabled;
-        if (isNotifEnabled) notifAccordionContent.classList.remove('collapsed');
+
+        // ЗАВЖДИ ховаємо плашку при старті додатку (незалежно від того увімкнено тумблер чи ні)
+        notifAccordionContent.classList.add('collapsed');
 
         // Відкриваємо потрібну вкладку, якщо курс збережено
         if (savedNotifCourse.includes("М")) {
-            document.querySelector('.notif-segment[data-notif-spec="man"]').click();
+            const manTab = document.querySelector('.notif-segment[data-notif-spec="man"]');
+            if(manTab) manTab.click();
         }
 
         // Функція для відправки налаштувань на PythonAnywhere
@@ -1909,14 +1915,16 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             }).catch(err => console.log("Помилка відправки сповіщень:", err));
         }
 
-        // Обробка тумблера
+        // Обробка тумблера (виїжджає тільки коли юзер сам його клацає)
         notifToggle.addEventListener('change', (e) => {
             isNotifEnabled = e.target.checked;
             localStorage.setItem('notifEnabled', isNotifEnabled);
             
             if (isNotifEnabled) {
+                // Увімкнули - меню виїжджає для вибору
                 notifAccordionContent.classList.remove('collapsed');
             } else {
+                // Вимкнули - одразу ховаємо і відключаємо на сервері
                 notifAccordionContent.classList.add('collapsed');
                 sendNotifSettingsToServer(false, ""); // Вимикаємо на сервері
             }
@@ -1962,6 +1970,11 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                 sendNotifSettingsToServer(true, val);
                 
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+                // ПЛАЖКА ОДРАЗУ ЗГОРТАЄТЬСЯ (з мінімальною затримкою, щоб клік виглядав красиво)
+                setTimeout(() => {
+                    notifAccordionContent.classList.add('collapsed');
+                }, 200); 
             });
         });
     </script>
