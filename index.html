@@ -333,8 +333,20 @@
         .settings-header h3 { margin: 0; font-size: 16px; color: #111827; display: flex; align-items: center; gap: 8px; transition: color 0.3s; }
         .settings-header-left > svg { color: #6b7280; width: 20px; height: 20px; transition: color 0.3s; }
 
-        .accordion-content { transition: max-height 0.3s ease, margin-top 0.3s ease, opacity 0.3s ease; max-height: 500px; opacity: 1; overflow: hidden; margin-top: 16px; }
-        .accordion-content.collapsed { max-height: 0; opacity: 0; margin-top: 0; }
+      .accordion-content { 
+            max-height: 600px; 
+            opacity: 1; 
+            overflow: hidden; 
+            margin-top: 12px; 
+            padding-top: 12px;
+            transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.35s ease, padding-top 0.35s ease; 
+        }
+        .accordion-content.collapsed { 
+            max-height: 0; 
+            opacity: 0; 
+            margin-top: 0; 
+            padding-top: 0; 
+        }
         .chevron-icon { transition: transform 0.3s ease; color: #9ca3af; }
         .chevron-icon.rotated { transform: rotate(-180deg); }
 
@@ -1887,14 +1899,14 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             openScheduleScreen(savedCourse);
         }
 
-        // --- ЛОГІКА СПОВІЩЕНЬ ---
+       // --- ЛОГІКА СПОВІЩЕНЬ ---
         const notifToggle = document.getElementById('notifToggle');
         const notifAccordionContent = document.getElementById('notifAccordionContent');
         const notifSegments = document.querySelectorAll('.notif-segment');
         const notifGridSoc = document.getElementById('notifGridSoc');
         const notifGridMan = document.getElementById('notifGridMan');
         const notifOptions = document.querySelectorAll('.notif-option');
-        const notifSelectedText = document.getElementById('notifSelectedText'); // Наш новий зелений текст
+        const notifSelectedText = document.getElementById('notifSelectedText');
 
         // Перевіряємо збережені налаштування
         let isNotifEnabled = localStorage.getItem('notifEnabled') === 'true';
@@ -1903,22 +1915,29 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
         notifToggle.checked = isNotifEnabled;
         notifAccordionContent.classList.add('collapsed');
 
-        if (savedNotifCourse.includes("М")) {
+        // Розумна перевірка: дивимося, в якій сітці лежить збережена кнопка
+        let savedCourseElem = document.querySelector(`.notif-option[data-val="${savedNotifCourse}"]`);
+        if (savedCourseElem && savedCourseElem.closest('#notifGridMan')) {
             const manTab = document.querySelector('.notif-segment[data-notif-spec="man"]');
             if(manTab) manTab.click();
         }
 
-        // Функція для оновлення зеленого підпису
+        // Оновлення зеленого тексту
         function updateNotifLabel() {
             if (isNotifEnabled && savedNotifCourse) {
-                let specName = savedNotifCourse.includes("М") ? "Менеджери" : "Соціологи";
                 let courseElem = document.querySelector(`.notif-option[data-val="${savedNotifCourse}"]`);
-                let courseName = courseElem ? courseElem.innerText.replace('✓', '').trim() : "";
-                
-                notifSelectedText.innerText = `(${specName} ${courseName})`;
-                notifSelectedText.style.display = 'block';
+                if (courseElem) {
+                    // Якщо кнопка лежить в гріді менеджерів - пишемо Менеджери, інакше Соціологи
+                    let specName = courseElem.closest('#notifGridMan') ? "Менеджери" : "Соціологи";
+                    let courseName = courseElem.innerText.replace('✓', '').trim();
+                    
+                    if (notifSelectedText) {
+                        notifSelectedText.innerText = `(${specName} ${courseName})`;
+                        notifSelectedText.style.display = 'block';
+                    }
+                }
             } else {
-                notifSelectedText.style.display = 'none';
+                if (notifSelectedText) notifSelectedText.style.display = 'none';
             }
         }
         updateNotifLabel(); // Викликаємо при старті
@@ -1935,7 +1954,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                     user_id: user.id, enabled: enabled, course: course,
                     group: localStorage.getItem('selectedGroupPref') || '1'
                 })
-            }).catch(err => console.log("Помилка відправки сповіщень:", err));
+            }).catch(err => console.log("Помилка відправки:", err));
         }
 
         // Тумблер
@@ -1990,7 +2009,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                 localStorage.setItem('notifCoursePref', val);
                 
                 updateNotifCourseUI(val);
-                updateNotifLabel(); // Оновлюємо зелений текст
+                updateNotifLabel();
                 sendNotifSettingsToServer(true, val);
                 
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
