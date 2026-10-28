@@ -541,7 +541,18 @@ body.dark-theme .magistr-text-svg text {
     margin-top: 12px;
     border-top: 1px solid #e5e7eb;
     padding-top: 12px;
-    display: block;
+    max-height: 600px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.35s ease, padding-top 0.35s ease, border-color 0.35s ease;
+}
+
+.accordion-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-color: transparent;
 }
 
 .accordion-content.collapsed {
@@ -706,9 +717,12 @@ body.dark-theme .magistr-text-svg text {
             <!-- Картка налаштувань Курсу -->
             <div class="settings-card">
                 <div class="settings-header" id="courseAccordionToggle">
-                    <div class="settings-header-left">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings preview-icon"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
-                        <h3>Налаштування курсу</h3>
+                    <div class="settings-header-left" style="align-items: flex-start;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell preview-icon" style="margin-top: 2px;"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <h3 style="margin: 0;">Сповіщення про пари</h3>
+                            <span id="notifSelectedText" style="font-size: 13px; font-weight: 700; color: #22C55E; display: none;"></span>
+                        </div>
                     </div>
                     <svg class="chevron-icon" id="courseChevron" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 </div>
@@ -1879,26 +1893,37 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
         const notifSegments = document.querySelectorAll('.notif-segment');
         const notifGridSoc = document.getElementById('notifGridSoc');
         const notifGridMan = document.getElementById('notifGridMan');
-        
-        // ВАЖЛИВО: .notif-option не конфліктує з розкладом
         const notifOptions = document.querySelectorAll('.notif-option');
+        const notifSelectedText = document.getElementById('notifSelectedText'); // Наш новий зелений текст
 
         // Перевіряємо збережені налаштування
         let isNotifEnabled = localStorage.getItem('notifEnabled') === 'true';
         let savedNotifCourse = localStorage.getItem('notifCoursePref') || "";
         
         notifToggle.checked = isNotifEnabled;
-
-        // ЗАВЖДИ ховаємо плашку при старті додатку (незалежно від того увімкнено тумблер чи ні)
         notifAccordionContent.classList.add('collapsed');
 
-        // Відкриваємо потрібну вкладку, якщо курс збережено
         if (savedNotifCourse.includes("М")) {
             const manTab = document.querySelector('.notif-segment[data-notif-spec="man"]');
             if(manTab) manTab.click();
         }
 
-        // Функція для відправки налаштувань на PythonAnywhere
+        // Функція для оновлення зеленого підпису
+        function updateNotifLabel() {
+            if (isNotifEnabled && savedNotifCourse) {
+                let specName = savedNotifCourse.includes("М") ? "Менеджери" : "Соціологи";
+                let courseElem = document.querySelector(`.notif-option[data-val="${savedNotifCourse}"]`);
+                let courseName = courseElem ? courseElem.innerText.replace('✓', '').trim() : "";
+                
+                notifSelectedText.innerText = `(${specName} ${courseName})`;
+                notifSelectedText.style.display = 'block';
+            } else {
+                notifSelectedText.style.display = 'none';
+            }
+        }
+        updateNotifLabel(); // Викликаємо при старті
+
+        // Відправка на сервер
         function sendNotifSettingsToServer(enabled, course) {
             const user = tg.initDataUnsafe?.user;
             if (!user) return;
@@ -1907,31 +1932,29 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    user_id: user.id,
-                    enabled: enabled,
-                    course: course,
+                    user_id: user.id, enabled: enabled, course: course,
                     group: localStorage.getItem('selectedGroupPref') || '1'
                 })
             }).catch(err => console.log("Помилка відправки сповіщень:", err));
         }
 
-        // Обробка тумблера (виїжджає тільки коли юзер сам його клацає)
+        // Тумблер
         notifToggle.addEventListener('change', (e) => {
             isNotifEnabled = e.target.checked;
             localStorage.setItem('notifEnabled', isNotifEnabled);
             
             if (isNotifEnabled) {
-                // Увімкнули - меню виїжджає для вибору
                 notifAccordionContent.classList.remove('collapsed');
+                updateNotifLabel();
             } else {
-                // Вимкнули - одразу ховаємо і відключаємо на сервері
                 notifAccordionContent.classList.add('collapsed');
-                sendNotifSettingsToServer(false, ""); // Вимикаємо на сервері
+                sendNotifSettingsToServer(false, "");
+                updateNotifLabel();
             }
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         });
 
-        // Перемикання вкладок Соціологи/Менеджери в сповіщеннях
+        // Вкладки
         notifSegments.forEach(segment => {
             segment.addEventListener('click', (e) => {
                 notifSegments.forEach(s => s.classList.remove('active'));
@@ -1944,7 +1967,7 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
             });
         });
 
-        // Вибір курсу для сповіщень
+        // Візуальне оновлення кнопок
         function updateNotifCourseUI(val) {
             notifOptions.forEach(opt => {
                 const optVal = opt.getAttribute('data-val');
@@ -1959,22 +1982,23 @@ document.getElementById('btnCourse2Mag').addEventListener('click', () => { curre
         }
         updateNotifCourseUI(savedNotifCourse);
 
+        // Вибір курсу
         notifOptions.forEach(opt => {
             opt.addEventListener('click', (e) => {
                 const val = e.currentTarget.getAttribute('data-val');
                 savedNotifCourse = val;
                 localStorage.setItem('notifCoursePref', val);
-                updateNotifCourseUI(val);
                 
-                // Зберегли курс — відразу передаємо на сервер
+                updateNotifCourseUI(val);
+                updateNotifLabel(); // Оновлюємо зелений текст
                 sendNotifSettingsToServer(true, val);
                 
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-                // ПЛАЖКА ОДРАЗУ ЗГОРТАЄТЬСЯ (з мінімальною затримкою, щоб клік виглядав красиво)
+                // Плавне згортання!
                 setTimeout(() => {
                     notifAccordionContent.classList.add('collapsed');
-                }, 200); 
+                }, 250); 
             });
         });
     </script>
